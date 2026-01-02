@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply text-white antialiased;
+    background-color: #0a1e33;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-6 py-3 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+    --tw-ring-offset-color: #0a1e33;
+  }
+
+  .btn-primary {
+    @apply text-white;
+    background-color: #d97706;
+  }
+
+  .btn-primary:hover {
+    background-color: #b45309;
+  }
+
+  .btn-primary:focus {
+    --tw-ring-color: #d97706;
+  }
+
+  .btn-secondary {
+    @apply text-white border;
+    background-color: #1f2937;
+    border-color: #374151;
+  }
+
+  .btn-secondary:focus {
+    --tw-ring-color: #334e68;
+  }
+
+  .btn-secondary:hover {
+    background-color: #374151;
+  }
+
+  .btn-outline {
+    @apply border-2 hover:text-white;
+    border-color: #d97706;
+    color: #fbbf24;
+  }
+
+  .btn-outline:focus {
+    --tw-ring-color: #d97706;
+  }
+
+  .btn-outline:hover {
+    background-color: #d97706;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-white;
+  }
+
+  .btn-ghost:focus {
+    --tw-ring-color: #334e68;
+  }
+
+  .btn-ghost:hover {
+    background-color: #1f2937;
+  }
+
+  .input {
+    @apply w-full px-4 py-3 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2;
+    background-color: #111827;
+    border: 1px solid #374151;
+  }
+
+  .input:focus {
+    border-color: #d97706;
+    --tw-ring-color: #d97706;
+  }
+
+  .card {
+    @apply rounded-xl p-6 shadow-lg;
+    background-color: #111827;
+    border: 1px solid #1f2937;
+  }
+
+  .card-feature {
+    @apply rounded-xl p-6 shadow-lg transition-all;
+    background-color: #1f2937;
+    border: 1px solid rgba(76, 29, 149, 0.3);
+  }
+
+  .card-feature:hover {
+    border-color: rgba(126, 34, 206, 0.5);
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-success {
+    @apply text-green-400 border;
+    background-color: rgba(34, 197, 94, 0.2);
+    border-color: rgba(34, 197, 94, 0.3);
+  }
+
+  .badge-warning {
+    @apply text-yellow-400 border;
+    background-color: rgba(234, 179, 8, 0.2);
+    border-color: rgba(234, 179, 8, 0.3);
+  }
+
+  .badge-info {
+    @apply border;
+    color: #fbbf24;
+    background-color: rgba(217, 119, 6, 0.2);
+    border-color: rgba(217, 119, 6, 0.3);
+  }
+
+  .badge-error {
+    @apply text-red-400 border;
+    background-color: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r bg-clip-text text-transparent;
+    background-image: linear-gradient(to right, #fbbf24, #d97706);
+  }
+}
