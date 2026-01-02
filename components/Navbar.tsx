@@ -32,7 +32,7 @@ export function Navbar() {
       const pointY = navbarBottom + 1 // Just below the navbar
       
       const elementBelow = document.elementFromPoint(centerX, pointY)
-      if (!elementBelow) {
+      if (!elementBelow || !(elementBelow instanceof HTMLElement)) {
         setIsOverWhite(false)
         return
       }
@@ -41,7 +41,7 @@ export function Navbar() {
       let currentElement: HTMLElement | null = elementBelow
       while (currentElement && currentElement !== document.body) {
         if (currentElement.tagName === 'SECTION') {
-          const section = currentElement as HTMLElement
+          const section = currentElement
           const bgColor = window.getComputedStyle(section).backgroundColor
           const computedBg = bgColor.toLowerCase()
           
