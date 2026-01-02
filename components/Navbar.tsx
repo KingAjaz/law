@@ -38,7 +38,7 @@ export function Navbar() {
       }
 
       // Traverse up the DOM tree to find the section
-      let currentElement = elementBelow
+      let currentElement: HTMLElement | null = elementBelow
       while (currentElement && currentElement !== document.body) {
         if (currentElement.tagName === 'SECTION') {
           const section = currentElement as HTMLElement
