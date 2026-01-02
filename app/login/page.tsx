@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -10,7 +10,7 @@ import { Footer } from '@/components/Footer'
 import toast from 'react-hot-toast'
 import { Mail, Lock, ArrowRight } from 'lucide-react'
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/dashboard'
@@ -194,5 +194,30 @@ export default function LoginPage() {
 
       <Footer />
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex flex-col bg-dark-950">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-md w-full">
+            <div className="card">
+              <div className="animate-pulse space-y-4">
+                <div className="h-8 bg-primary-700 rounded w-3/4"></div>
+                <div className="h-10 bg-primary-700 rounded"></div>
+                <div className="h-10 bg-primary-700 rounded"></div>
+                <div className="h-10 bg-primary-700 rounded"></div>
+              </div>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   )
 }
