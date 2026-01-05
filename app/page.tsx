@@ -70,7 +70,7 @@ export default function HomePage() {
   ]
 
   return (
-    <div className="min-h-screen flex flex-col bg-brand-600">
+    <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
 
       {/* Hero Banner with Dynamic Images */}
@@ -121,7 +121,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 bg-brand-600">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
             <motion.div
@@ -129,7 +129,7 @@ export default function HomePage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">
                 Explore Our Expertise Areas
               </h2>
             </motion.div>
@@ -138,7 +138,7 @@ export default function HomePage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <p className="text-white/90 text-lg">
+              <p className="text-brand-700 text-lg">
                 Our licensed lawyers specialize in various areas of law, providing comprehensive 
                 contract review and legal consultation services tailored to your needs.
               </p>
@@ -155,19 +155,19 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="card-beige hover:border-white/30 transition-all"
+                className="card hover:border-brand-500 transition-all"
               >
-                <div className="w-16 h-16 bg-white/20 rounded-lg flex items-center justify-center mb-4">
+                <div className="w-16 h-16 bg-brand-500 rounded-lg flex items-center justify-center mb-4">
                   <IconComponent className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-3">{area.title}</h3>
-                <p className="text-white/80 mb-4 text-sm">{area.description}</p>
+                <h3 className="text-xl font-semibold text-brand-700 mb-3">{area.title}</h3>
+                <p className="text-brand-700 mb-4 text-sm">{area.description}</p>
                 <Link
                   href="/services"
                   className={`inline-block text-sm font-medium ${
                     area.featured
-                      ? 'text-white hover:text-white/80'
-                      : 'text-white/70 hover:text-white'
+                      ? 'text-brand-600 hover:text-brand-500'
+                      : 'text-brand-600 hover:text-brand-500'
                   }`}
                 >
                   Learn More →
@@ -179,7 +179,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 bg-brand-700 relative overflow-hidden">
+      <section className="py-20 bg-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d97706' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
@@ -194,8 +194,8 @@ export default function HomePage() {
               viewport={{ once: true }}
               className="hidden lg:block"
             >
-              <div className="w-full h-96 bg-gradient-to-br from-gold-600/20 to-gold-800/10 rounded-2xl border border-gold-600/30 flex items-center justify-center">
-                <Gavel className="w-48 h-48 text-gold-500/40" strokeWidth={0.5} />
+              <div className="w-full h-96 bg-gradient-to-br from-brand-500/20 to-brand-700/10 rounded-2xl border border-brand-500/30 flex items-center justify-center">
+                <Gavel className="w-48 h-48 text-brand-500/40" strokeWidth={0.5} />
               </div>
             </motion.div>
 
@@ -204,10 +204,10 @@ export default function HomePage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-6">
                 We Are Specialised And Experienced
               </h2>
-              <p className="text-white/90 mb-8 text-lg">
+              <p className="text-brand-700 mb-8 text-lg">
                 Our team of licensed lawyers brings years of experience and specialized knowledge 
                 to every contract review, ensuring comprehensive analysis and professional recommendations.
               </p>
@@ -222,23 +222,23 @@ export default function HomePage() {
                     transition={{ delay: index * 0.1 }}
                   >
                     <div className="flex justify-between mb-2">
-                      <span className="text-white font-medium">{spec.name}</span>
-                      <span className="text-white font-semibold">{spec.percentage}%</span>
+                      <span className="text-brand-700 font-medium">{spec.name}</span>
+                      <span className="text-brand-700 font-semibold">{spec.percentage}%</span>
                     </div>
-                    <div className="w-full bg-white/10 rounded-full h-3 overflow-hidden">
+                    <div className="w-full bg-brand-100 rounded-full h-3 overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
                         whileInView={{ width: `${spec.percentage}%` }}
                         viewport={{ once: true }}
                         transition={{ duration: 1, delay: index * 0.1 }}
-                        className="h-full bg-white rounded-full"
+                        className="h-full bg-brand-500 rounded-full"
                       />
                     </div>
                   </motion.div>
                 ))}
               </div>
 
-              <Link href="/signup" className="btn btn-primary mt-8 inline-block">
+              <Link href="/signup" className="btn btn-primary-beige mt-8 inline-block">
                 Get Free Consult
               </Link>
             </motion.div>
@@ -246,7 +246,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 bg-brand-600">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -254,8 +254,8 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Testimonials</h2>
-            <div className="w-24 h-1 bg-white mx-auto"></div>
+            <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">Testimonials</h2>
+            <div className="w-24 h-1 bg-brand-500 mx-auto"></div>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -266,19 +266,19 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="card-beige"
+                className="card"
               >
-                <MessageSquare className="h-12 w-12 text-white mb-4" />
-                <p className="text-white/90 mb-6 text-lg leading-relaxed">&quot;{testimonial.quote}&quot;</p>
+                <MessageSquare className="h-12 w-12 text-brand-500 mb-4" />
+                <p className="text-brand-700 mb-6 text-lg leading-relaxed">&quot;{testimonial.quote}&quot;</p>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full bg-brand-500 flex items-center justify-center">
                     <span className="text-white font-semibold">
                       {testimonial.author.charAt(0)}
                     </span>
                   </div>
                   <div>
-                    <p className="text-white font-semibold">{testimonial.author}</p>
-                    <p className="text-white/70 text-sm">{testimonial.date} • {testimonial.role}</p>
+                    <p className="text-brand-700 font-semibold">{testimonial.author}</p>
+                    <p className="text-brand-600 text-sm">{testimonial.date} • {testimonial.role}</p>
                   </div>
                 </div>
               </motion.div>
@@ -287,7 +287,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 bg-brand-700 relative overflow-hidden">
+      <section className="py-20 bg-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d97706' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
@@ -301,10 +301,10 @@ export default function HomePage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-6">
                 Our Expert Professional Law Team is Always Ready to Serve You the Best Solution!
               </h2>
-              <Link href="/signup" className="btn btn-primary text-lg px-8 py-4 inline-block">
+              <Link href="/signup" className="btn btn-primary-beige text-lg px-8 py-4 inline-block">
                 Contact Us
               </Link>
             </motion.div>

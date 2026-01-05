@@ -117,29 +117,40 @@ export function HeroBanner() {
       className="relative w-full h-[600px] md:h-[700px] lg:h-[800px] overflow-hidden"
       aria-label="Hero banner carousel"
     >
-      {/* Background Images with Fade Transition */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentSlide}
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -100 }}
-          transition={{ duration: 0.6, ease: 'easeInOut' }}
-          className="absolute inset-0"
-        >
-          <Image
-            src={currentSlideData.image}
-            alt={currentSlideData.headline}
-            fill
-            priority={currentSlide === 0}
-            quality={85}
-            className="object-cover"
-            sizes="100vw"
-          />
-          {/* Minimal overlay for text readability - keeping images clear */}
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-600/20 via-brand-600/15 to-brand-600/10" />
-        </motion.div>
-      </AnimatePresence>
+      {/* Background Images with Smooth Crossfade - No white background visible */}
+      <div className="absolute inset-0 bg-brand-600">
+        {bannerSlides.map((slide, index) => {
+          const isActive = index === currentSlide
+          
+          return (
+            <motion.div
+              key={slide.id}
+              initial={false}
+              animate={{ 
+                opacity: isActive ? 1 : 0,
+              }}
+              transition={{ 
+                duration: 1.5, 
+                ease: [0.4, 0, 0.2, 1]
+              }}
+              className="absolute inset-0"
+              style={{ zIndex: isActive ? 1 : 0 }}
+            >
+              <Image
+                src={slide.image}
+                alt={slide.headline}
+                fill
+                priority={index === 0}
+                quality={85}
+                className="object-cover"
+                sizes="100vw"
+              />
+              {/* Minimal overlay for text readability - keeping images clear */}
+              <div className="absolute inset-0 bg-gradient-to-r from-brand-600/20 via-brand-600/15 to-brand-600/10" />
+            </motion.div>
+          )
+        })}
+      </div>
 
       {/* Content */}
       <div className="relative z-10 h-full flex items-center">
@@ -147,10 +158,10 @@ export function HeroBanner() {
           <AnimatePresence mode="wait">
             <motion.div
               key={currentSlide}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -30 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: [0.4, 0, 0.2, 1] }}
               className="max-w-3xl"
             >
               <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 text-white leading-tight">
@@ -179,14 +190,14 @@ export function HeroBanner() {
       {/* Navigation Arrows */}
       <button
         onClick={goToPrevious}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gold-600"
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500"
         aria-label="Previous slide"
       >
         <ChevronLeft className="h-6 w-6" />
       </button>
       <button
         onClick={goToNext}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gold-600"
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500"
         aria-label="Next slide"
       >
         <ChevronRight className="h-6 w-6" />
@@ -198,9 +209,9 @@ export function HeroBanner() {
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold-600 focus:ring-offset-2 ${
+            className={`w-3 h-3 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 ${
               index === currentSlide
-                ? 'bg-gold-600 w-8'
+                ? 'bg-brand-500 w-8'
                 : 'bg-white/40 hover:bg-white/60'
             }`}
             aria-label={`Go to slide ${index + 1}`}

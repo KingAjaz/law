@@ -16,32 +16,32 @@
     @apply px-6 py-3 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
   }
 
-  /* Primary button: White background + dark beige text (for beige pages) */
+  /* Primary button: White background + brand text (for brand pages) */
   .btn-primary {
-    @apply bg-white text-brand-600;
-    --tw-ring-offset-color: #8b7355;
+    @apply bg-white text-brand-500;
+    --tw-ring-offset-color: #a67b5b;
   }
 
   .btn-primary:hover {
-    @apply bg-brand-50 text-brand-700 shadow-md;
+    @apply bg-brand-50 text-brand-600 shadow-md;
   }
 
   .btn-primary:focus {
-    --tw-ring-color: #8b7355;
+    --tw-ring-color: #a67b5b;
   }
 
-  /* Primary button variant: Dark beige background + white text (for white pages) */
+  /* Primary button variant: Brand background + white text (for white pages) */
   .btn-primary-beige {
-    @apply bg-brand-600 text-white;
+    @apply bg-brand-500 text-white;
     --tw-ring-offset-color: #ffffff;
   }
 
   .btn-primary-beige:hover {
-    @apply bg-brand-700 text-white shadow-md;
+    @apply bg-brand-600 text-white shadow-md;
   }
 
   .btn-primary-beige:focus {
-    --tw-ring-color: #8b7355;
+    --tw-ring-color: #a67b5b;
   }
 
   /* Secondary button: White background + beige border (for white pages) */
@@ -75,18 +75,18 @@
   /* Outline button */
   .btn-outline {
     @apply border-2 bg-transparent;
-    border-color: #8b7355;
-    color: #8b7355;
+    border-color: #a67b5b;
+    color: #a67b5b;
     --tw-ring-offset-color: #ffffff;
   }
 
   .btn-outline:focus {
-    --tw-ring-color: #8b7355;
+    --tw-ring-color: #a67b5b;
   }
 
   .btn-outline:hover {
-    @apply bg-brand-600 text-white;
-    border-color: #8b7355;
+    @apply bg-brand-500 text-white;
+    border-color: #a67b5b;
   }
 
   /* Ghost button */
@@ -97,7 +97,7 @@
   }
 
   .btn-ghost:focus {
-    --tw-ring-color: #8b7355;
+    --tw-ring-color: #a67b5b;
   }
 
   .btn-ghost:hover {
@@ -131,8 +131,8 @@
   }
 
   .input:focus {
-    border-color: #8b7355;
-    --tw-ring-color: #8b7355;
+    border-color: #a67b5b;
+    --tw-ring-color: #a67b5b;
   }
 
   /* Input variant for beige backgrounds */
@@ -205,6 +205,6 @@
 
   .text-gradient {
     @apply bg-gradient-to-r bg-clip-text text-transparent;
-    background-image: linear-gradient(to right, #8b7355, #6b5a47);
+    background-image: linear-gradient(to right, #a67b5b, #8f6849);
   }
 }
