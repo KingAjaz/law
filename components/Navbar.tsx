@@ -14,6 +14,9 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isOverWhite, setIsOverWhite] = useState(false)
 
+  // Determine if we're on home page (beige background)
+  const isHomePage = pathname === '/'
+
   useEffect(() => {
     if (pathname !== '/') {
       setIsOverWhite(false)
@@ -96,9 +99,17 @@ export function Navbar() {
     window.location.href = '/'
   }
 
-  const navClasses = isOverWhite
-    ? 'bg-white/95 border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm shadow-sm'
-    : 'bg-primary-950 border-b border-primary-800 sticky top-0 z-50 backdrop-blur-sm bg-opacity-95'
+  const navClasses = isOverWhite || !isHomePage
+    ? 'bg-white/95 border-b border-brand-200 sticky top-0 z-50 backdrop-blur-sm shadow-sm transition-colors duration-300'
+    : 'bg-brand-600 border-b border-brand-700 sticky top-0 z-50 backdrop-blur-sm bg-opacity-95 transition-colors duration-300'
+
+  const logoTextClass = isOverWhite || !isHomePage ? 'text-brand-700' : 'text-white'
+  const subLabelClass = isOverWhite || !isHomePage ? 'text-brand-600' : 'text-white/80'
+  const linkClass = (linkHref: string) => 
+    `${isOverWhite || !isHomePage ? 'text-brand-600 hover:text-brand-700' : 'text-white/80 hover:text-white'} 
+    ${pathname === linkHref ? (isOverWhite || !isHomePage ? 'text-brand-700' : 'text-white') : ''}`
+  const authLinkClass = isOverWhite || !isHomePage ? 'text-brand-600 hover:text-brand-700' : 'text-white/80 hover:text-white'
+  const mobileMenuButtonClass = isOverWhite || !isHomePage ? 'text-brand-700' : 'text-white'
 
   return (
     <nav className={navClasses}>
@@ -106,16 +117,12 @@ export function Navbar() {
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gold-600 rounded-lg flex items-center justify-center">
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isOverWhite || !isHomePage ? 'bg-brand-600' : 'bg-white/20'}`}>
               <Scale className="h-6 w-6 text-white" />
             </div>
             <div>
-              <span className={`text-xl font-bold transition-colors ${isOverWhite ? 'text-primary-900' : 'text-white'}`}>
-                LawTech NG
-              </span>
-              <p className={`text-xs transition-colors ${isOverWhite ? 'text-gray-600' : 'text-gray-400'}`}>
-                Advocates & Solicitors
-              </p>
+              <span className={`text-xl font-bold transition-colors ${logoTextClass}`}>LawTech NG</span>
+              <p className={`text-xs transition-colors ${subLabelClass}`}>Advocates & Solicitors</p>
             </div>
           </Link>
 
@@ -125,15 +132,7 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors ${
-                  pathname === link.href
-                    ? isOverWhite
-                      ? 'text-gold-600'
-                      : 'text-gold-400'
-                    : isOverWhite
-                      ? 'text-gray-700 hover:text-gold-600'
-                      : 'text-gray-300 hover:text-gold-400'
-                }`}
+                className={`text-sm font-medium transition-colors ${linkClass(link.href)}`}
               >
                 {link.label}
               </Link>
@@ -143,29 +142,22 @@ export function Navbar() {
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
             {loading ? (
-              <div className="h-8 w-20 bg-primary-800 animate-pulse rounded"></div>
+              <div className={`h-8 w-20 animate-pulse rounded ${isOverWhite || !isHomePage ? 'bg-brand-200' : 'bg-white/20'}`}></div>
             ) : user ? (
               <>
-                <Link href="/dashboard" className="btn btn-secondary text-sm">
+                <Link href="/dashboard" className={`btn text-sm ${isOverWhite || !isHomePage ? 'btn-secondary' : 'btn-secondary-beige'}`}>
                   Dashboard
                 </Link>
-                <button onClick={handleSignOut} className="btn btn-ghost text-sm">
+                <button onClick={handleSignOut} className={`btn text-sm ${isOverWhite || !isHomePage ? 'btn-ghost' : 'btn-ghost-beige'}`}>
                   Sign Out
                 </button>
               </>
             ) : (
               <>
-                <Link 
-                  href="/login" 
-                  className={`text-sm font-medium transition-colors ${
-                    isOverWhite
-                      ? 'text-gray-700 hover:text-gold-600'
-                      : 'text-gray-300 hover:text-gold-400'
-                  }`}
-                >
+                <Link href="/login" className={`text-sm font-medium transition-colors ${authLinkClass}`}>
                   Login
                 </Link>
-                <Link href="/signup" className="btn btn-primary text-sm">
+                <Link href="/signup" className={`btn text-sm ${isOverWhite || !isHomePage ? 'btn-primary-beige' : 'btn-primary'}`}>
                   Get Started
                 </Link>
               </>
@@ -174,7 +166,7 @@ export function Navbar() {
 
           {/* Mobile Menu Button */}
           <button
-            className={`md:hidden p-2 transition-colors ${isOverWhite ? 'text-primary-900' : 'text-white'}`}
+            className={`md:hidden p-2 ${mobileMenuButtonClass}`}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? (
@@ -192,11 +184,7 @@ export function Navbar() {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className={`md:hidden border-t ${
-            isOverWhite
-              ? 'border-gray-200 bg-white'
-              : 'border-primary-800 bg-primary-950'
-          }`}
+          className={`md:hidden border-t ${isOverWhite || !isHomePage ? 'border-brand-200 bg-white' : 'border-brand-700 bg-brand-600'}`}
         >
           <div className="px-4 py-4 space-y-4">
             {navLinks.map((link) => (
@@ -204,26 +192,18 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`block text-base font-medium transition-colors ${
-                  pathname === link.href
-                    ? isOverWhite
-                      ? 'text-gold-600'
-                      : 'text-gold-400'
-                    : isOverWhite
-                      ? 'text-gray-700 hover:text-gold-600'
-                      : 'text-gray-300 hover:text-gold-400'
-                }`}
+                className={`block text-base font-medium ${linkClass(link.href)}`}
               >
                 {link.label}
               </Link>
             ))}
-            <div className="pt-4 border-t border-primary-800 space-y-2">
+            <div className={`pt-4 border-t ${isOverWhite || !isHomePage ? 'border-brand-200' : 'border-brand-700'} space-y-2`}>
               {user ? (
                 <>
                   <Link
                     href="/dashboard"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block btn btn-secondary w-full text-center"
+                    className={`block btn w-full text-center ${isOverWhite || !isHomePage ? 'btn-secondary' : 'btn-secondary-beige'}`}
                   >
                     Dashboard
                   </Link>
@@ -232,7 +212,7 @@ export function Navbar() {
                       handleSignOut()
                       setMobileMenuOpen(false)
                     }}
-                    className="block btn btn-ghost w-full"
+                    className={`block btn w-full ${isOverWhite || !isHomePage ? 'btn-ghost' : 'btn-ghost-beige'}`}
                   >
                     Sign Out
                   </button>
@@ -242,14 +222,14 @@ export function Navbar() {
                   <Link
                     href="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block text-center btn btn-secondary w-full"
+                    className={`block text-center btn w-full ${isOverWhite || !isHomePage ? 'btn-secondary' : 'btn-secondary-beige'}`}
                   >
                     Login
                   </Link>
                   <Link
                     href="/signup"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block text-center btn btn-primary w-full"
+                    className={`block text-center btn w-full ${isOverWhite || !isHomePage ? 'btn-primary-beige' : 'btn-primary'}`}
                   >
                     Get Started
                   </Link>

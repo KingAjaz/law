@@ -9,7 +9,7 @@ import Link from 'next/link'
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-dark-950">
+    <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
 
       <main className="flex-1 py-20">
@@ -20,10 +20,10 @@ export default function PricingPage() {
             className="text-center mb-16"
           >
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              <span className="text-white">OUR</span>{' '}
+              <span className="text-brand-700">OUR</span>{' '}
               <span className="text-gradient">PRICING PLANS</span>
             </h1>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl text-brand-700 max-w-3xl mx-auto">
               Choose the right plan for your contract review needs
             </p>
           </motion.div>
@@ -36,31 +36,31 @@ export default function PricingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className={`card ${tier === 'standard' ? 'border-2 border-primary-600 scale-105' : ''}`}
+                className={`card ${tier === 'standard' ? 'border-2 border-brand-600 scale-105' : ''}`}
               >
                 {tier === 'standard' && (
                   <div className="badge badge-info mb-4 mx-auto w-fit">Most Popular</div>
                 )}
-                <h3 className="text-2xl font-bold mb-2 text-white">{details.name}</h3>
-                <p className="text-gray-400 mb-6 text-sm">{details.description}</p>
+                <h3 className="text-2xl font-bold mb-2 text-brand-700">{details.name}</h3>
+                <p className="text-brand-700 mb-6 text-sm">{details.description}</p>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-white">
+                  <span className="text-4xl font-bold text-brand-700">
                     ₦{details.price.toLocaleString()}
                   </span>
-                  <span className="text-gray-400 text-sm ml-2">/review</span>
+                  <span className="text-brand-700 text-sm ml-2">/review</span>
                 </div>
                 <ul className="space-y-3 mb-8">
                   {details.features.map((feature) => (
                     <li key={feature} className="flex items-start">
-                      <Check className="h-5 w-5 text-primary-400 mr-2 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-300 text-sm">{feature}</span>
+                      <Check className="h-5 w-5 text-brand-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-brand-700 text-sm">{feature}</span>
                     </li>
                   ))}
                 </ul>
                 <Link
                   href="/signup"
                   className={`btn w-full text-center ${
-                    tier === 'standard' ? 'btn-primary' : 'btn-outline'
+                    tier === 'standard' ? 'btn-primary-beige' : 'btn-outline'
                   }`}
                 >
                   PURCHASE NOW
@@ -73,10 +73,10 @@ export default function PricingPage() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="card bg-primary-900/20 border-primary-800/50 text-center"
+            className="card text-center"
           >
-            <h2 className="text-2xl font-semibold mb-4 text-white">All Reviews by Licensed Lawyers</h2>
-            <p className="text-gray-300">
+            <h2 className="text-2xl font-semibold mb-4 text-brand-700">All Reviews by Licensed Lawyers</h2>
+            <p className="text-brand-700">
               Every contract review is performed by a licensed Nigerian lawyer. No AI or automation is used
               for legal review. Our platform ensures quality, professional legal analysis.
             </p>

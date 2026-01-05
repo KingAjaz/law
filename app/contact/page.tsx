@@ -29,7 +29,7 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-dark-950">
+    <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
 
       <main className="flex-1 py-20">
@@ -39,10 +39,10 @@ export default function ContactPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-16"
           >
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">
               Contact Us
             </h1>
-            <p className="text-xl text-gray-200 font-medium">
+            <p className="text-xl text-brand-700 font-medium">
               Get in touch with our team
             </p>
           </motion.div>
@@ -52,33 +52,33 @@ export default function ContactPage() {
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="card bg-primary-800 border-primary-700"
+              className="card"
             >
-              <Mail className="h-8 w-8 text-gold-500 mb-4" />
-              <h3 className="text-xl font-bold text-white mb-2">Email</h3>
-              <p className="text-gray-200 font-medium">support@lawtechng.com</p>
+              <Mail className="h-8 w-8 text-brand-600 mb-4" />
+              <h3 className="text-xl font-bold text-brand-700 mb-2">Email</h3>
+              <p className="text-brand-700 font-medium">support@lawtechng.com</p>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="card bg-primary-800 border-primary-700"
+              className="card"
             >
-              <Phone className="h-8 w-8 text-gold-500 mb-4" />
-              <h3 className="text-xl font-bold text-white mb-2">Phone</h3>
-              <p className="text-gray-200 font-medium">+234 XXX XXX XXXX</p>
+              <Phone className="h-8 w-8 text-brand-600 mb-4" />
+              <h3 className="text-xl font-bold text-brand-700 mb-2">Phone</h3>
+              <p className="text-brand-700 font-medium">+234 XXX XXX XXXX</p>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="card bg-primary-800 border-primary-700 md:col-span-2"
+              className="card md:col-span-2"
             >
-              <MapPin className="h-8 w-8 text-gold-500 mb-4" />
-              <h3 className="text-xl font-bold text-white mb-2">Address</h3>
-              <p className="text-gray-200 font-medium">Lagos, Nigeria</p>
+              <MapPin className="h-8 w-8 text-brand-600 mb-4" />
+              <h3 className="text-xl font-bold text-brand-700 mb-2">Address</h3>
+              <p className="text-brand-700 font-medium">Lagos, Nigeria</p>
             </motion.div>
           </div>
 
@@ -86,58 +86,58 @@ export default function ContactPage() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="card bg-primary-800 border-primary-700"
+            className="card"
           >
-            <h2 className="text-2xl font-bold text-white mb-6">Send us a Message</h2>
+            <h2 className="text-2xl font-bold text-brand-700 mb-6">Send us a Message</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold mb-2 text-gray-200">Name</label>
+                <label className="block text-sm font-semibold mb-2 text-brand-700">Name</label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="input bg-primary-900 border-primary-700 text-white placeholder-gray-400 focus:border-gold-600 focus:ring-gold-600"
+                  className="input"
                   placeholder="Your name"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-2 text-gray-200">Email</label>
+                <label className="block text-sm font-semibold mb-2 text-brand-700">Email</label>
                 <input
                   type="email"
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="input bg-primary-900 border-primary-700 text-white placeholder-gray-400 focus:border-gold-600 focus:ring-gold-600"
+                  className="input"
                   placeholder="your.email@example.com"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-2 text-gray-200">Subject</label>
+                <label className="block text-sm font-semibold mb-2 text-brand-700">Subject</label>
                 <input
                   type="text"
                   required
                   value={formData.subject}
                   onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                  className="input bg-primary-900 border-primary-700 text-white placeholder-gray-400 focus:border-gold-600 focus:ring-gold-600"
+                  className="input"
                   placeholder="Subject of your message"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-2 text-gray-200">Message</label>
+                <label className="block text-sm font-semibold mb-2 text-brand-700">Message</label>
                 <textarea
                   required
                   rows={6}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="input bg-primary-900 border-primary-700 text-white placeholder-gray-400 focus:border-gold-600 focus:ring-gold-600"
+                  className="input"
                   placeholder="Your message here..."
                 />
               </div>
               <button
                 type="submit"
                 disabled={submitting}
-                className="btn btn-primary w-full"
+                className="btn btn-primary-beige w-full"
               >
                 {submitting ? 'Sending...' : (
                   <>

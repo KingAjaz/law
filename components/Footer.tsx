@@ -3,17 +3,17 @@ import { Scale } from 'lucide-react'
 
 export function Footer() {
   return (
-    <footer className="bg-primary-950 border-t border-primary-800">
+    <footer className="bg-brand-600 border-t border-brand-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Logo Section */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center space-x-3 mb-4">
-            <div className="w-10 h-10 bg-gold-600 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
               <Scale className="h-6 w-6 text-white" />
             </div>
             <div>
               <span className="text-xl font-bold text-white">LawTech NG</span>
-              <p className="text-xs text-gray-400">Advocates & Solicitors</p>
+              <p className="text-xs text-white/80">Advocates & Solicitors</p>
             </div>
           </Link>
         </div>
@@ -22,29 +22,29 @@ export function Footer() {
           {/* Quick Links */}
           <div>
             <h3 className="font-semibold mb-4 text-white">Quick Link</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
+            <ul className="space-y-2 text-sm text-white/80">
               <li>
-                <Link href="/" className="hover:text-gold-400 transition-colors">
+                <Link href="/" className="hover:text-white transition-colors">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="hover:text-gold-400 transition-colors">
+                <Link href="/about" className="hover:text-white transition-colors">
                   About
                 </Link>
               </li>
               <li>
-                <Link href="/services" className="hover:text-gold-400 transition-colors">
+                <Link href="/services" className="hover:text-white transition-colors">
                   Expertise
                 </Link>
               </li>
               <li>
-                <Link href="/pricing" className="hover:text-gold-400 transition-colors">
+                <Link href="/pricing" className="hover:text-white transition-colors">
                   Pricing
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-gold-400 transition-colors">
+                <Link href="/contact" className="hover:text-white transition-colors">
                   Contact
                 </Link>
               </li>
@@ -54,7 +54,7 @@ export function Footer() {
           {/* Contact Us */}
           <div>
             <h3 className="font-semibold mb-4 text-white">Contact Us</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
+            <ul className="space-y-2 text-sm text-white/80">
               <li>
                 <p className="font-medium text-white mb-1">Head Office Address</p>
                 <p>Lagos, Nigeria</p>
@@ -76,7 +76,7 @@ export function Footer() {
             <div className="flex gap-4">
               <a
                 href="#"
-                className="w-10 h-10 rounded-full border border-primary-700 flex items-center justify-center text-gray-400 hover:text-gold-400 hover:border-gold-600 transition-colors"
+                className="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center text-white/80 hover:text-white hover:border-white/50 transition-colors"
                 aria-label="Facebook"
               >
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -85,7 +85,7 @@ export function Footer() {
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-full border border-primary-700 flex items-center justify-center text-gray-400 hover:text-gold-400 hover:border-gold-600 transition-colors"
+                className="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center text-white/80 hover:text-white hover:border-white/50 transition-colors"
                 aria-label="Twitter"
               >
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -94,7 +94,7 @@ export function Footer() {
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-full border border-primary-700 flex items-center justify-center text-gray-400 hover:text-gold-400 hover:border-gold-600 transition-colors"
+                className="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center text-white/80 hover:text-white hover:border-white/50 transition-colors"
                 aria-label="Instagram"
               >
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -103,7 +103,7 @@ export function Footer() {
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-full border border-primary-700 flex items-center justify-center text-gray-400 hover:text-gold-400 hover:border-gold-600 transition-colors"
+                className="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center text-white/80 hover:text-white hover:border-white/50 transition-colors"
                 aria-label="LinkedIn"
               >
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -114,7 +114,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-primary-800 text-center text-sm text-gray-400">
+        <div className="pt-8 border-t border-white/20 text-center text-sm text-white/70">
           <p>
             Copyright © {new Date().getFullYear()} LawTech NG Advocates & Solicitors. All rights reserved.
           </p>
