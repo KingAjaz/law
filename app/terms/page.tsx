@@ -21,14 +21,14 @@ export default function TermsPage() {
               <section>
                 <h2 className="text-2xl font-semibold mb-4">1. Acceptance of Terms</h2>
                 <p className="text-gray-700">
-                  By accessing and using LawTech NG, you accept and agree to be bound by these Terms of Service.
+                  By accessing and using LegalEase, you accept and agree to be bound by these Terms of Service.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-2xl font-semibold mb-4">2. Service Description</h2>
                 <p className="text-gray-700">
-                  LawTech NG is a platform that facilitates contract review services. All contract reviews are
+                  LegalEase is a platform that facilitates contract review services. All contract reviews are
                   performed exclusively by licensed Nigerian lawyers. We do not use AI or automation for contract review.
                 </p>
               </section>
@@ -61,7 +61,7 @@ export default function TermsPage() {
               <section>
                 <h2 className="text-2xl font-semibold mb-4">6. Limitation of Liability</h2>
                 <p className="text-gray-700">
-                  LawTech NG shall not be liable for any indirect, incidental, special, or consequential damages
+                  LegalEase shall not be liable for any indirect, incidental, special, or consequential damages
                   arising from the use of our services.
                 </p>
               </section>

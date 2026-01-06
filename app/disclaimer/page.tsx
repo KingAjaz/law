@@ -25,7 +25,7 @@ export default function DisclaimerPage() {
               <section>
                 <h2 className="text-2xl font-semibold mb-4">Important Notice</h2>
                 <p className="text-gray-700 mb-4">
-                  LawTech NG is a platform that facilitates contract review services. This service is designed
+                  LegalEase is a platform that facilitates contract review services. This service is designed
                   to connect clients with licensed Nigerian lawyers for professional contract review.
                 </p>
                 <p className="text-gray-700">
@@ -61,7 +61,7 @@ export default function DisclaimerPage() {
               <section>
                 <h2 className="text-2xl font-semibold mb-4">Limitation of Liability</h2>
                 <p className="text-gray-700">
-                  While we ensure that all reviews are performed by licensed lawyers, LawTech NG is not responsible
+                  While we ensure that all reviews are performed by licensed lawyers, LegalEase is not responsible
                   for the specific legal opinions or recommendations provided by individual lawyers. The platform
                   serves as a facilitator and does not guarantee specific outcomes.
                 </p>

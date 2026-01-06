@@ -3,7 +3,8 @@
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { motion } from 'framer-motion'
-import { Scale, Target, Users, Award } from 'lucide-react'
+import { Scale, CheckCircle, ArrowRight } from 'lucide-react'
+import Link from 'next/link'
 
 export default function AboutPage() {
   return (
@@ -18,87 +19,72 @@ export default function AboutPage() {
             className="text-center mb-16"
           >
             <Scale className="h-16 w-16 text-brand-700 mx-auto mb-6" />
-            <h1 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">
-              About LawTech NG
+            <h1 className="text-4xl md:text-5xl font-bold text-brand-700 mb-6">
+              Built for Tech, Fintech & Modern Legal Teams
             </h1>
-            <p className="text-xl text-brand-700 font-medium">
-              Connecting clients with licensed Nigerian lawyers for professional contract review
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="card mb-8"
-          >
-            <h2 className="text-2xl font-bold text-brand-700 mb-4">Our Mission</h2>
-            <p className="text-brand-700 mb-4 leading-relaxed text-base">
-              LawTech NG was founded to make professional legal contract review accessible to individuals,
-              startups, SMEs, and companies across Nigeria. We believe that everyone should have access to
-              quality legal services without the need to hire a full-time lawyer.
-            </p>
-            <p className="text-brand-700 leading-relaxed text-base">
-              Our platform facilitates the connection between clients and licensed Nigerian lawyers,
-              ensuring that all contract reviews are performed by qualified legal professionals.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="card mb-8"
-          >
-            <h2 className="text-2xl font-bold text-brand-700 mb-6">Our Commitment</h2>
-            <div className="space-y-6">
-              <div className="flex items-start">
-                <Award className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
-                <div>
-                  <h3 className="font-bold text-brand-700 mb-2 text-lg">Licensed Lawyers Only</h3>
-                  <p className="text-brand-700 leading-relaxed">
-                    All contract reviews are performed exclusively by licensed Nigerian lawyers.
-                    No AI or automation is used for legal review.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <Target className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
-                <div>
-                  <h3 className="font-bold text-brand-700 mb-2 text-lg">Quality Assurance</h3>
-                  <p className="text-brand-700 leading-relaxed">
-                    We maintain high standards for all reviews and ensure timely delivery of reviewed documents.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <Users className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
-                <div>
-                  <h3 className="font-bold text-brand-700 mb-2 text-lg">Client-Focused</h3>
-                  <p className="text-brand-700 leading-relaxed">
-                    We prioritize our clients' needs and provide transparent, secure, and efficient services.
-                  </p>
-                </div>
-              </div>
+            <div className="w-24 h-1 bg-brand-600 mx-auto mb-8"></div>
+            <div className="max-w-4xl mx-auto space-y-6">
+              <p className="text-lg md:text-xl text-brand-700 leading-relaxed">
+                Legalease was created to solve a real problem: legal teams and founders burdened by recurring
+                contract reviews and operational legal work while strategic priorities wait on the sidelines. We
+                combine domain expertise in fintech and technology with a flexible delivery model that feels like
+                an extension of your team, not a traditional law firm.
+              </p>
+              <p className="text-lg md:text-xl text-brand-700 leading-relaxed">
+                We value clarity, responsiveness, and deep industry knowledge — because legal should
+                accelerate your business, not slow it down.
+              </p>
             </div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="card"
+            className="card mb-8"
           >
-            <h2 className="text-2xl font-bold text-brand-700 mb-4">Legal Disclaimer</h2>
-            <p className="text-brand-700 mb-4 leading-relaxed text-base">
-              LawTech NG is a platform that facilitates contract review services. All reviews are performed
-              by licensed Nigerian lawyers. This service is not a substitute for comprehensive legal
-              representation or legal advice for complex matters.
-            </p>
-            <p className="text-brand-700 leading-relaxed text-base">
-              We do not use AI or automation for contract review. All legal analysis is performed by
-              qualified legal professionals.
-            </p>
+            <h2 className="text-2xl font-bold text-brand-700 mb-6">Our Services</h2>
+            <ul className="space-y-4">
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Contract review for NDAs, SLAs, MSAs, service agreements, and key operational contracts
+                </p>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Fractional general counsel — compliance, risk, governance, and strategic advisory
+                </p>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  In-house legal team recruitment & training
+                </p>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Transparent pricing, reliable delivery, secure communication
+                </p>
+              </li>
+            </ul>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <Link
+              href="/services"
+              className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
+            >
+              Explore Our Services
+              <ArrowRight className="h-5 w-5" />
+            </Link>
           </motion.div>
         </div>
       </main>

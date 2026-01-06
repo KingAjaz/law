@@ -7,7 +7,7 @@ import { Providers } from './providers'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Nigerian Law-Tech Platform | Professional Contract Review',
+  title: 'LegalEase | Professional Contract Review',
   description: 'Get your legal contracts reviewed by licensed Nigerian lawyers. Fast, secure, and professional.',
 }
 

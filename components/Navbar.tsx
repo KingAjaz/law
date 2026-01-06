@@ -121,7 +121,7 @@ export function Navbar() {
               <Scale className="h-6 w-6 text-white" />
             </div>
             <div>
-              <span className={`text-xl font-bold transition-colors ${logoTextClass}`}>LawTech NG</span>
+              <span className={`text-xl font-bold transition-colors ${logoTextClass}`}>LegalEase</span>
               <p className={`text-xs transition-colors ${subLabelClass}`}>Advocates & Solicitors</p>
             </div>
           </Link>

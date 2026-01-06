@@ -12,7 +12,7 @@ export function Footer() {
               <Scale className="h-6 w-6 text-white" />
             </div>
             <div>
-              <span className="text-xl font-bold text-white">LawTech NG</span>
+              <span className="text-xl font-bold text-white">LegalEase</span>
               <p className="text-xs text-white/80">Advocates & Solicitors</p>
             </div>
           </Link>
@@ -65,7 +65,7 @@ export function Footer() {
               </li>
               <li>
                 <p className="font-medium text-white mb-1">Email:</p>
-                <p>support@lawtechng.com</p>
+                <p>support@legalease.com</p>
               </li>
             </ul>
           </div>
@@ -116,7 +116,7 @@ export function Footer() {
 
         <div className="pt-8 border-t border-white/20 text-center text-sm text-white/70">
           <p>
-            Copyright © {new Date().getFullYear()} LawTech NG Advocates & Solicitors. All rights reserved.
+            Copyright © {new Date().getFullYear()} LegalEase Advocates & Solicitors. All rights reserved.
           </p>
           <p className="mt-2 text-xs">
             This platform facilitates contract review services. All reviews are performed by licensed

@@ -10,8 +10,10 @@ import toast from 'react-hot-toast'
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
+    company: '',
     email: '',
-    subject: '',
+    phone: '',
+    service: '',
     message: '',
   })
   const [submitting, setSubmitting] = useState(false)
@@ -23,7 +25,7 @@ export default function ContactPage() {
     // Simulate form submission (replace with actual API call)
     setTimeout(() => {
       toast.success('Message sent successfully! We will get back to you soon.')
-      setFormData({ name: '', email: '', subject: '', message: '' })
+      setFormData({ name: '', company: '', email: '', phone: '', service: '', message: '' })
       setSubmitting(false)
     }, 1000)
   }
@@ -40,10 +42,11 @@ export default function ContactPage() {
             className="text-center mb-16"
           >
             <h1 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">
-              Contact Us
+              Let's Move Your Legal Work Forward
             </h1>
-            <p className="text-xl text-brand-700 font-medium">
-              Get in touch with our team
+            <p className="text-lg md:text-xl text-brand-700 leading-relaxed max-w-3xl mx-auto">
+              Whether you are ready to upload a contract, need a custom quote, or want to talk strategy —
+              we are here to help.
             </p>
           </motion.div>
 
@@ -56,7 +59,7 @@ export default function ContactPage() {
             >
               <Mail className="h-8 w-8 text-brand-600 mb-4" />
               <h3 className="text-xl font-bold text-brand-700 mb-2">Email</h3>
-              <p className="text-brand-700 font-medium">support@lawtechng.com</p>
+              <p className="text-brand-700 font-medium">support@legalease.com</p>
             </motion.div>
 
             <motion.div
@@ -102,6 +105,17 @@ export default function ContactPage() {
                 />
               </div>
               <div>
+                <label className="block text-sm font-semibold mb-2 text-brand-700">Company</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.company}
+                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                  className="input"
+                  placeholder="Your company name"
+                />
+              </div>
+              <div>
                 <label className="block text-sm font-semibold mb-2 text-brand-700">Email</label>
                 <input
                   type="email"
@@ -113,15 +127,31 @@ export default function ContactPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-2 text-brand-700">Subject</label>
+                <label className="block text-sm font-semibold mb-2 text-brand-700">Phone</label>
                 <input
-                  type="text"
+                  type="tel"
                   required
-                  value={formData.subject}
-                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   className="input"
-                  placeholder="Subject of your message"
+                  placeholder="Your phone number"
                 />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-brand-700">Service Interested In</label>
+                <select
+                  required
+                  value={formData.service}
+                  onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+                  className="input"
+                >
+                  <option value="">Select a service</option>
+                  <option value="contract-review">Contract Review</option>
+                  <option value="fractional-gc">Fractional General Counsel</option>
+                  <option value="recruitment-training">Recruitment & Training</option>
+                  <option value="custom-quote">Custom Quote</option>
+                  <option value="other">Other</option>
+                </select>
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-2 text-brand-700">Message</label>

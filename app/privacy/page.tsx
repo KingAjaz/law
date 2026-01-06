@@ -76,7 +76,7 @@ export default function PrivacyPage() {
               <section>
                 <h2 className="text-2xl font-semibold mb-4">6. Contact Us</h2>
                 <p className="text-gray-700">
-                  If you have questions about this Privacy Policy, please contact us at support@lawtechng.com
+                  If you have questions about this Privacy Policy, please contact us at support@legalease.com
                 </p>
               </section>
             </div>

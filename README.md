@@ -1,4 +1,4 @@
-# Nigerian Law-Tech Platform
+# LegalEase
 
 A modern legal-tech SaaS platform where contract reviews are performed exclusively by licensed lawyers.
 

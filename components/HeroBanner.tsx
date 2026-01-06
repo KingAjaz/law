@@ -4,55 +4,44 @@ import React, { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronLeft, ChevronRight, Upload } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 // Banner slide configuration
 interface BannerSlide {
   id: number
   image: string
-  headline: string
-  subtext: string
-  ctaText: string
-  ctaLink: string
 }
 
 const bannerSlides: BannerSlide[] = [
   {
     id: 1,
     image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1280&q=75&auto=format&fit=crop',
-    headline: 'Your Trusted Legal Partner',
-    subtext: 'Empowering your business success through strategic contract review and legal expertise by licensed Nigerian lawyers.',
-    ctaText: 'Upload Contract',
-    ctaLink: '/signup',
   },
   {
     id: 2,
     image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1280&q=75&auto=format&fit=crop',
-    headline: 'Professional Contract Review',
-    subtext: 'Get comprehensive legal analysis of your contracts by experienced lawyers. Quality, professionalism, and timely delivery guaranteed.',
-    ctaText: 'Get Started',
-    ctaLink: '/signup',
   },
   {
     id: 3,
     image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1280&q=75&auto=format&fit=crop',
-    headline: 'Expert Legal Consultation',
-    subtext: 'Connect with licensed Nigerian lawyers for professional contract review services tailored to your business needs.',
-    ctaText: 'Contact Us',
-    ctaLink: '/contact',
   },
   {
     id: 4,
     image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1280&q=75&auto=format&fit=crop',
-    headline: 'Secure & Confidential',
-    subtext: 'Your documents are handled with the utmost security and confidentiality by our team of licensed legal professionals.',
-    ctaText: 'Learn More',
-    ctaLink: '/services',
   },
+]
+
+// Rotating sub-headlines
+const subHeadlines = [
+  'For law firms managing heavy contract volumes',
+  'For startups scaling without a full-time GC',
+  'For in-house teams that need extra legal capacity',
+  'For fintechs operating across complex regulatory environments',
 ]
 
 export function HeroBanner() {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [currentSubHeadline, setCurrentSubHeadline] = useState(0)
 
   // Preload all images for faster transitions
   useEffect(() => {
@@ -84,6 +73,15 @@ export function HeroBanner() {
     return () => clearInterval(interval)
   }, [])
 
+  // Auto-rotate sub-headlines
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSubHeadline((prev) => (prev + 1) % subHeadlines.length)
+    }, 3000) // 3 seconds per sub-headline
+
+    return () => clearInterval(interval)
+  }, [])
+
   // Navigate to specific slide
   const goToSlide = useCallback((index: number) => {
     setCurrentSlide(index)
@@ -109,8 +107,6 @@ export function HeroBanner() {
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [goToPrevious, goToNext])
-
-  const currentSlideData = bannerSlides[currentSlide]
 
   return (
     <section
@@ -138,7 +134,7 @@ export function HeroBanner() {
             >
               <Image
                 src={slide.image}
-                alt={slide.headline}
+                alt={`Hero banner slide ${index + 1}`}
                 fill
                 priority={index === 0}
                 quality={85}
@@ -155,35 +151,49 @@ export function HeroBanner() {
       {/* Content */}
       <div className="relative z-10 h-full flex items-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentSlide}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.8, delay: 0.3, ease: [0.4, 0, 0.2, 1] }}
-              className="max-w-3xl"
+          <div className="max-w-4xl">
+            {/* Primary Headline (H1) - Static */}
+            <h1 
+              className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 text-white leading-tight"
+              style={{
+                textShadow: '-1px -1px 0 #8f6849, 1px -1px 0 #8f6849, -1px 1px 0 #8f6849, 1px 1px 0 #8f6849, 2px 2px 4px rgba(143, 104, 73, 0.5)'
+              }}
             >
-              <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 text-white leading-tight">
-                {currentSlideData.headline}
-              </h1>
-              <p className="text-lg md:text-xl lg:text-2xl text-gray-200 mb-8 leading-relaxed">
-                {currentSlideData.subtext}
-              </p>
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Link
-                  href={currentSlideData.ctaLink}
-                  className="btn btn-primary text-lg px-8 py-4 inline-flex items-center gap-2"
+              On-Demand Contract Review and Fractional General Counsel for Fintech & Technology Teams
+            </h1>
+            
+            {/* Dynamic Rotating Sub-Headline */}
+            <div className="h-12 md:h-16 mb-8 flex items-center">
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={currentSubHeadline}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+                  className="text-lg md:text-xl lg:text-2xl text-gray-200 leading-relaxed"
+                  style={{
+                    textShadow: '-1px -1px 0 #8f6849, 1px -1px 0 #8f6849, -1px 1px 0 #8f6849, 1px 1px 0 #8f6849, 2px 2px 4px rgba(143, 104, 73, 0.5)'
+                  }}
                 >
-                  <Upload className="h-5 w-5" />
-                  {currentSlideData.ctaText}
-                </Link>
-              </motion.div>
+                  {subHeadlines[currentSubHeadline]}
+                </motion.p>
+              </AnimatePresence>
+            </div>
+
+            {/* Primary CTA Button */}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link
+                href="/signup"
+                className="btn btn-primary text-lg px-8 py-4 inline-flex items-center gap-2"
+              >
+                Get Started
+              </Link>
             </motion.div>
-          </AnimatePresence>
+          </div>
         </div>
       </div>
 

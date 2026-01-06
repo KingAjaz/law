@@ -3,8 +3,8 @@
 ## GitHub Setup
 
 1. Create a new repository on GitHub: https://github.com/new
-   - Name: `lawtech-ng` (or your preferred name)
-   - Description: "Nigerian law-tech platform for contract review services"
+   - Name: `legalease` (or your preferred name)
+   - Description: "LegalEase - Professional contract review services by licensed Nigerian lawyers"
    - Keep it **Public** or **Private** (your choice)
    - **DO NOT** initialize with README, .gitignore, or license
 

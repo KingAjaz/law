@@ -9,41 +9,30 @@ import { HeroBanner } from '@/components/HeroBanner'
 import { 
   Scale, Users, CheckCircle, ArrowRight, Briefcase, 
   Building2, Car, Coffee, Shield, Users2, Phone, Mail,
-  Gavel, MessageSquare
+  Gavel, MessageSquare, Rocket, Building, Zap, Upload, FileText, Lightbulb
 } from 'lucide-react'
 
 export default function HomePage() {
   const expertiseAreas = [
     {
+      icon: Rocket,
+      title: 'Startups & Founder Teams',
+      description: 'Get expert contract review and legal guidance without a full-time GC.',
+    },
+    {
+      icon: Building,
+      title: 'In-House Legal Teams',
+      description: 'Offload routine contract work and scale efficiently.',
+    },
+    {
       icon: Briefcase,
-      title: 'Business Law',
-      description: 'Comprehensive legal support for businesses, including contract review, corporate governance, and compliance.',
-      featured: true,
+      title: 'Law Firms & Legal Departments',
+      description: 'Outsource overflow review work so you can focus on more strategic matters.',
     },
     {
-      icon: Building2,
-      title: 'Construction Law',
-      description: 'Expert review of construction contracts, project agreements, and regulatory compliance.',
-    },
-    {
-      icon: Car,
-      title: 'Commercial Agreements',
-      description: 'Review of commercial contracts, service agreements, and vendor partnerships.',
-    },
-    {
-      icon: Coffee,
-      title: 'Employment Contracts',
-      description: 'Professional review of employment agreements, NDAs, and workplace legal documents.',
-    },
-    {
-      icon: Shield,
-      title: 'Criminal Law',
-      description: 'Specialized legal review and consultation for criminal law matters and documentation.',
-    },
-    {
-      icon: Users2,
-      title: 'Family Law',
-      description: 'Sensitive handling of family law documents, agreements, and legal consultations.',
+      icon: Zap,
+      title: 'Fintech & Technology Players',
+      description: 'Legal clarity that keeps deals moving and risk controlled.',
     },
   ]
 
@@ -56,7 +45,7 @@ export default function HomePage() {
 
   const testimonials = [
     {
-      quote: 'LawTech NG provided exceptional contract review services. Their licensed lawyers were thorough and professional.',
+      quote: 'LegalEase provided exceptional contract review services. Their licensed lawyers were thorough and professional.',
       author: 'Sarah Johnson',
       date: 'Mar 15',
       role: 'CEO, Tech Startup',
@@ -84,68 +73,83 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">About Us</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-6">
+              Legal Support That Works the Way You Do
+            </h2>
             <div className="w-24 h-1 bg-brand-600 mx-auto mb-6"></div>
-            <p className="text-lg text-brand-800 max-w-3xl mx-auto mb-6 leading-relaxed font-medium">
-              LawTech NG is a leading platform connecting clients with licensed Nigerian lawyers 
-              for professional contract review services. We ensure quality, professionalism, and 
-              timely delivery of legal services.
+            <p className="text-lg md:text-xl text-brand-800 max-w-3xl mx-auto mb-8 leading-relaxed font-medium">
+              Legalease provides on-demand contract review and fractional GC services tailored for the
+              fintech, finance, and technology sectors. We help you manage legal workloads with specialists
+              who understand your industry, so your team can focus on strategy, growth, and execution.
             </p>
-            <Link href="/about" className="text-brand-700 font-bold hover:text-brand-600 inline-flex items-center transition-colors border-b-2 border-brand-600 pb-1">
-              Read More <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { number: '500+', label: 'Trusted Clients', sublabel: 'Proven Your Worth Expertise' },
-              { number: '1,200+', label: 'Successful Cases', sublabel: 'Exceptional in section' },
-              { number: '2,500+', label: 'Contracts Reviewed', sublabel: 'Professional Legal Analysis' },
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="text-center"
-              >
-                <div className="w-32 h-32 rounded-full border-4 border-brand-600 mx-auto mb-4 flex items-center justify-center bg-brand-50 shadow-lg">
-                  <p className="text-3xl font-bold text-brand-700">{stat.number}</p>
-                </div>
-                <h3 className="text-xl font-bold text-brand-800 mb-2">{stat.label}</h3>
-                <p className="text-brand-700 text-sm font-semibold">{stat.sublabel}</p>
-              </motion.div>
-            ))}
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto mb-12"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Contract review for NDAs, SLAs, MSAs, service agreements, and key operational contracts
+                </p>
+              </div>
+              <div className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Fractional general counsel — compliance, risk, governance, and strategic advisory
+                </p>
+              </div>
+              <div className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  In-house legal team recruitment & training
+                </p>
+              </div>
+              <div className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Transparent pricing, reliable delivery, secure communication
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <Link
+              href="/services"
+              className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
+            >
+              Explore Our Services
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+          </motion.div>
         </div>
       </section>
 
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">
-                Explore Our Expertise Areas
-              </h2>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <p className="text-brand-700 text-lg">
-                Our licensed lawyers specialize in various areas of law, providing comprehensive 
-                contract review and legal consultation services tailored to your needs.
-              </p>
-            </motion.div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">
+              Solutions for Every Stage of Growth
+            </h2>
+            <div className="w-24 h-1 bg-brand-600 mx-auto"></div>
+          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
             {expertiseAreas.map((area, index) => {
               const IconComponent = area.icon
               return (
@@ -161,21 +165,26 @@ export default function HomePage() {
                   <IconComponent className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-brand-700 mb-3">{area.title}</h3>
-                <p className="text-brand-700 mb-4 text-sm">{area.description}</p>
-                <Link
-                  href="/services"
-                  className={`inline-block text-sm font-medium ${
-                    area.featured
-                      ? 'text-brand-600 hover:text-brand-500'
-                      : 'text-brand-600 hover:text-brand-500'
-                  }`}
-                >
-                  Learn More →
-                </Link>
+                <p className="text-brand-700 mb-4 text-base leading-relaxed">{area.description}</p>
               </motion.div>
               )
             })}
           </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <Link
+              href="/services"
+              className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
+            >
+              Learn More About Your Use Case
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+          </motion.div>
         </div>
       </section>
 
@@ -187,62 +196,91 @@ export default function HomePage() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">
+              How It Works
+            </h2>
+            <div className="w-24 h-1 bg-brand-600 mx-auto mb-4"></div>
+            <p className="text-xl text-brand-700 font-medium">
+              A Clear, Efficient Legal Workflow
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="hidden lg:block"
+              transition={{ delay: 0.1 }}
+              className="text-center"
             >
-              <div className="w-full h-96 bg-gradient-to-br from-brand-500/20 to-brand-700/10 rounded-2xl border border-brand-500/30 flex items-center justify-center">
-                <Gavel className="w-48 h-48 text-brand-500/40" strokeWidth={0.5} />
+              <div className="w-20 h-20 bg-brand-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-3xl font-bold text-white">1</span>
               </div>
+              <h3 className="text-xl font-bold text-brand-700 mb-3">
+                Upload your contract
+              </h3>
+              <p className="text-brand-700 leading-relaxed">
+                Select type & turnaround.
+              </p>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="text-center"
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-6">
-                We Are Specialised And Experienced
-              </h2>
-              <p className="text-brand-700 mb-8 text-lg">
-                Our team of licensed lawyers brings years of experience and specialized knowledge 
-                to every contract review, ensuring comprehensive analysis and professional recommendations.
-              </p>
-
-              <div className="space-y-6">
-                {specializations.map((spec, index) => (
-                  <motion.div
-                    key={spec.name}
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <div className="flex justify-between mb-2">
-                      <span className="text-brand-700 font-medium">{spec.name}</span>
-                      <span className="text-brand-700 font-semibold">{spec.percentage}%</span>
-                    </div>
-                    <div className="w-full bg-brand-100 rounded-full h-3 overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${spec.percentage}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, delay: index * 0.1 }}
-                        className="h-full bg-brand-500 rounded-full"
-                      />
-                    </div>
-                  </motion.div>
-                ))}
+              <div className="w-20 h-20 bg-brand-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-3xl font-bold text-white">2</span>
               </div>
+              <h3 className="text-xl font-bold text-brand-700 mb-3">
+                Review & analysis
+              </h3>
+              <p className="text-brand-700 leading-relaxed">
+                Delivered with actionable insights.
+              </p>
+            </motion.div>
 
-              <Link href="/signup" className="btn btn-primary-beige mt-8 inline-block">
-                Get Free Consult
-              </Link>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="text-center"
+            >
+              <div className="w-20 h-20 bg-brand-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-3xl font-bold text-white">3</span>
+              </div>
+              <h3 className="text-xl font-bold text-brand-700 mb-3">
+                Strategic support
+              </h3>
+              <p className="text-brand-700 leading-relaxed">
+                Optional counsel, governance input or training.
+              </p>
             </motion.div>
           </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <Link
+              href="/signup"
+              className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
+            >
+              <Upload className="h-5 w-5" />
+              Upload Contract
+            </Link>
+          </motion.div>
         </div>
       </section>
 
@@ -252,38 +290,388 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-12"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">Testimonials</h2>
-            <div className="w-24 h-1 bg-brand-500 mx-auto"></div>
+            <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">
+              Industry Experience You Can Trust
+            </h2>
+            <div className="w-24 h-1 bg-brand-600 mx-auto mb-6"></div>
+            <p className="text-lg md:text-xl text-brand-700 leading-relaxed max-w-4xl mx-auto">
+              Our team has decades of combined legal experience with leading fintech unicorns, international
+              law firms, and investment companies — locally and cross-border. We've supported C-suite
+              executives, in-house legal teams, and fast-scaling tech businesses with real legal work.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">
+              About Us
+            </h2>
+            <div className="w-24 h-1 bg-brand-600 mx-auto mb-6"></div>
+            <h3 className="text-2xl md:text-3xl font-semibold text-brand-700 mb-8">
+              Built for Tech, Fintech & Modern Legal Teams
+            </h3>
+            <div className="max-w-4xl mx-auto space-y-6">
+              <p className="text-lg md:text-xl text-brand-700 leading-relaxed">
+                Legalease was created to solve a real problem: legal teams and founders burdened by recurring
+                contract reviews and operational legal work while strategic priorities wait on the sidelines. We
+                combine domain expertise in fintech and technology with a flexible delivery model that feels like
+                an extension of your team, not a traditional law firm.
+              </p>
+              <p className="text-lg md:text-xl text-brand-700 leading-relaxed">
+                We value clarity, responsiveness, and deep industry knowledge — because legal should
+                accelerate your business, not slow it down.
+              </p>
+            </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="card"
-              >
-                <MessageSquare className="h-12 w-12 text-brand-500 mb-4" />
-                <p className="text-brand-700 mb-6 text-lg leading-relaxed">&quot;{testimonial.quote}&quot;</p>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-brand-500 flex items-center justify-center">
-                    <span className="text-white font-semibold">
-                      {testimonial.author.charAt(0)}
-                    </span>
-                  </div>
-                  <div>
-                    <p className="text-brand-700 font-semibold">{testimonial.author}</p>
-                    <p className="text-brand-600 text-sm">{testimonial.date} • {testimonial.role}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <Link
+              href="/about"
+              className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
+            >
+              Learn More
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">
+              Services / Expertise
+            </h2>
+            <div className="w-24 h-1 bg-brand-600 mx-auto mb-6"></div>
+            <h3 className="text-2xl md:text-3xl font-semibold text-brand-700 mb-4">
+              On-Demand Contract Review
+            </h3>
+            <p className="text-xl md:text-2xl text-brand-700 font-medium mb-8">
+              Precise Contract Reviews — Fast Turnaround
+            </p>
+            <p className="text-lg md:text-xl text-brand-700 leading-relaxed max-w-4xl mx-auto mb-8">
+              We focus on the contracts that matter to your operations. We review operational agreements
+              such as:
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto mb-8"
+          >
+            <ul className="space-y-4">
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  NDAs & Confidentiality Agreements
+                </p>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Service Level Agreements (SLAs)
+                </p>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Master Service Agreements (MSAs)
+                </p>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Vendor & Partnership Agreements
+                </p>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Other operational documents
+                </p>
+              </li>
+            </ul>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <p className="text-lg md:text-xl text-brand-700 leading-relaxed max-w-4xl mx-auto mb-8">
+              Our reviews give you clear summaries, risk flags, and concise advice — all delivered securely
+              on your schedule.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <Link
+              href="/signup"
+              className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
+            >
+              Request Contract Review
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">
+              Fractional General Counsel
+            </h2>
+            <div className="w-24 h-1 bg-brand-600 mx-auto mb-6"></div>
+            <h3 className="text-2xl md:text-3xl font-semibold text-brand-700 mb-4">
+              Strategic Counsel — Fractional & Scalable
+            </h3>
+            <p className="text-lg md:text-xl text-brand-700 leading-relaxed max-w-4xl mx-auto mb-8">
+              Not ready for a full-time GC? We provide flexible counsel for:
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto mb-12"
+          >
+            <ul className="space-y-4">
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Regulatory advisory
+                </p>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Contract review
+                </p>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Legal strategy
+                </p>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Data and IP Protection
+                </p>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Cross-functional risk alignment
+                </p>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Legal operations
+                </p>
+              </li>
+            </ul>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <Link
+              href="/signup"
+              className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
+            >
+              Engage a Fractional Counsel
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">
+              Recruitment & Training
+            </h2>
+            <div className="w-24 h-1 bg-brand-600 mx-auto mb-6"></div>
+            <h3 className="text-2xl md:text-3xl font-semibold text-brand-700 mb-4">
+              Grow Your Legal Team — With Support
+            </h3>
+            <p className="text-lg md:text-xl text-brand-700 leading-relaxed max-w-4xl mx-auto mb-8">
+              Need to recruit or train your in-house legal team? We support you with:
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto mb-12"
+          >
+            <ul className="space-y-4">
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Hiring guidance for legal roles
+                </p>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Onboarding and training frameworks
+                </p>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Practical workshops for contract management and legal operations
+                </p>
+              </li>
+            </ul>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <Link
+              href="/contact"
+              className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
+            >
+              Contact us to learn more
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">
+              Pricing
+            </h2>
+            <div className="w-24 h-1 bg-brand-600 mx-auto mb-6"></div>
+            <h3 className="text-2xl md:text-3xl font-semibold text-brand-700 mb-4">
+              Transparent, Predictable Pricing
+            </h3>
+            <p className="text-lg md:text-xl text-brand-700 leading-relaxed max-w-4xl mx-auto mb-8">
+              We offer service plans designed for clarity and scalability:
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="card text-center"
+            >
+              <h4 className="text-lg font-bold text-brand-700 mb-2">NDA Reviews</h4>
+              <p className="text-2xl font-bold text-brand-600 mb-4">NGN60,000</p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="card text-center border-2 border-brand-600"
+            >
+              <div className="badge badge-info mb-2 mx-auto w-fit">Popular</div>
+              <h4 className="text-lg font-bold text-brand-700 mb-2">SLA and Service Agreement Reviews</h4>
+              <p className="text-2xl font-bold text-brand-600 mb-4">NGN100,000</p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="card text-center"
+            >
+              <h4 className="text-lg font-bold text-brand-700 mb-2">Tech MSAs and Order Forms</h4>
+              <p className="text-2xl font-bold text-brand-600 mb-4">NGN150,000</p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="card text-center"
+            >
+              <h4 className="text-lg font-bold text-brand-700 mb-2">Fractional GC</h4>
+              <p className="text-2xl font-bold text-brand-600 mb-4">NGN18,000<span className="text-base">/hour</span></p>
+            </motion.div>
           </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <Link
+              href="/pricing"
+              className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
+            >
+              See Full Pricing & Plans
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+          </motion.div>
         </div>
       </section>
 
@@ -317,7 +705,7 @@ export default function HomePage() {
             >
               <div className="flex items-center gap-3 mb-6">
                 <Scale className="h-8 w-8 text-brand-700" />
-                <span className="text-2xl font-bold text-brand-700">LawTech NG</span>
+                <span className="text-2xl font-bold text-brand-700">LegalEase</span>
               </div>
               <h3 className="text-2xl font-bold text-brand-800 mb-6">Get a Free Consultation</h3>
               <div className="flex items-center gap-3">

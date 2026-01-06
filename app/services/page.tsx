@@ -3,32 +3,10 @@
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { motion } from 'framer-motion'
-import { FileText, Briefcase, Handshake, Building2 } from 'lucide-react'
+import { CheckCircle, ArrowRight } from 'lucide-react'
+import Link from 'next/link'
 
 export default function ServicesPage() {
-  const services = [
-    {
-      icon: FileText,
-      title: 'Employment Contracts',
-      description: 'Review employment agreements, non-disclosure agreements, and employment terms.',
-    },
-    {
-      icon: Briefcase,
-      title: 'Business Contracts',
-      description: 'Review partnership agreements, service contracts, and vendor agreements.',
-    },
-    {
-      icon: Handshake,
-      title: 'Commercial Agreements',
-      description: 'Review sales agreements, distribution contracts, and licensing agreements.',
-    },
-    {
-      icon: Building2,
-      title: 'Corporate Documents',
-      description: 'Review shareholder agreements, board resolutions, and corporate governance documents.',
-    },
-  ]
-
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
@@ -38,52 +16,89 @@ export default function ServicesPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-16"
+            className="text-center mb-12"
           >
             <h1 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">
-              Our Services
+              Services / Expertise
             </h1>
-            <p className="text-xl text-brand-700 max-w-3xl mx-auto font-medium">
-              Professional contract review services by licensed Nigerian lawyers
+            <div className="w-24 h-1 bg-brand-600 mx-auto mb-6"></div>
+            <h2 className="text-2xl md:text-3xl font-semibold text-brand-700 mb-4">
+              On-Demand Contract Review
+            </h2>
+            <p className="text-xl md:text-2xl text-brand-700 font-medium mb-8">
+              Precise Contract Reviews — Fast Turnaround
+            </p>
+            <p className="text-lg md:text-xl text-brand-700 leading-relaxed max-w-4xl mx-auto mb-8">
+              We focus on the contracts that matter to your operations. We review operational agreements
+              such as:
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-            {services.map((service, index) => {
-              const IconComponent = service.icon
-              return (
-                <motion.div
-                  key={service.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="card hover:border-brand-600 hover:shadow-xl transition-all"
-                >
-                  <IconComponent className="h-12 w-12 text-brand-600 mb-4" />
-                  <h3 className="text-2xl font-bold text-brand-700 mb-3">{service.title}</h3>
-                  <p className="text-brand-700 leading-relaxed">{service.description}</p>
-                </motion.div>
-              )
-            })}
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto mb-8"
+          >
+            <ul className="space-y-4">
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  NDAs & Confidentiality Agreements
+                </p>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Service Level Agreements (SLAs)
+                </p>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Master Service Agreements (MSAs)
+                </p>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Vendor & Partnership Agreements
+                </p>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-brand-700 leading-relaxed text-base">
+                  Other operational documents
+                </p>
+              </li>
+            </ul>
+          </motion.div>
 
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="card"
+            className="text-center mb-12"
           >
-            <h2 className="text-2xl font-bold text-brand-700 mb-4">Important Notice</h2>
-            <p className="text-brand-700 mb-4 leading-relaxed text-base">
-              All contract reviews on this platform are performed exclusively by licensed Nigerian lawyers.
-              We do not use AI or automation for contract review. Our platform facilitates the connection
-              between clients and licensed legal professionals.
+            <p className="text-lg md:text-xl text-brand-700 leading-relaxed max-w-4xl mx-auto mb-8">
+              Our reviews give you clear summaries, risk flags, and concise advice — all delivered securely
+              on your schedule.
             </p>
-            <p className="text-brand-700 leading-relaxed text-base">
-              This service is not a substitute for comprehensive legal representation. For complex legal
-              matters, we recommend consulting with a lawyer directly.
-            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <Link
+              href="/signup"
+              className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
+            >
+              Request Contract Review
+              <ArrowRight className="h-5 w-5" />
+            </Link>
           </motion.div>
         </div>
       </main>
