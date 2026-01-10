@@ -119,14 +119,34 @@ CREATE TRIGGER update_payments_updated_at BEFORE UPDATE ON public.payments
 -- Function to automatically create profile on user signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
+DECLARE
+  user_full_name TEXT;
 BEGIN
+  -- Extract full_name from various possible locations in metadata
+  -- OAuth providers (Google, GitHub, etc.) may store it differently
+  -- Google provides: raw_user_meta_data->>'full_name' or raw_user_meta_data->>'name'
+  user_full_name := COALESCE(
+    NEW.raw_user_meta_data->>'full_name',
+    NEW.raw_user_meta_data->>'name',
+    NEW.raw_user_meta_data->>'display_name',
+    NEW.user_metadata->>'full_name',
+    NEW.user_metadata->>'name',
+    split_part(COALESCE(NEW.email, ''), '@', 1)  -- Fallback to email prefix
+  );
+
   INSERT INTO public.profiles (id, email, full_name, role)
   VALUES (
     NEW.id,
-    NEW.email,
-    COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.email),
+    COALESCE(NEW.email, ''),
+    user_full_name,
     'user'
-  );
+  )
+  ON CONFLICT (id) DO UPDATE
+  SET 
+    email = COALESCE(NEW.email, profiles.email),
+    full_name = COALESCE(NULLIF(user_full_name, ''), profiles.full_name),
+    updated_at = NOW();
+  
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

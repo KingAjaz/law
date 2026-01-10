@@ -6,8 +6,8 @@
   body {
     @apply antialiased;
     /* Default to white background for inner pages */
-    background-color: #ffffff;
-    color: #564839; /* Dark beige text */
+    background-color: #FFFFFF;
+    color: #1A1A1A; /* Charcoal Black - Text Primary */
   }
 }
 
@@ -19,7 +19,7 @@
   /* Primary button: White background + brand text (for brand pages) */
   .btn-primary {
     @apply bg-white text-brand-500;
-    --tw-ring-offset-color: #a67b5b;
+    --tw-ring-offset-color: #A10454;
   }
 
   .btn-primary:hover {
@@ -27,7 +27,7 @@
   }
 
   .btn-primary:focus {
-    --tw-ring-color: #a67b5b;
+    --tw-ring-color: #A10454;
   }
 
   /* Primary button variant: Brand background + white text (for white pages) */
@@ -41,27 +41,27 @@
   }
 
   .btn-primary-beige:focus {
-    --tw-ring-color: #a67b5b;
+    --tw-ring-color: #A10454;
   }
 
-  /* Secondary button: White background + beige border (for white pages) */
+  /* Secondary button: White background + brand border (for white pages) */
   .btn-secondary {
-    @apply bg-white text-brand-600 border border-brand-300;
+    @apply bg-white text-brand-600 border border-gray-200;
     --tw-ring-offset-color: #ffffff;
   }
 
   .btn-secondary:focus {
-    --tw-ring-color: #8b7355;
+    --tw-ring-color: #A10454;
   }
 
   .btn-secondary:hover {
-    @apply bg-brand-50 border-brand-400;
+    @apply bg-brand-50 border-brand-300;
   }
 
-  /* Secondary button variant: Transparent + white border (for beige pages) */
+  /* Secondary button variant: Transparent + white border (for brand pages) */
   .btn-secondary-beige {
     @apply bg-transparent text-white border border-white/30;
-    --tw-ring-offset-color: #8b7355;
+    --tw-ring-offset-color: #5B002D;
   }
 
   .btn-secondary-beige:focus {
@@ -75,39 +75,39 @@
   /* Outline button */
   .btn-outline {
     @apply border-2 bg-transparent;
-    border-color: #a67b5b;
-    color: #a67b5b;
+    border-color: #A10454;
+    color: #A10454;
     --tw-ring-offset-color: #ffffff;
   }
 
   .btn-outline:focus {
-    --tw-ring-color: #a67b5b;
+    --tw-ring-color: #A10454;
   }
 
   .btn-outline:hover {
     @apply bg-brand-500 text-white;
-    border-color: #a67b5b;
+    border-color: #A10454;
   }
 
   /* Ghost button */
   .btn-ghost {
     @apply bg-transparent;
-    color: #564839;
+    color: #1A1A1A;
     --tw-ring-offset-color: #ffffff;
   }
 
   .btn-ghost:focus {
-    --tw-ring-color: #a67b5b;
+    --tw-ring-color: #A10454;
   }
 
   .btn-ghost:hover {
     @apply bg-brand-50;
   }
 
-  /* Ghost button variant for beige backgrounds */
+  /* Ghost button variant for brand backgrounds */
   .btn-ghost-beige {
     @apply bg-transparent text-white;
-    --tw-ring-offset-color: #8b7355;
+    --tw-ring-offset-color: #5B002D;
   }
 
   .btn-ghost-beige:focus {
@@ -120,22 +120,19 @@
 
   /* Input fields */
   .input {
-    @apply w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2;
-    background-color: #ffffff;
-    border: 1px solid #d4c4b0;
-    color: #564839;
+    @apply w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 bg-white border border-gray-200 text-gray-900;
   }
 
   .input::placeholder {
-    color: #b8a088;
+    @apply text-gray-500;
   }
 
   .input:focus {
-    border-color: #a67b5b;
-    --tw-ring-color: #a67b5b;
+    @apply border-brand-500;
+    --tw-ring-color: #A10454;
   }
 
-  /* Input variant for beige backgrounds */
+  /* Input variant for brand backgrounds */
   .input-beige {
     @apply w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2;
     background-color: rgba(255, 255, 255, 0.1);
@@ -154,12 +151,10 @@
 
   /* Card component for white pages */
   .card {
-    @apply rounded-xl p-6 shadow-lg;
-    background-color: #ffffff;
-    border: 1px solid #e8ddd0;
+    @apply rounded-xl p-6 shadow-lg bg-white border border-gray-200;
   }
 
-  /* Card variant for beige pages */
+  /* Card variant for brand pages */
   .card-beige {
     @apply rounded-xl p-6 shadow-lg;
     background-color: rgba(255, 255, 255, 0.05);
@@ -167,14 +162,12 @@
   }
 
   .card-feature {
-    @apply rounded-xl p-6 shadow-lg transition-all;
-    background-color: #ffffff;
-    border: 1px solid #e8ddd0;
+    @apply rounded-xl p-6 shadow-lg transition-all bg-white border border-gray-200;
   }
 
   .card-feature:hover {
-    border-color: #8b7355;
-    box-shadow: 0 10px 25px rgba(139, 115, 85, 0.1);
+    @apply border-brand-500;
+    box-shadow: 0 10px 25px rgba(161, 4, 84, 0.1);
   }
 
   .badge {
@@ -192,10 +185,8 @@
   }
 
   .badge-info {
-    @apply border;
-    color: #8b7355;
-    background-color: #faf8f5;
-    border-color: #d4c4b0;
+    @apply border border-gray-200 text-brand-800;
+    background-color: #FCE6EF;
   }
 
   .badge-error {
@@ -205,6 +196,6 @@
 
   .text-gradient {
     @apply bg-gradient-to-r bg-clip-text text-transparent;
-    background-image: linear-gradient(to right, #a67b5b, #8f6849);
+    background-image: linear-gradient(to right, #A10454, #E43F8C);
   }
 }

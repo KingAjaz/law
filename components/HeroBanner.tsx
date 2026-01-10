@@ -19,7 +19,7 @@ const bannerSlides: BannerSlide[] = [
   },
   {
     id: 2,
-    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1280&q=75&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1280&q=75&auto=format&fit=crop',
   },
   {
     id: 3,
@@ -113,8 +113,8 @@ export function HeroBanner() {
       className="relative w-full h-[600px] md:h-[700px] lg:h-[800px] overflow-hidden"
       aria-label="Hero banner carousel"
     >
-      {/* Background Images with Smooth Crossfade - No white background visible */}
-      <div className="absolute inset-0 bg-brand-600">
+      {/* Background Images with Smooth Crossfade - No color flash visible */}
+      <div className="absolute inset-0 bg-black">
         {bannerSlides.map((slide, index) => {
           const isActive = index === currentSlide
           
@@ -141,8 +141,6 @@ export function HeroBanner() {
                 className="object-cover"
                 sizes="100vw"
               />
-              {/* Minimal overlay for text readability - keeping images clear */}
-              <div className="absolute inset-0 bg-gradient-to-r from-brand-600/20 via-brand-600/15 to-brand-600/10" />
             </motion.div>
           )
         })}
@@ -156,7 +154,7 @@ export function HeroBanner() {
             <h1 
               className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 text-white leading-tight"
               style={{
-                textShadow: '-1px -1px 0 #8f6849, 1px -1px 0 #8f6849, -1px 1px 0 #8f6849, 1px 1px 0 #8f6849, 2px 2px 4px rgba(143, 104, 73, 0.5)'
+                textShadow: '-1px -1px 0 #5B002D, 1px -1px 0 #5B002D, -1px 1px 0 #5B002D, 1px 1px 0 #5B002D, 2px 2px 4px rgba(91, 0, 45, 0.5)'
               }}
             >
               On-Demand Contract Review and Fractional General Counsel for Fintech & Technology Teams
@@ -173,7 +171,7 @@ export function HeroBanner() {
                   transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
                   className="text-lg md:text-xl lg:text-2xl text-gray-200 leading-relaxed"
                   style={{
-                    textShadow: '-1px -1px 0 #8f6849, 1px -1px 0 #8f6849, -1px 1px 0 #8f6849, 1px 1px 0 #8f6849, 2px 2px 4px rgba(143, 104, 73, 0.5)'
+                    textShadow: '-1px -1px 0 #5B002D, 1px -1px 0 #5B002D, -1px 1px 0 #5B002D, 1px 1px 0 #5B002D, 2px 2px 4px rgba(91, 0, 45, 0.5)'
                   }}
                 >
                   {subHeadlines[currentSubHeadline]}

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { createSupabaseClient } from '@/lib/supabase/client'
+import { resetPassword } from '@/lib/auth'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import toast from 'react-hot-toast'
@@ -13,19 +13,13 @@ export default function ResetPasswordPage() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
-  const supabase = createSupabaseClient()
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/reset-password-confirm`,
-      })
-
-      if (error) throw error
-
+      await resetPassword(email)
       setSent(true)
       toast.success('Password reset email sent! Check your inbox.')
     } catch (error: any) {
@@ -36,7 +30,7 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-dark-950">
       <Navbar />
 
       <main className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -46,10 +40,10 @@ export default function ResetPasswordPage() {
           className="max-w-md w-full space-y-8"
         >
           <div>
-            <h2 className="text-3xl font-bold text-center text-primary-900">Reset your password</h2>
-            <p className="mt-2 text-center text-sm text-gray-600">
+            <h2 className="text-3xl font-bold text-center text-white">Reset your password</h2>
+            <p className="mt-2 text-center text-sm text-gray-400">
               Remember your password?{' '}
-              <Link href="/login" className="font-medium text-primary-700 hover:text-primary-800">
+              <Link href="/login" className="font-medium text-primary-400 hover:text-primary-300">
                 Sign in
               </Link>
             </p>
@@ -58,10 +52,10 @@ export default function ResetPasswordPage() {
           <div className="card">
             {sent ? (
               <div className="text-center">
-                <Mail className="h-12 w-12 text-primary-700 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Check your email</h3>
-                <p className="text-gray-600 mb-4">
-                  We've sent a password reset link to <strong>{email}</strong>
+                <Mail className="h-12 w-12 text-primary-500 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2 text-white">Check your email</h3>
+                <p className="text-gray-400 mb-4">
+                  We've sent a password reset link to <strong className="text-white">{email}</strong>
                 </p>
                 <Link href="/login" className="btn btn-primary">
                   Back to Login

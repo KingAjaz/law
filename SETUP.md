@@ -17,7 +17,30 @@ npm install
 1. Create a new Supabase project at https://supabase.com
 2. Go to SQL Editor and run the migration file: `supabase/migrations/001_initial_schema.sql`
 3. Set up storage bucket (see `supabase/storage-setup.md`)
-4. Enable Google OAuth in Authentication > Providers (optional)
+4. Configure Authentication Providers in Supabase Dashboard:
+   - **Email/Password**: Enabled by default
+   - **Magic Link (OTP)**: Go to Authentication > Providers > Email, enable "Enable email confirmations"
+   - **Google OAuth**: 
+     - Go to Authentication > Providers
+     - Enable Google provider
+     - Add your Google OAuth Client ID and Secret
+   - **GitHub OAuth** (optional):
+     - Go to Authentication > Providers
+     - Enable GitHub provider
+     - Add your GitHub OAuth App Client ID and Secret
+   - **Facebook OAuth** (optional):
+     - Go to Authentication > Providers
+     - Enable Facebook provider
+     - Add your Facebook App ID and Secret
+
+5. Configure Email Templates (optional):
+   - Go to Authentication > Email Templates
+   - Customize the confirmation email and password reset email templates
+
+6. Configure Site URL and Redirect URLs:
+   - Go to Authentication > URL Configuration
+   - Site URL: `http://localhost:3000` (for development) or your production URL
+   - Redirect URLs: Add `http://localhost:3000/auth/callback` and your production callback URL
 
 ## Step 3: Configure Environment Variables
 
@@ -68,6 +91,38 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+## Authentication Methods
+
+The application supports the following authentication methods:
+
+### 1. Email/Password Authentication
+- Users can sign up and sign in with email and password
+- Password requirements: Minimum 6 characters
+- Email verification required for new accounts
+
+### 2. Magic Link Authentication (Passwordless)
+- Users can sign in without a password
+- A magic link is sent to their email
+- Click the link to authenticate automatically
+
+### 3. OAuth Authentication
+- **Google**: Sign in/sign up with Google account
+- **GitHub**: Sign in/sign up with GitHub account (optional)
+- **Facebook**: Sign in/sign up with Facebook account (optional)
+
+### 4. Password Reset
+- Users can request a password reset via email
+- Secure password reset flow with email verification
+
+### Authentication Routes
+
+- `/login` - Sign in page (password or magic link)
+- `/signup` - Sign up page (password or magic link)
+- `/reset-password` - Request password reset
+- `/auth/reset-password-confirm` - Set new password (after clicking reset link)
+- `/auth/verify-email` - Email verification page
+- `/auth/callback` - OAuth and magic link callback handler
+
 ## Important Notes
 
 - **NO AI is used for contract review** - All reviews are performed by licensed lawyers only
@@ -75,6 +130,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - Make sure to configure Supabase storage bucket with proper RLS policies
 - Test Paystack integration in test mode before going live
 - All legal disclaimers should be displayed to users
+- Test all authentication flows (email/password, magic link, OAuth) before going live
+- Ensure email templates are configured properly in Supabase dashboard
 
 ## Production Deployment
 

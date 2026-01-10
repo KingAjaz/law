@@ -16,6 +16,7 @@ export async function middleware(req: NextRequest) {
     '/login',
     '/signup',
     '/reset-password',
+    '/auth',
     '/terms',
     '/privacy',
     '/disclaimer',
@@ -43,6 +44,9 @@ export async function middleware(req: NextRequest) {
 
     // Auth routes (redirect if already logged in)
     const authRoutes = ['/login', '/signup', '/reset-password']
+    
+    // Auth callback routes (public, but handle differently)
+    const authCallbackRoutes = ['/auth']
 
     // Protected routes
     const protectedRoutes = ['/dashboard', '/kyc']
