@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { Scale } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -7,10 +6,7 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Logo Section */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center space-x-3 mb-4">
-            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-              <Scale className="h-6 w-6 text-white" />
-            </div>
+          <Link href="/" className="inline-flex items-center mb-4">
             <div>
               <span className="text-xl font-bold text-white">LegalEase</span>
               <p className="text-xs text-white/80">Advocates & Solicitors</p>

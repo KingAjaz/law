@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useAuth } from '@/app/providers'
 import { signOut } from '@/lib/auth'
-import { Scale, Menu, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
 export function Navbar() {
@@ -116,10 +116,7 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3">
-            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isOverWhite || !isHomePage ? 'bg-brand-600' : 'bg-white/20'}`}>
-              <Scale className="h-6 w-6 text-white" />
-            </div>
+          <Link href="/" className="flex items-center">
             <div>
               <span className={`text-xl font-bold transition-colors ${logoTextClass}`}>LegalEase</span>
               <p className={`text-xs transition-colors ${subLabelClass}`}>Advocates & Solicitors</p>

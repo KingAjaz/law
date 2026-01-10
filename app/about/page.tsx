@@ -3,7 +3,7 @@
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { motion } from 'framer-motion'
-import { Scale, CheckCircle, ArrowRight } from 'lucide-react'
+import { Star, CheckCircle, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
 export default function AboutPage() {
@@ -18,7 +18,7 @@ export default function AboutPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-16"
           >
-            <Scale className="h-16 w-16 text-brand-700 mx-auto mb-6" />
+            <Star className="h-16 w-16 text-brand-700 mx-auto mb-6" fill="currentColor" />
             <h1 className="text-4xl md:text-5xl font-bold text-brand-700 mb-6">
               Built for Tech, Fintech & Modern Legal Teams
             </h1>
