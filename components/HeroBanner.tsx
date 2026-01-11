@@ -183,7 +183,7 @@ export function HeroBanner() {
                 textShadow: '-1px -1px 0 #5B002D, 1px -1px 0 #5B002D, -1px 1px 0 #5B002D, 1px 1px 0 #5B002D, 2px 2px 4px rgba(91, 0, 45, 0.5)'
               }}
             >
-              On-Demand Contract Review and Fractional General Counsel for Fintech & Technology Teams
+              On-Demand Contract Review and Fractional General Counsel Services
             </h1>
             
             {/* Dynamic Rotating Sub-Headline */}
