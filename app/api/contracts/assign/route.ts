@@ -127,7 +127,8 @@ export async function POST(request: NextRequest) {
       { headers }
     )
   } catch (error: any) {
-    logger.error('Contract assignment error', { contractId, lawyerId, error }, error instanceof Error ? error : new Error(error.message))
+    // Don't reference contractId/lawyerId here as they may not be in scope if error occurs before destructuring
+    logger.error('Contract assignment error', { error }, error instanceof Error ? error : new Error(error.message))
     const headers = createRateLimitHeaders(rateLimitResult)
     return NextResponse.json(
       { error: error.message || 'Internal server error' },
