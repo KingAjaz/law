@@ -94,6 +94,7 @@ export async function POST(request: NextRequest) {
               updated_at: new Date().toISOString(),
             })
             .eq('id', payment.contract_id)
+        }
 
         // Get user and contract details for email notification
         const { data: contract } = await supabase
