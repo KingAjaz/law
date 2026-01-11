@@ -81,8 +81,11 @@ NEXT_PUBLIC_SOCIAL_LINKEDIN=https://linkedin.com/company/yourcompany
 
 - [ ] Set Production Site URL:
   - [ ] Go to Authentication → URL Configuration
-  - [ ] Site URL: `https://yourdomain.com`
-  - [ ] Redirect URLs: Add `https://yourdomain.com/auth/callback`
+  - [ ] Site URL: `https://yourdomain.com` (⚠️ **CRITICAL**: Must be your production URL, not localhost)
+  - [ ] Redirect URLs: Add both:
+    - [ ] `http://localhost:3000/auth/callback` (for local development)
+    - [ ] `https://yourdomain.com/auth/callback` (for production)
+  - [ ] **Note**: If users are being redirected to localhost after email clicks, see `FIX_VERCEL_REDIRECT.md`
 
 - [ ] Configure Email Templates (optional customization)
 

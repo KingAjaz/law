@@ -47,14 +47,15 @@ export async function GET(request: NextRequest) {
         // If session exists and email is verified, redirect to KYC (new users need to complete KYC)
         if (data.session?.user.email_confirmed_at) {
           // Check if user has completed KYC
-          const { data: profile } = await supabase
+          // Use maybeSingle() to handle case where profile doesn't exist yet
+          const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('kyc_completed')
             .eq('id', data.session.user.id)
-            .single()
+            .maybeSingle()
           
-          // If KYC not completed, redirect to KYC page
-          if (!profile?.kyc_completed) {
+          // If profile doesn't exist or KYC not completed, redirect to KYC page
+          if (profileError || !profile || !profile.kyc_completed) {
             return NextResponse.redirect(new URL('/kyc', requestUrl.origin))
           }
           // If KYC completed, redirect to intended destination or dashboard
@@ -68,14 +69,16 @@ export async function GET(request: NextRequest) {
       // OAuth or magic link (OTP) - session should be created
       if (data.session) {
         // For new OAuth users, check KYC status
-        const { data: profile } = await supabase
+        // Use maybeSingle() to handle case where profile doesn't exist yet
+        const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('kyc_completed')
           .eq('id', data.session.user.id)
-          .single()
+          .maybeSingle()
         
-        // If KYC not completed, redirect to KYC page
-        if (!profile?.kyc_completed) {
+        // If profile doesn't exist (new OAuth user), redirect to KYC
+        // If profile exists but KYC not completed, redirect to KYC
+        if (profileError || !profile || !profile.kyc_completed) {
           return NextResponse.redirect(new URL('/kyc', requestUrl.origin))
         }
         // If KYC completed, redirect to intended destination
