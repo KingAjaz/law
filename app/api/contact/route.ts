@@ -17,8 +17,6 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { name, company, email, phone, service, message } = body
-    const emailForLogging = email || 'unknown'
-    const nameForLogging = name || 'unknown'
 
     // Validate required fields
     if (!name || !email || !message) {
@@ -82,10 +80,8 @@ export async function POST(request: NextRequest) {
       { status: 200, headers }
     )
   } catch (error: any) {
-    // email and name might not be defined if error occurs before destructuring
-    const errorEmail = typeof email !== 'undefined' ? email : 'unknown'
-    const errorName = typeof name !== 'undefined' ? name : 'unknown'
-    logger.error('Contact form error', { email: errorEmail, name: errorName, error }, error instanceof Error ? error : new Error(error.message))
+    // Don't reference email/name here as they may not be in scope if error occurs before destructuring
+    logger.error('Contact form error', { error }, error instanceof Error ? error : new Error(error.message))
     return NextResponse.json(
       { error: error.message || 'Internal server error' },
       { status: 500 }
