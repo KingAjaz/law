@@ -106,7 +106,7 @@ export async function signInWithMagicLink(email: string, redirectTo?: string) {
  * Sign in with OAuth provider
  */
 export async function signInWithOAuth(
-  provider: 'google' | 'github' | 'facebook',
+  provider: 'google',
   redirectTo?: string
 ) {
   const supabase = createSupabaseClient()

@@ -1,0 +1,56 @@
+-- Fix script for handle_new_user trigger
+-- Run this in Supabase SQL Editor if the trigger isn't working
+
+-- Ensure the function exists with correct security settings
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+DECLARE
+  user_full_name TEXT;
+BEGIN
+  -- Extract full_name from metadata
+  user_full_name := COALESCE(
+    NEW.raw_user_meta_data->>'full_name',
+    NEW.raw_user_meta_data->>'name',
+    NEW.raw_user_meta_data->>'display_name',
+    NEW.user_metadata->>'full_name',
+    NEW.user_metadata->>'name',
+    split_part(COALESCE(NEW.email, ''), '@', 1)
+  );
+
+  INSERT INTO public.profiles (id, email, full_name, role)
+  VALUES (
+    NEW.id,
+    COALESCE(NEW.email, ''),
+    user_full_name,
+    'user'
+  )
+  ON CONFLICT (id) DO UPDATE
+  SET 
+    email = COALESCE(NEW.email, profiles.email),
+    full_name = COALESCE(NULLIF(user_full_name, ''), profiles.full_name),
+    updated_at = NOW();
+  
+  RETURN NEW;
+EXCEPTION
+  WHEN others THEN
+    -- Log error but don't fail the user creation
+    RAISE WARNING 'Error creating profile for user %: %', NEW.id, SQLERRM;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Drop and recreate the trigger
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- Verify the trigger was created
+SELECT 
+  trigger_name,
+  event_manipulation,
+  event_object_table,
+  action_statement
+FROM information_schema.triggers
+WHERE trigger_name = 'on_auth_user_created';

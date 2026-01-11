@@ -7,6 +7,7 @@ import { createSupabaseClient } from '@/lib/supabase/client'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import toast from 'react-hot-toast'
+import { validateFile, getAllowedFileTypesString, formatFileSize } from '@/lib/file-validation'
 import { Upload, CheckCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -77,8 +78,10 @@ export default function KYCPage() {
     const file = e.target.files?.[0]
     if (!file) return
 
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('File size must be less than 5MB')
+    // Validate file with strict rules
+    const validation = validateFile(file, 'kyc')
+    if (!validation.valid) {
+      toast.error(validation.error || 'Invalid file')
       return
     }
 
@@ -162,16 +165,17 @@ export default function KYCPage() {
 
       if (kycError) throw kycError
 
-      // Update profile
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ kyc_completed: true })
-        .eq('id', user.id)
+      // Don't update kyc_completed immediately - wait for admin approval
+      // Set status to 'pending' (default) for admin review
+      const { error: updateStatusError } = await supabase
+        .from('kyc_data')
+        .update({ status: 'pending' })
+        .eq('user_id', user.id)
 
-      if (profileError) throw profileError
+      if (updateStatusError) throw updateStatusError
 
-      toast.success('KYC verification completed!')
-      router.push('/dashboard')
+      toast.success('KYC submission received! It will be reviewed by our team shortly.')
+      // Don't redirect - let user know it's pending
     } catch (error: any) {
       toast.error(error.message || 'Failed to submit KYC')
     } finally {
@@ -333,14 +337,16 @@ export default function KYCPage() {
                             <input
                               type="file"
                               className="sr-only"
-                              accept=".pdf,.jpg,.jpeg,.png"
+                              accept={getAllowedFileTypesString('kyc')}
                               onChange={handleFileUpload}
                               disabled={uploading}
                             />
                           </label>
                           <p className="pl-1">or drag and drop</p>
                         </div>
-                        <p className="text-xs text-gray-500">PDF, JPG, PNG up to 5MB</p>
+                        <p className="text-xs text-gray-500">
+                          PDF, JPG, PNG up to {formatFileSize(5 * 1024 * 1024)}
+                        </p>
                         {idDocument && (
                           <p className="text-sm text-green-600 mt-2">
                             <CheckCircle className="inline h-4 w-4 mr-1" />

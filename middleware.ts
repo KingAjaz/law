@@ -1,9 +1,34 @@
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { validateEnv } from '@/lib/env'
+
+// Validate environment variables once on startup
+let envValidated = false
+let envValidationResult: { valid: boolean; errors: string[]; warnings: string[] } | null = null
+
+function ensureEnvValidated() {
+  if (!envValidated) {
+    envValidationResult = validateEnv(true) // Server-side validation
+    envValidated = true
+    
+    if (!envValidationResult.valid) {
+      console.error('\n❌ Environment Variable Validation Failed:\n')
+      envValidationResult.errors.forEach((error) => console.error(`  ${error}`))
+      if (envValidationResult.warnings.length > 0) {
+        console.warn('\n⚠️  Warnings:\n')
+        envValidationResult.warnings.forEach((warning) => console.warn(`  ${warning}`))
+      }
+    }
+  }
+  return envValidationResult
+}
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
+
+  // Validate environment variables
+  const validation = ensureEnvValidated()
 
   // Public routes that don't require authentication
   const publicRoutes = [
@@ -22,8 +47,8 @@ export async function middleware(req: NextRequest) {
     '/disclaimer',
   ]
 
-  // Check if Supabase env variables are set
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  // Check if Supabase env variables are set (use validated result)
+  if (!validation?.valid || !process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     // If env variables are missing, allow public routes only
     if (publicRoutes.some((route) => pathname === route || pathname.startsWith(route))) {
       return NextResponse.next()

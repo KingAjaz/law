@@ -1,12 +1,41 @@
 'use client'
 
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { motion } from 'framer-motion'
 import { CheckCircle, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import { PRICING_TIERS } from '@/lib/constants'
+import { createSupabaseClient } from '@/lib/supabase/client'
 
 export default function PricingPage() {
+  const router = useRouter()
+  const supabase = createSupabaseClient()
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    checkAuth()
+  }, [])
+
+  const checkAuth = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+    setIsAuthenticated(!!session)
+  }
+
+  const handleGetStarted = (e: React.MouseEvent<HTMLAnchorElement>, tier?: string) => {
+    e.preventDefault()
+    if (isAuthenticated) {
+      // User is logged in, redirect to dashboard where they can upload and pay
+      router.push('/dashboard')
+    } else {
+      // User is not logged in, redirect to signup
+      router.push('/signup')
+    }
+  }
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
@@ -41,69 +70,37 @@ export default function PricingPage() {
               Contract Review Plans
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* NDA Review */}
-              <div className="card">
-                <h4 className="text-xl font-bold text-brand-700 mb-4">NDA Review</h4>
-                <div className="mb-6">
-                  <span className="text-3xl font-bold text-brand-700">NGN60,000</span>
+              {Object.entries(PRICING_TIERS).map(([tier, details], index) => (
+                <div 
+                  key={tier} 
+                  className={`card ${tier === 'sla' ? 'border-2 border-brand-600' : ''}`}
+                >
+                  {tier === 'sla' && (
+                    <div className="badge badge-info mb-4 mx-auto w-fit">Popular</div>
+                  )}
+                  <h4 className="text-xl font-bold text-brand-700 mb-4">{details.name}</h4>
+                  <div className="mb-6">
+                    <span className="text-3xl font-bold text-brand-700">
+                      ₦{details.price.toLocaleString()}
+                    </span>
+                  </div>
+                  <ul className="space-y-3 mb-6">
+                    {details.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-start">
+                        <CheckCircle className="h-5 w-5 text-brand-600 mr-2 mt-0.5 flex-shrink-0" />
+                        <span className="text-brand-700 text-sm">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link 
+                    href={isAuthenticated ? "/dashboard" : "/signup"} 
+                    onClick={(e) => handleGetStarted(e, tier)}
+                    className="btn btn-primary-beige w-full text-center"
+                  >
+                    Get Started
+                  </Link>
                 </div>
-                <ul className="space-y-3 mb-6">
-                  <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-brand-600 mr-2 mt-0.5 flex-shrink-0" />
-                    <span className="text-brand-700 text-sm">2 reviews</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-brand-600 mr-2 mt-0.5 flex-shrink-0" />
-                    <span className="text-brand-700 text-sm">30-min virtual review call with counterparty</span>
-                  </li>
-                </ul>
-                <Link href="/signup" className="btn btn-primary-beige w-full text-center">
-                  Get Started
-                </Link>
-              </div>
-
-              {/* SLA and Service Agreement Reviews */}
-              <div className="card border-2 border-brand-600">
-                <div className="badge badge-info mb-4 mx-auto w-fit">Popular</div>
-                <h4 className="text-xl font-bold text-brand-700 mb-4">SLA and Service Agreement Reviews</h4>
-                <div className="mb-6">
-                  <span className="text-3xl font-bold text-brand-700">NGN100,000</span>
-                </div>
-                <ul className="space-y-3 mb-6">
-                  <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-brand-600 mr-2 mt-0.5 flex-shrink-0" />
-                    <span className="text-brand-700 text-sm">2 reviews</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-brand-600 mr-2 mt-0.5 flex-shrink-0" />
-                    <span className="text-brand-700 text-sm">30-min virtual review call with counterparty</span>
-                  </li>
-                </ul>
-                <Link href="/signup" className="btn btn-primary-beige w-full text-center">
-                  Get Started
-                </Link>
-              </div>
-
-              {/* Tech MSAs and Order Forms */}
-              <div className="card">
-                <h4 className="text-xl font-bold text-brand-700 mb-4">Tech MSAs and Order Forms</h4>
-                <div className="mb-6">
-                  <span className="text-3xl font-bold text-brand-700">NGN150,000</span>
-                </div>
-                <ul className="space-y-3 mb-6">
-                  <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-brand-600 mr-2 mt-0.5 flex-shrink-0" />
-                    <span className="text-brand-700 text-sm">2 reviews</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-brand-600 mr-2 mt-0.5 flex-shrink-0" />
-                    <span className="text-brand-700 text-sm">1-hour virtual review call with counterparty</span>
-                  </li>
-                </ul>
-                <Link href="/signup" className="btn btn-primary-beige w-full text-center">
-                  Get Started
-                </Link>
-              </div>
+              ))}
             </div>
           </motion.div>
 
@@ -175,7 +172,11 @@ export default function PricingPage() {
                   </span>
                 </li>
               </ul>
-              <Link href="/signup" className="btn btn-primary-beige w-full text-center mt-6">
+              <Link 
+                href={isAuthenticated ? "/dashboard" : "/signup"} 
+                onClick={handleGetStarted}
+                className="btn btn-primary-beige w-full text-center mt-6"
+              >
                 Get Started
               </Link>
             </div>

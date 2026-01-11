@@ -7,10 +7,13 @@ import { createSupabaseClient } from '@/lib/supabase/client'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import toast from 'react-hot-toast'
-import { Upload, FileText, Download, Trash2, CreditCard, Clock, CheckCircle, XCircle } from 'lucide-react'
+import { Upload, FileText, Download, Trash2, CreditCard, Clock, CheckCircle, XCircle, AlertTriangle } from 'lucide-react'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { EmptyState, ErrorMessage } from '@/components/ErrorFallback'
 import { PRICING_TIERS, CONTRACT_STATUS_LABELS } from '@/lib/constants'
 import type { Contract, PricingTier } from '@/lib/types'
 import { initializePayment } from '@/lib/paystack'
+import { validateFile, getAllowedFileTypesString, formatFileSize } from '@/lib/file-validation'
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -20,6 +23,11 @@ export default function DashboardPage() {
   const [uploading, setUploading] = useState(false)
   const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null)
   const [showUploadModal, setShowUploadModal] = useState(false)
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
+  const [processingPayment, setProcessingPayment] = useState(false)
+  const [uploadingContractId, setUploadingContractId] = useState<string | null>(null)
+  const [deletingContract, setDeletingContract] = useState<string | null>(null)
+  const [contractToDelete, setContractToDelete] = useState<Contract | null>(null)
 
   useEffect(() => {
     loadContracts()
@@ -51,21 +59,14 @@ export default function DashboardPage() {
     }
   }
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-
+  // Handle payment initiation (before file upload)
+  const handlePaymentInitiation = async () => {
     if (!selectedTier) {
       toast.error('Please select a pricing tier')
       return
     }
 
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error('File size must be less than 10MB')
-      return
-    }
-
-    setUploading(true)
+    setProcessingPayment(true)
 
     try {
       const {
@@ -74,44 +75,23 @@ export default function DashboardPage() {
 
       if (!user) throw new Error('Not authenticated')
 
-      // Upload file to Supabase Storage
-      const fileExt = file.name.split('.').pop()
-      const fileName = `${user.id}-${Date.now()}.${fileExt}`
-      const filePath = `contracts/${fileName}`
-
-      const { error: uploadError } = await supabase.storage
-        .from('documents')
-        .upload(filePath, file)
-
-      if (uploadError) throw uploadError
-
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from('documents').getPublicUrl(filePath)
-
-      // Create contract record
+      // Create contract record with tier but no file yet
+      const paymentRef = `payment-${Date.now()}-${user.id}`
+      
       const { data: contract, error: contractError } = await supabase
         .from('contracts')
         .insert({
           user_id: user.id,
-          title: file.name,
-          original_file_url: publicUrl,
+          title: `Contract - ${PRICING_TIERS[selectedTier].name}`,
           pricing_tier: selectedTier,
           status: 'awaiting_payment',
           payment_status: 'pending',
+          payment_id: paymentRef,
         })
         .select()
         .single()
 
       if (contractError) throw contractError
-
-      // Initialize payment
-      const paymentRef = `contract-${contract.id}-${Date.now()}`
-      const paymentData = await initializePayment(
-        user.email!,
-        PRICING_TIERS[selectedTier].price,
-        paymentRef
-      )
 
       // Create payment record
       const { error: paymentError } = await supabase.from('payments').insert({
@@ -125,35 +105,97 @@ export default function DashboardPage() {
 
       if (paymentError) throw paymentError
 
-      // Update contract with payment ID
-      await supabase
-        .from('contracts')
-        .update({ payment_id: paymentRef })
-        .eq('id', contract.id)
+      // Initialize payment with Paystack
+      const paymentData = await initializePayment(
+        user.email!,
+        PRICING_TIERS[selectedTier].price,
+        paymentRef,
+        {
+          contract_id: contract.id,
+          pricing_tier: selectedTier,
+        }
+      )
 
       // Redirect to Paystack
       window.location.href = paymentData.data.authorization_url
     } catch (error: any) {
-      toast.error(error.message || 'Failed to upload contract')
+      toast.error(error.message || 'Failed to initialize payment')
+      setProcessingPayment(false)
+    }
+  }
+
+  // Handle file upload for contract (after payment)
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, contractId: string) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // Validate file with strict rules
+    const validation = validateFile(file, 'contract')
+    if (!validation.valid) {
+      toast.error(validation.error || 'Invalid file')
+      return
+    }
+
+    setUploadingContractId(contractId)
+    setUploading(true)
+
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('contractId', contractId)
+
+      const response = await fetch('/api/contracts/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to upload file')
+      }
+
+      toast.success('File uploaded successfully!')
+      setShowUploadModal(false)
+      loadContracts() // Reload contracts to show updated status
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to upload file')
     } finally {
       setUploading(false)
-      setShowUploadModal(false)
-      setSelectedTier(null)
+      setUploadingContractId(null)
     }
   }
 
   const handleDelete = async (contractId: string) => {
-    if (!confirm('Are you sure you want to delete this contract?')) return
+    const contract = contracts.find((c) => c.id === contractId)
+    if (!contract) return
+
+    setContractToDelete(contract)
+  }
+
+  const confirmDelete = async () => {
+    if (!contractToDelete) return
+
+    setDeletingContract(contractToDelete.id)
 
     try {
-      const { error } = await supabase.from('contracts').delete().eq('id', contractId)
+      const response = await fetch(`/api/contracts/delete?contractId=${contractToDelete.id}`, {
+        method: 'DELETE',
+      })
 
-      if (error) throw error
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to delete contract')
+      }
 
       toast.success('Contract deleted successfully')
+      setContractToDelete(null)
       loadContracts()
     } catch (error: any) {
       toast.error(error.message || 'Failed to delete contract')
+    } finally {
+      setDeletingContract(null)
     }
   }
 
@@ -169,8 +211,11 @@ export default function DashboardPage() {
       case 'completed':
         return <CheckCircle className="h-5 w-5 text-green-600" />
       case 'awaiting_payment':
-      case 'payment_confirmed':
         return <CreditCard className="h-5 w-5 text-yellow-600" />
+      case 'awaiting_upload':
+        return <Upload className="h-5 w-5 text-orange-600" />
+      case 'payment_confirmed':
+        return <CheckCircle className="h-5 w-5 text-green-600" />
       case 'under_review':
         return <Clock className="h-5 w-5 text-blue-600" />
       default:
@@ -195,23 +240,23 @@ export default function DashboardPage() {
             <motion.button
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              onClick={() => setShowUploadModal(true)}
+              onClick={() => setShowPaymentModal(true)}
               className="btn btn-primary"
             >
-              <Upload className="h-5 w-5 mr-2" />
-              Upload Contract
+              <CreditCard className="h-5 w-5 mr-2" />
+              New Contract Review
             </motion.button>
           </div>
 
-          {/* Upload Modal */}
-          {showUploadModal && (
+          {/* Payment Modal - Select Tier and Pay */}
+          {showPaymentModal && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="card max-w-2xl w-full max-h-[90vh] overflow-y-auto"
               >
-                <h2 className="text-2xl font-semibold mb-6">Upload Contract</h2>
+                <h2 className="text-2xl font-semibold mb-6">Select Pricing Tier & Pay</h2>
 
                 <div className="space-y-6">
                   <div>
@@ -238,6 +283,58 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p className="text-sm text-blue-800">
+                      <strong>Note:</strong> After payment is confirmed, you'll be able to upload your contract file for review.
+                    </p>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <button
+                      onClick={() => {
+                        setShowPaymentModal(false)
+                        setSelectedTier(null)
+                      }}
+                      className="btn btn-secondary flex-1"
+                      disabled={processingPayment}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handlePaymentInitiation}
+                      disabled={!selectedTier || processingPayment}
+                      className="btn btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {processingPayment ? 'Processing...' : (
+                        <>
+                          <CreditCard className="h-5 w-5 mr-2 inline" />
+                          Pay ₦{selectedTier ? PRICING_TIERS[selectedTier].price.toLocaleString() : ''}
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {/* Upload Modal - Upload File for Paid Contract */}
+          {showUploadModal && uploadingContractId && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="card max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              >
+                <h2 className="text-2xl font-semibold mb-6">Upload Contract File</h2>
+
+                <div className="space-y-6">
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <p className="text-sm text-green-800">
+                      <strong>Payment Confirmed!</strong> Please upload your contract file for review.
+                    </p>
+                  </div>
+
                   <div>
                     <label className="block text-sm font-medium mb-2">Upload Document *</label>
                     <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
@@ -249,14 +346,16 @@ export default function DashboardPage() {
                             <input
                               type="file"
                               className="sr-only"
-                              accept=".pdf,.doc,.docx"
-                              onChange={handleFileUpload}
-                              disabled={uploading || !selectedTier}
+                              accept={getAllowedFileTypesString('contract')}
+                              onChange={(e) => handleFileUpload(e, uploadingContractId)}
+                              disabled={uploading}
                             />
                           </label>
                           <p className="pl-1">or drag and drop</p>
                         </div>
-                        <p className="text-xs text-gray-500">PDF, DOC, DOCX up to 10MB</p>
+                        <p className="text-xs text-gray-500">
+                          PDF, DOC, DOCX up to {formatFileSize(10 * 1024 * 1024)}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -265,9 +364,10 @@ export default function DashboardPage() {
                     <button
                       onClick={() => {
                         setShowUploadModal(false)
-                        setSelectedTier(null)
+                        setUploadingContractId(null)
                       }}
                       className="btn btn-secondary flex-1"
+                      disabled={uploading}
                     >
                       Cancel
                     </button>
@@ -288,18 +388,33 @@ export default function DashboardPage() {
               ))}
             </div>
           ) : contracts.length === 0 ? (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="card text-center py-12"
+            <ErrorBoundary
+              fallback={
+                <EmptyState
+                  title="Unable to load contracts"
+                  message="There was an error loading your contracts. Please try again."
+                  action={{
+                    label: 'Retry',
+                    onClick: loadContracts,
+                  }}
+                  icon={<FileText className="h-16 w-16 text-gray-400 mx-auto" />}
+                />
+              }
             >
-              <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">No contracts yet</h3>
-              <p className="text-gray-600 mb-6">Upload your first contract to get started</p>
-              <button onClick={() => setShowUploadModal(true)} className="btn btn-primary">
-                Upload Contract
-              </button>
-            </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="card text-center py-12"
+              >
+                <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-2">No contracts yet</h3>
+                <p className="text-gray-600 mb-6">Select a pricing tier and make payment to get started</p>
+                <button onClick={() => setShowPaymentModal(true)} className="btn btn-primary">
+                  <CreditCard className="h-5 w-5 mr-2 inline" />
+                  Start Contract Review
+                </button>
+              </motion.div>
+            </ErrorBoundary>
           ) : (
             <div className="space-y-4">
               {contracts.map((contract, index) => (
@@ -333,6 +448,19 @@ export default function DashboardPage() {
                       </p>
                     </div>
                     <div className="flex gap-2">
+                      {contract.status === 'awaiting_upload' && (
+                        <button
+                          onClick={() => {
+                            setUploadingContractId(contract.id)
+                            setShowUploadModal(true)
+                          }}
+                          className="btn btn-primary"
+                          title="Upload contract file"
+                        >
+                          <Upload className="h-4 w-4 mr-2" />
+                          Upload File
+                        </button>
+                      )}
                       {contract.reviewed_file_url && (
                         <button
                           onClick={() => handleDownload(contract.reviewed_file_url!, `${contract.title}-reviewed.pdf`)}
@@ -344,10 +472,15 @@ export default function DashboardPage() {
                       )}
                       <button
                         onClick={() => handleDelete(contract.id)}
-                        className="btn btn-secondary"
+                        disabled={deletingContract === contract.id}
+                        className="btn btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
                         title="Delete contract"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        {deletingContract === contract.id ? (
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        ) : (
+                          <Trash2 className="h-4 w-4" />
+                        )}
                       </button>
                     </div>
                   </div>
@@ -357,6 +490,74 @@ export default function DashboardPage() {
           )}
         </div>
       </main>
+
+      {/* Delete Confirmation Modal */}
+      {contractToDelete && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="card max-w-md w-full"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                <AlertTriangle className="h-6 w-6 text-red-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold">Delete Contract</h3>
+                <p className="text-sm text-gray-600">This action cannot be undone</p>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <p className="text-gray-700 mb-2">
+                Are you sure you want to delete this contract?
+              </p>
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <p className="font-medium text-sm">{contractToDelete.title}</p>
+                <p className="text-xs text-gray-600 mt-1">
+                  Status: {CONTRACT_STATUS_LABELS[contractToDelete.status]}
+                </p>
+              </div>
+              <p className="text-sm text-gray-600 mt-4">
+                This will permanently delete:
+              </p>
+              <ul className="text-sm text-gray-600 mt-2 list-disc list-inside space-y-1">
+                <li>The contract record</li>
+                <li>The original document file</li>
+                {contractToDelete.reviewed_file_url && (
+                  <li>The reviewed document file</li>
+                )}
+                <li>All associated payment records</li>
+              </ul>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setContractToDelete(null)}
+                disabled={deletingContract !== null}
+                className="btn btn-secondary flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                disabled={deletingContract !== null}
+                className="btn bg-red-600 hover:bg-red-700 text-white flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {deletingContract ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2 inline-block"></div>
+                    Deleting...
+                  </>
+                ) : (
+                  'Delete Contract'
+                )}
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
 
       <Footer />
     </div>

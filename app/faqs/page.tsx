@@ -168,15 +168,20 @@ export default function FAQsPage() {
               )}
             </div>
 
-            <form onSubmit={handleChatbotSubmit} className="flex gap-2">
+            <form onSubmit={handleChatbotSubmit} className="flex gap-2" aria-label="FAQ chatbot">
+              <label htmlFor="faq-input" className="sr-only">
+                Ask a question
+              </label>
               <input
+                id="faq-input"
                 type="text"
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 placeholder="Ask a question..."
                 className="input flex-1"
+                aria-label="FAQ question input"
               />
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="btn btn-primary" aria-label="Send question">
                 Send
               </button>
             </form>

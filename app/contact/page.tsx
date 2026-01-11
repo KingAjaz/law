@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { Mail, Phone, MapPin, Send } from 'lucide-react'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
+import { CONTACT_INFO } from '@/lib/constants'
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -22,19 +23,35 @@ export default function ContactPage() {
     e.preventDefault()
     setSubmitting(true)
 
-    // Simulate form submission (replace with actual API call)
-    setTimeout(() => {
-      toast.success('Message sent successfully! We will get back to you soon.')
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message')
+      }
+
+      toast.success(data.message || 'Message sent successfully! We will get back to you soon.')
       setFormData({ name: '', company: '', email: '', phone: '', service: '', message: '' })
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to send message. Please try again.')
+    } finally {
       setSubmitting(false)
-    }, 1000)
+    }
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
 
-      <main className="flex-1 py-20">
+      <main id="main-content" className="flex-1 py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -59,7 +76,7 @@ export default function ContactPage() {
             >
               <Mail className="h-8 w-8 text-brand-600 mb-4" />
               <h3 className="text-xl font-bold text-brand-700 mb-2">Email</h3>
-              <p className="text-brand-700 font-medium">support@legalease.com</p>
+              <p className="text-brand-700 font-medium">{CONTACT_INFO.email}</p>
             </motion.div>
 
             <motion.div
@@ -70,7 +87,7 @@ export default function ContactPage() {
             >
               <Phone className="h-8 w-8 text-brand-600 mb-4" />
               <h3 className="text-xl font-bold text-brand-700 mb-2">Phone</h3>
-              <p className="text-brand-700 font-medium">+234 XXX XXX XXXX</p>
+              <p className="text-brand-700 font-medium">{CONTACT_INFO.phone}</p>
             </motion.div>
 
             <motion.div
@@ -81,7 +98,7 @@ export default function ContactPage() {
             >
               <MapPin className="h-8 w-8 text-brand-600 mb-4" />
               <h3 className="text-xl font-bold text-brand-700 mb-2">Address</h3>
-              <p className="text-brand-700 font-medium">Lagos, Nigeria</p>
+              <p className="text-brand-700 font-medium">{CONTACT_INFO.address}</p>
             </motion.div>
           </div>
 
@@ -92,58 +109,87 @@ export default function ContactPage() {
             className="card"
           >
             <h2 className="text-2xl font-bold text-brand-700 mb-6">Send us a Message</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4" aria-label="Contact form">
               <div>
-                <label className="block text-sm font-semibold mb-2 text-brand-700">Name</label>
+                <label htmlFor="contact-name" className="block text-sm font-semibold mb-2 text-brand-700">
+                  Name <span className="text-red-600" aria-label="required">*</span>
+                </label>
                 <input
+                  id="contact-name"
+                  name="name"
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="input"
                   placeholder="Your name"
+                  aria-required="true"
+                  autoComplete="name"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-2 text-brand-700">Company</label>
+                <label htmlFor="contact-company" className="block text-sm font-semibold mb-2 text-brand-700">
+                  Company <span className="text-red-600" aria-label="required">*</span>
+                </label>
                 <input
+                  id="contact-company"
+                  name="company"
                   type="text"
                   required
                   value={formData.company}
                   onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                   className="input"
                   placeholder="Your company name"
+                  aria-required="true"
+                  autoComplete="organization"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-2 text-brand-700">Email</label>
+                <label htmlFor="contact-email" className="block text-sm font-semibold mb-2 text-brand-700">
+                  Email <span className="text-red-600" aria-label="required">*</span>
+                </label>
                 <input
+                  id="contact-email"
+                  name="email"
                   type="email"
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="input"
                   placeholder="your.email@example.com"
+                  aria-required="true"
+                  autoComplete="email"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-2 text-brand-700">Phone</label>
+                <label htmlFor="contact-phone" className="block text-sm font-semibold mb-2 text-brand-700">
+                  Phone <span className="text-red-600" aria-label="required">*</span>
+                </label>
                 <input
+                  id="contact-phone"
+                  name="phone"
                   type="tel"
                   required
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   className="input"
                   placeholder="Your phone number"
+                  aria-required="true"
+                  autoComplete="tel"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-2 text-brand-700">Service Interested In</label>
+                <label htmlFor="contact-service" className="block text-sm font-semibold mb-2 text-brand-700">
+                  Service Interested In <span className="text-red-600" aria-label="required">*</span>
+                </label>
                 <select
+                  id="contact-service"
+                  name="service"
                   required
                   value={formData.service}
                   onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                   className="input"
+                  aria-required="true"
                 >
                   <option value="">Select a service</option>
                   <option value="contract-review">Contract Review</option>
@@ -154,25 +200,32 @@ export default function ContactPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-2 text-brand-700">Message</label>
+                <label htmlFor="contact-message" className="block text-sm font-semibold mb-2 text-brand-700">
+                  Message <span className="text-red-600" aria-label="required">*</span>
+                </label>
                 <textarea
+                  id="contact-message"
+                  name="message"
                   required
                   rows={6}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   className="input"
                   placeholder="Your message here..."
+                  aria-required="true"
                 />
               </div>
               <button
                 type="submit"
                 disabled={submitting}
                 className="btn btn-primary-beige w-full"
+                aria-label={submitting ? 'Sending message' : 'Send message'}
+                aria-busy={submitting}
               >
                 {submitting ? 'Sending...' : (
                   <>
                     Send Message
-                    <Send className="ml-2 h-4 w-4 inline" />
+                    <Send className="ml-2 h-4 w-4 inline" aria-hidden="true" />
                   </>
                 )}
               </button>

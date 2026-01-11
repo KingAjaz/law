@@ -5,6 +5,7 @@ import { Footer } from '@/components/Footer'
 import { motion } from 'framer-motion'
 import { Star, CheckCircle, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import { StructuredData } from '@/components/StructuredData'
 
 export default function AboutPage() {
   return (

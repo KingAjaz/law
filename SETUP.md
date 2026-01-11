@@ -24,14 +24,6 @@ npm install
      - Go to Authentication > Providers
      - Enable Google provider
      - Add your Google OAuth Client ID and Secret
-   - **GitHub OAuth** (optional):
-     - Go to Authentication > Providers
-     - Enable GitHub provider
-     - Add your GitHub OAuth App Client ID and Secret
-   - **Facebook OAuth** (optional):
-     - Go to Authentication > Providers
-     - Enable Facebook provider
-     - Add your Facebook App ID and Secret
 
 5. Configure Email Templates (optional):
    - Go to Authentication > Email Templates
@@ -58,6 +50,16 @@ PAYSTACK_SECRET_KEY=your_paystack_secret_key
 
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Contact Information (optional - defaults provided)
+NEXT_PUBLIC_CONTACT_EMAIL=support@legalease.com
+NEXT_PUBLIC_CONTACT_PHONE=+234 XXX XXX XXXX
+
+# Google OAuth (OPTIONAL - for reference only)
+# NOTE: These credentials must be configured in Supabase Dashboard → Authentication → Providers → Google
+# The app uses Supabase's OAuth configuration, not these env vars directly
+# GOOGLE_OAUTH_CLIENT_ID=your-google-client-id
+# GOOGLE_OAUTH_CLIENT_SECRET=your-google-client-secret
 ```
 
 ## Step 4: Set Up Paystack Webhook
@@ -107,8 +109,6 @@ The application supports the following authentication methods:
 
 ### 3. OAuth Authentication
 - **Google**: Sign in/sign up with Google account
-- **GitHub**: Sign in/sign up with GitHub account (optional)
-- **Facebook**: Sign in/sign up with Facebook account (optional)
 
 ### 4. Password Reset
 - Users can request a password reset via email

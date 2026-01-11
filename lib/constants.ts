@@ -1,46 +1,38 @@
 import { PricingTier } from './types'
 
 export const PRICING_TIERS: Record<PricingTier, { name: string; price: number; description: string; features: string[] }> = {
-  basic: {
-    name: 'Basic Review',
-    price: 25000,
-    description: 'Essential contract review for simple agreements',
+  nda: {
+    name: 'NDA Review',
+    price: 60000,
+    description: 'Non-Disclosure Agreement review with counterparty consultation',
     features: [
-      'Review of key terms and conditions',
-      'Identification of potential risks',
-      'Basic recommendations',
-      '5-7 business days turnaround',
+      '2 reviews',
+      '30-min virtual review call with counterparty',
     ],
   },
-  standard: {
-    name: 'Standard Review',
-    price: 50000,
-    description: 'Comprehensive review for standard business contracts',
-    features: [
-      'Detailed term analysis',
-      'Risk assessment and mitigation',
-      'Detailed recommendations',
-      '3-5 business days turnaround',
-      'Follow-up consultation (30 min)',
-    ],
-  },
-  premium: {
-    name: 'Premium Review',
+  sla: {
+    name: 'SLA and Service Agreement Reviews',
     price: 100000,
-    description: 'In-depth review with expert consultation',
+    description: 'Service Level Agreement and service agreement review with consultation',
     features: [
-      'Comprehensive contract analysis',
-      'Full risk assessment',
-      'Detailed recommendations with alternatives',
-      '1-3 business days turnaround',
-      'Follow-up consultation (1 hour)',
-      'Contract revision support',
+      '2 reviews',
+      '30-min virtual review call with counterparty',
+    ],
+  },
+  tech_msa: {
+    name: 'Tech MSAs and Order Forms',
+    price: 150000,
+    description: 'Technology Master Service Agreements and order forms review',
+    features: [
+      '2 reviews',
+      '1-hour virtual review call with counterparty',
     ],
   },
 }
 
 export const CONTRACT_STATUS_LABELS: Record<string, string> = {
   awaiting_payment: 'Awaiting Payment',
+  awaiting_upload: 'Payment Confirmed - Upload File',
   payment_confirmed: 'Payment Confirmed',
   assigned_to_lawyer: 'Assigned to Lawyer',
   under_review: 'Under Review',
@@ -49,6 +41,20 @@ export const CONTRACT_STATUS_LABELS: Record<string, string> = {
 
 export const PAYMENT_STATUS_LABELS: Record<string, string> = {
   pending: 'Pending',
-  completed: 'Completed',
+  success: 'Completed', // For payments table
+  completed: 'Completed', // For contracts.payment_status
   failed: 'Failed',
+}
+
+export const CONTACT_INFO = {
+  phone: process.env.NEXT_PUBLIC_CONTACT_PHONE || '+234 XXX XXX XXXX',
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'support@legalease.com',
+  address: 'Lagos, Nigeria',
+}
+
+export const SOCIAL_MEDIA_LINKS = {
+  facebook: process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK || null,
+  twitter: process.env.NEXT_PUBLIC_SOCIAL_TWITTER || null,
+  instagram: process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM || null,
+  linkedin: process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN || null,
 }

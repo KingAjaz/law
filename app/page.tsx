@@ -1,19 +1,47 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
+import { createSupabaseClient } from '@/lib/supabase/client'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { HeroBanner } from '@/components/HeroBanner'
+import { CONTACT_INFO } from '@/lib/constants'
+import { StructuredData, getOrganizationStructuredData, getWebsiteStructuredData, getServiceStructuredData } from '@/components/StructuredData'
 import { 
-  Scale, Users, CheckCircle, ArrowRight, Briefcase, 
+  Users, CheckCircle, ArrowRight, Briefcase, 
   Building2, Car, Coffee, Shield, Users2, Phone, Mail,
   Gavel, MessageSquare, Rocket, Building, Zap, Upload, FileText, Lightbulb
 } from 'lucide-react'
 
 export default function HomePage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const supabase = createSupabaseClient()
+
+  useEffect(() => {
+    // Check authentication status
+    const checkAuth = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      setIsAuthenticated(!!user)
+    }
+
+    checkAuth()
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session?.user)
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [])
   const expertiseAreas = [
     {
       icon: Rocket,
@@ -60,8 +88,12 @@ export default function HomePage() {
   ]
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <Navbar />
+    <>
+      <StructuredData data={getOrganizationStructuredData()} />
+      <StructuredData data={getWebsiteStructuredData()} />
+      <StructuredData data={getServiceStructuredData()} />
+      <div className="min-h-screen flex flex-col bg-white">
+        <Navbar />
 
       {/* Hero Banner with Dynamic Images */}
       <HeroBanner />
@@ -329,7 +361,7 @@ export default function HomePage() {
             className="text-center"
           >
             <Link
-              href="/signup"
+              href={isAuthenticated ? "/dashboard" : "/signup"}
               className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
             >
               <Upload className="h-5 w-5" />
@@ -532,7 +564,7 @@ export default function HomePage() {
             className="text-center"
           >
             <Link
-              href="/signup"
+              href={isAuthenticated ? "/dashboard" : "/signup"}
               className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
             >
               Request Contract Review
@@ -830,8 +862,8 @@ export default function HomePage() {
               <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-6">
                 Our Expert Professional Law Team is Always Ready to Serve You the Best Solution!
               </h2>
-              <Link href="/signup" className="btn btn-primary-beige text-lg px-8 py-4 inline-block">
-                Contact Us
+              <Link href={isAuthenticated ? "/dashboard" : "/signup"} className="btn btn-primary-beige text-lg px-8 py-4 inline-block">
+                {isAuthenticated ? "Go to Dashboard" : "Contact Us"}
               </Link>
             </motion.div>
 
@@ -850,13 +882,12 @@ export default function HomePage() {
               <div className="absolute inset-0 flex items-end">
                 <div className="p-8 w-full bg-white/90 backdrop-blur-sm">
                   <div className="flex items-center gap-3 mb-4">
-                    <Scale className="h-8 w-8 text-brand-700" />
                     <span className="text-2xl font-bold text-brand-700">LegalEase</span>
                   </div>
                   <h3 className="text-2xl font-bold mb-6 text-brand-700">Get a Free Consultation</h3>
                   <div className="flex items-center gap-3">
                     <Phone className="h-6 w-6 text-brand-600" />
-                    <span className="font-semibold text-brand-700">+234 XXX XXX XXXX</span>
+                    <span className="font-semibold text-brand-700">{CONTACT_INFO.phone}</span>
                   </div>
                 </div>
               </div>
@@ -866,6 +897,7 @@ export default function HomePage() {
       </section>
 
       <Footer />
-    </div>
+      </div>
+    </>
   )
 }

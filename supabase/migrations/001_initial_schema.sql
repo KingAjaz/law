@@ -123,7 +123,7 @@ DECLARE
   user_full_name TEXT;
 BEGIN
   -- Extract full_name from various possible locations in metadata
-  -- OAuth providers (Google, GitHub, etc.) may store it differently
+  -- OAuth provider (Google) may store it differently
   -- Google provides: raw_user_meta_data->>'full_name' or raw_user_meta_data->>'name'
   user_full_name := COALESCE(
     NEW.raw_user_meta_data->>'full_name',

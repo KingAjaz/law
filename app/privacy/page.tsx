@@ -3,6 +3,7 @@
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { motion } from 'framer-motion'
+import { CONTACT_INFO } from '@/lib/constants'
 
 export default function PrivacyPage() {
   return (
@@ -76,7 +77,10 @@ export default function PrivacyPage() {
               <section>
                 <h2 className="text-2xl font-semibold mb-4">6. Contact Us</h2>
                 <p className="text-gray-700">
-                  If you have questions about this Privacy Policy, please contact us at support@legalease.com
+                  If you have questions about this Privacy Policy, please contact us at{' '}
+                  <a href={`mailto:${CONTACT_INFO.email}`} className="text-primary-600 hover:text-primary-700 underline">
+                    {CONTACT_INFO.email}
+                  </a>
                 </p>
               </section>
             </div>

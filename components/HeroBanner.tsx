@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
+import { createSupabaseClient } from '@/lib/supabase/client'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 // Banner slide configuration
@@ -15,7 +16,7 @@ interface BannerSlide {
 const bannerSlides: BannerSlide[] = [
   {
     id: 1,
-    image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1280&q=75&auto=format&fit=crop',
+    image: '/peopletalk.jpeg',
   },
   {
     id: 2,
@@ -23,11 +24,11 @@ const bannerSlides: BannerSlide[] = [
   },
   {
     id: 3,
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1280&q=75&auto=format&fit=crop',
+    image: '/bolb.jpeg',
   },
   {
     id: 4,
-    image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1280&q=75&auto=format&fit=crop',
+    image: '/peoplemap.jpeg',
   },
 ]
 
@@ -42,6 +43,31 @@ const subHeadlines = [
 export function HeroBanner() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [currentSubHeadline, setCurrentSubHeadline] = useState(0)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const supabase = createSupabaseClient()
+
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      setIsAuthenticated(!!user)
+    }
+
+    checkAuth()
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session?.user)
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [])
 
   // Preload all images for faster transitions
   useEffect(() => {
@@ -185,10 +211,10 @@ export function HeroBanner() {
               whileTap={{ scale: 0.95 }}
             >
               <Link
-                href="/signup"
+                href={isAuthenticated ? "/dashboard" : "/signup"}
                 className="btn btn-primary text-lg px-8 py-4 inline-flex items-center gap-2"
               >
-                Get Started
+                {isAuthenticated ? "Go to Dashboard" : "Get Started"}
               </Link>
             </motion.div>
           </div>

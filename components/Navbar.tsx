@@ -112,24 +112,24 @@ export function Navbar() {
   const mobileMenuButtonClass = isOverWhite || !isHomePage ? 'text-brand-700' : 'text-white'
 
   return (
-    <nav className={navClasses}>
+    <nav className={navClasses} role="navigation" aria-label="Main navigation">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center" aria-label="LegalEase home">
             <div>
               <span className={`text-xl font-bold transition-colors ${logoTextClass}`}>LegalEase</span>
-              <p className={`text-xs transition-colors ${subLabelClass}`}>Advocates & Solicitors</p>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-8" role="list">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={`text-sm font-medium transition-colors ${linkClass(link.href)}`}
+                aria-current={pathname === link.href ? 'page' : undefined}
               >
                 {link.label}
               </Link>
@@ -145,7 +145,11 @@ export function Navbar() {
                 <Link href="/dashboard" className={`btn text-sm ${isOverWhite || !isHomePage ? 'btn-secondary' : 'btn-secondary-beige'}`}>
                   Dashboard
                 </Link>
-                <button onClick={handleSignOut} className={`btn text-sm ${isOverWhite || !isHomePage ? 'btn-ghost' : 'btn-ghost-beige'}`}>
+                <button 
+                  onClick={handleSignOut} 
+                  className={`btn text-sm ${isOverWhite || !isHomePage ? 'btn-ghost' : 'btn-ghost-beige'}`}
+                  aria-label="Sign out"
+                >
                   Sign Out
                 </button>
               </>
@@ -165,11 +169,14 @@ export function Navbar() {
           <button
             className={`md:hidden p-2 ${mobileMenuButtonClass}`}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
           >
             {mobileMenuOpen ? (
-              <X className="h-6 w-6" />
+              <X className="h-6 w-6" aria-hidden="true" />
             ) : (
-              <Menu className="h-6 w-6" />
+              <Menu className="h-6 w-6" aria-hidden="true" />
             )}
           </button>
         </div>
@@ -178,10 +185,13 @@ export function Navbar() {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <motion.div
+          id="mobile-menu"
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
           className={`md:hidden border-t ${isOverWhite || !isHomePage ? 'border-brand-200 bg-white' : 'border-brand-700 bg-brand-600'}`}
+          role="menu"
+          aria-label="Mobile navigation menu"
         >
           <div className="px-4 py-4 space-y-4">
             {navLinks.map((link) => (
@@ -190,6 +200,8 @@ export function Navbar() {
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
                 className={`block text-base font-medium ${linkClass(link.href)}`}
+                role="menuitem"
+                aria-current={pathname === link.href ? 'page' : undefined}
               >
                 {link.label}
               </Link>
@@ -210,6 +222,8 @@ export function Navbar() {
                       setMobileMenuOpen(false)
                     }}
                     className={`block btn w-full ${isOverWhite || !isHomePage ? 'btn-ghost' : 'btn-ghost-beige'}`}
+                    role="menuitem"
+                    aria-label="Sign out"
                   >
                     Sign Out
                   </button>

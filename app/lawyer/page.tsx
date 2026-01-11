@@ -10,6 +10,9 @@ import toast from 'react-hot-toast'
 import { FileText, Upload, CheckCircle, Clock, Download } from 'lucide-react'
 import type { Contract } from '@/lib/types'
 import { CONTRACT_STATUS_LABELS, PRICING_TIERS } from '@/lib/constants'
+import { validateFile, getAllowedFileTypesString, formatFileSize } from '@/lib/file-validation'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { EmptyState } from '@/components/ErrorFallback'
 
 export default function LawyerPage() {
   const router = useRouter()
@@ -17,6 +20,7 @@ export default function LawyerPage() {
   const [contracts, setContracts] = useState<Contract[]>([])
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState<string | null>(null)
+  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null)
   const [selectedFile, setSelectedFile] = useState<{ contractId: string; file: File | null }>({
     contractId: '',
     file: null,
@@ -51,6 +55,7 @@ export default function LawyerPage() {
 
   const loadContracts = async () => {
     try {
+      setLoading(true)
       const {
         data: { user },
       } = await supabase.auth.getUser()
@@ -76,8 +81,10 @@ export default function LawyerPage() {
     const file = e.target.files?.[0]
     if (!file) return
 
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error('File size must be less than 10MB')
+    // Validate file with strict rules
+    const validation = validateFile(file, 'reviewed')
+    if (!validation.valid) {
+      toast.error(validation.error || 'Invalid file')
       return
     }
 
@@ -114,17 +121,23 @@ export default function LawyerPage() {
         data: { publicUrl },
       } = supabase.storage.from('documents').getPublicUrl(filePath)
 
-      // Update contract
-      const { error: updateError } = await supabase
-        .from('contracts')
-        .update({
-          reviewed_file_url: publicUrl,
-          status: 'completed',
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', contractId)
+      // Use API route to complete review (sends email notification)
+      const response = await fetch('/api/contracts/complete-review', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contractId,
+          reviewedFileUrl: publicUrl,
+        }),
+      })
 
-      if (updateError) throw updateError
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to complete review')
+      }
 
       toast.success('Reviewed document uploaded successfully')
       setSelectedFile({ contractId: '', file: null })
@@ -137,6 +150,7 @@ export default function LawyerPage() {
   }
 
   const updateStatus = async (contractId: string, status: string) => {
+    setUpdatingStatus(contractId)
     try {
       const { error } = await supabase
         .from('contracts')
@@ -149,9 +163,11 @@ export default function LawyerPage() {
       if (error) throw error
 
       toast.success('Status updated successfully')
-      loadContracts()
+      await loadContracts()
     } catch (error: any) {
       toast.error(error.message || 'Failed to update status')
+    } finally {
+      setUpdatingStatus(null)
     }
   }
 
@@ -189,15 +205,29 @@ export default function LawyerPage() {
           </motion.div>
 
           {contracts.length === 0 ? (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="card text-center py-12"
+            <ErrorBoundary
+              fallback={
+                <EmptyState
+                  title="Unable to load contracts"
+                  message="There was an error loading your contracts. Please try again."
+                  action={{
+                    label: 'Retry',
+                    onClick: loadContracts,
+                  }}
+                  icon={<FileText className="h-16 w-16 text-gray-400 mx-auto" />}
+                />
+              }
             >
-              <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">No contracts assigned</h3>
-              <p className="text-gray-600">You don't have any contracts assigned yet</p>
-            </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="card text-center py-12"
+              >
+                <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-2">No contracts assigned</h3>
+                <p className="text-gray-600">You don't have any contracts assigned yet</p>
+              </motion.div>
+            </ErrorBoundary>
           ) : (
             <div className="space-y-4">
               {contracts.map((contract, index) => (
@@ -243,10 +273,20 @@ export default function LawyerPage() {
                     {contract.status !== 'under_review' && contract.status !== 'completed' && (
                       <button
                         onClick={() => updateStatus(contract.id, 'under_review')}
-                        className="btn btn-primary"
+                        disabled={updatingStatus === contract.id}
+                        className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <Clock className="h-4 w-4 mr-2" />
-                        Mark as Under Review
+                        {updatingStatus === contract.id ? (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            Updating...
+                          </>
+                        ) : (
+                          <>
+                            <Clock className="h-4 w-4 mr-2" />
+                            Mark as Under Review
+                          </>
+                        )}
                       </button>
                     )}
                   </div>
@@ -259,7 +299,7 @@ export default function LawyerPage() {
                         <div className="flex-1">
                           <input
                             type="file"
-                            accept=".pdf,.doc,.docx"
+                            accept={getAllowedFileTypesString('reviewed')}
                             onChange={(e) => handleFileSelect(contract.id, e)}
                             className="input"
                           />
@@ -273,10 +313,13 @@ export default function LawyerPage() {
                         <button
                           onClick={() => handleUploadReviewed(contract.id)}
                           disabled={!selectedFile.file || selectedFile.contractId !== contract.id || uploading === contract.id}
-                          className="btn btn-primary"
+                          className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {uploading === contract.id ? (
-                            'Uploading...'
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                              Uploading...
+                            </>
                           ) : (
                             <>
                               <Upload className="h-4 w-4 mr-2" />

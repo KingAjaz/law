@@ -43,9 +43,21 @@ export async function GET(request: NextRequest) {
       }
 
       if (type === 'signup' || type === 'email') {
-        // Email verification - check if email is verified
+        // Email verification flow
+        // If session exists and email is verified, redirect to KYC (new users need to complete KYC)
         if (data.session?.user.email_confirmed_at) {
-          // Email is verified, redirect to dashboard
+          // Check if user has completed KYC
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('kyc_completed')
+            .eq('id', data.session.user.id)
+            .single()
+          
+          // If KYC not completed, redirect to KYC page
+          if (!profile?.kyc_completed) {
+            return NextResponse.redirect(new URL('/kyc', requestUrl.origin))
+          }
+          // If KYC completed, redirect to intended destination or dashboard
           return NextResponse.redirect(new URL(redirect, requestUrl.origin))
         } else {
           // Email not verified yet, redirect to verification page
@@ -53,8 +65,25 @@ export async function GET(request: NextRequest) {
         }
       }
 
-      // OAuth or magic link - redirect to intended destination
-      return NextResponse.redirect(new URL(redirect, requestUrl.origin))
+      // OAuth or magic link (OTP) - session should be created
+      if (data.session) {
+        // For new OAuth users, check KYC status
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('kyc_completed')
+          .eq('id', data.session.user.id)
+          .single()
+        
+        // If KYC not completed, redirect to KYC page
+        if (!profile?.kyc_completed) {
+          return NextResponse.redirect(new URL('/kyc', requestUrl.origin))
+        }
+        // If KYC completed, redirect to intended destination
+        return NextResponse.redirect(new URL(redirect, requestUrl.origin))
+      }
+
+      // Fallback: redirect to login if no session
+      return NextResponse.redirect(new URL('/login', requestUrl.origin))
     } catch (err) {
       console.error('Auth callback error:', err)
       const errorUrl = new URL('/login', requestUrl.origin)

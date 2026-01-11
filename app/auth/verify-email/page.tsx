@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { createSupabaseClient } from '@/lib/supabase/client'
 import { resendEmailConfirmation, getCurrentUser } from '@/lib/auth'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
@@ -15,6 +16,7 @@ function VerifyEmailForm() {
   const searchParams = useSearchParams()
   const token = searchParams.get('token')
   const type = searchParams.get('type')
+  const supabase = createSupabaseClient()
   const [verified, setVerified] = useState(false)
   const [loading, setLoading] = useState(true)
   const [resending, setResending] = useState(false)
@@ -28,9 +30,18 @@ function VerifyEmailForm() {
         if (user?.email_verified) {
           setVerified(true)
           toast.success('Email verified successfully!')
-          // Redirect to dashboard after 2 seconds
+          
+          // Check KYC status and redirect accordingly
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('kyc_completed')
+            .eq('id', user.id)
+            .single()
+          
+          // Redirect to KYC if not completed, otherwise dashboard
+          const redirectPath = profile?.kyc_completed ? '/dashboard' : '/kyc'
           setTimeout(() => {
-            router.push('/dashboard')
+            router.push(redirectPath)
           }, 2000)
         } else if (user) {
           // User is logged in but email not verified
@@ -44,7 +55,7 @@ function VerifyEmailForm() {
     }
 
     verifyEmail()
-  }, [router])
+  }, [router, supabase])
 
   const handleResendEmail = async () => {
     if (!email) {
@@ -98,10 +109,10 @@ function VerifyEmailForm() {
               <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
               <h2 className="text-2xl font-bold mb-4">Email Verified!</h2>
               <p className="text-gray-400 mb-6">
-                Your email has been successfully verified. Redirecting to dashboard...
+                Your email has been successfully verified. Redirecting...
               </p>
-              <Link href="/dashboard" className="btn btn-primary">
-                Go to Dashboard
+              <Link href="/kyc" className="btn btn-primary">
+                Complete KYC
               </Link>
             </div>
           </motion.div>
