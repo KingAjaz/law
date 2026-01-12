@@ -8,7 +8,7 @@ import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import toast from 'react-hot-toast'
 import { validateFile, getAllowedFileTypesString, formatFileSize } from '@/lib/file-validation'
-import { Upload, CheckCircle } from 'lucide-react'
+import { Upload, CheckCircle, XCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -35,6 +35,8 @@ export default function KYCPage() {
   const [idDocument, setIdDocument] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [kycStatus, setKycStatus] = useState<'none' | 'pending' | 'approved' | 'rejected' | null>(null)
+  const [kycData, setKycData] = useState<any>(null)
 
   const {
     register,
@@ -52,21 +54,38 @@ export default function KYCPage() {
   })
 
   useEffect(() => {
-    // Check if user is already KYC verified
+    // Check KYC status
     const checkKYC = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser()
 
       if (user) {
+        // Check profile for kyc_completed status
         const { data: profile } = await supabase
           .from('profiles')
           .select('kyc_completed')
           .eq('id', user.id)
           .single()
 
+        // If KYC is completed, redirect to dashboard
         if (profile?.kyc_completed) {
           router.push('/dashboard')
+          return
+        }
+
+        // Check if KYC has been submitted
+        const { data: existingKyc } = await supabase
+          .from('kyc_data')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle()
+
+        if (existingKyc) {
+          setKycData(existingKyc)
+          setKycStatus(existingKyc.status || 'pending')
+        } else {
+          setKycStatus('none')
         }
       }
     }
@@ -195,8 +214,18 @@ export default function KYCPage() {
         })
       }
 
-      toast.success('KYC submission received! It will be reviewed by our team shortly.')
-      // Show message but stay on page - user can see status
+      toast.success('KYC submission received! Our admin team will review it as soon as possible. You\'ll receive an email notification once it\'s been reviewed.')
+      // Update status to show pending message
+      setKycStatus('pending')
+      // Reload KYC data to show updated status
+      const { data: updatedKyc } = await supabase
+        .from('kyc_data')
+        .select('*')
+        .eq('user_id', user.id)
+        .single()
+      if (updatedKyc) {
+        setKycData(updatedKyc)
+      }
     } catch (error: any) {
       toast.error(error.message || 'Failed to submit KYC')
     } finally {
@@ -217,17 +246,79 @@ export default function KYCPage() {
           >
             <h1 className="text-3xl font-bold text-primary-900 mb-2">KYC Verification</h1>
             <p className="text-gray-600">
-              Complete your Know Your Customer verification to access the dashboard
+              {kycStatus === 'pending' 
+                ? 'Your KYC submission is being reviewed'
+                : kycStatus === 'rejected'
+                ? 'Please review and resubmit your KYC'
+                : 'Complete your Know Your Customer verification to access the dashboard'}
             </p>
           </motion.div>
+
+          {/* KYC Status Banner */}
+          {kycStatus === 'pending' && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4"
+            >
+              <div className="flex items-start">
+                <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
+                <div className="flex-1">
+                  <h3 className="text-sm font-semibold text-blue-800 mb-1">
+                    KYC Submission Received
+                  </h3>
+                  <p className="text-sm text-blue-700">
+                    Your KYC submission has been received and is awaiting review by our admin team. 
+                    We'll notify you via email once it's been reviewed and approved. 
+                    This process usually takes 1-2 business days.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {kycStatus === 'rejected' && kycData && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4"
+            >
+              <div className="flex items-start">
+                <XCircle className="h-5 w-5 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
+                <div className="flex-1">
+                  <h3 className="text-sm font-semibold text-red-800 mb-1">
+                    KYC Submission Rejected
+                  </h3>
+                  {kycData.rejection_reason && (
+                    <div className="mb-2">
+                      <p className="text-sm font-medium text-red-800">Reason:</p>
+                      <p className="text-sm text-red-700">{kycData.rejection_reason}</p>
+                    </div>
+                  )}
+                  <p className="text-sm text-red-700">
+                    Please review the information above and resubmit your KYC with the necessary corrections.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          )}
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="card"
+            className="card relative"
           >
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {kycStatus === 'pending' && (
+              <div className="absolute inset-0 bg-white bg-opacity-90 rounded-lg flex items-center justify-center z-10 pointer-events-auto">
+                <div className="text-center">
+                  <CheckCircle className="h-12 w-12 text-blue-600 mx-auto mb-3" />
+                  <p className="text-gray-700 font-medium">KYC submission is pending review</p>
+                  <p className="text-sm text-gray-600 mt-2">You'll receive an email notification once it's been reviewed.</p>
+                </div>
+              </div>
+            )}
+            <form onSubmit={handleSubmit(onSubmit)} className={`space-y-6 ${kycStatus === 'pending' ? 'opacity-50 pointer-events-none' : ''}`}>
               {/* Personal Information */}
               <div>
                 <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
@@ -424,10 +515,10 @@ export default function KYCPage() {
 
               <button
                 type="submit"
-                disabled={submitting || uploading}
+                disabled={submitting || uploading || kycStatus === 'pending'}
                 className="btn btn-primary w-full"
               >
-                {submitting ? 'Submitting...' : 'Complete Verification'}
+                {submitting ? 'Submitting...' : kycStatus === 'pending' ? 'KYC Pending Review' : 'Complete Verification'}
               </button>
             </form>
           </motion.div>

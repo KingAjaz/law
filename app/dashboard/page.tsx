@@ -7,7 +7,7 @@ import { createSupabaseClient } from '@/lib/supabase/client'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import toast from 'react-hot-toast'
-import { Upload, FileText, Download, Trash2, CreditCard, Clock, CheckCircle, XCircle, AlertTriangle } from 'lucide-react'
+import { Upload, FileText, Download, Trash2, CreditCard, Clock, CheckCircle, XCircle, AlertTriangle, ArrowRight } from 'lucide-react'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { EmptyState, ErrorMessage } from '@/components/ErrorFallback'
 import { PRICING_TIERS, CONTRACT_STATUS_LABELS } from '@/lib/constants'
@@ -21,6 +21,7 @@ export default function DashboardPage() {
   const [contracts, setContracts] = useState<Contract[]>([])
   const [loading, setLoading] = useState(true)
   const [kycCompleted, setKycCompleted] = useState<boolean | null>(null)
+  const [kycSubmitted, setKycSubmitted] = useState<boolean>(false)
   const [uploading, setUploading] = useState(false)
   const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null)
   const [showUploadModal, setShowUploadModal] = useState(false)
@@ -43,16 +44,26 @@ export default function DashboardPage() {
 
       if (!user) return
 
+      // Check profile for kyc_completed status
       const { data: profile } = await supabase
         .from('profiles')
         .select('kyc_completed')
         .eq('id', user.id)
         .single()
 
+      // Check if KYC has been submitted (even if not approved yet)
+      const { data: kycData } = await supabase
+        .from('kyc_data')
+        .select('id, status')
+        .eq('user_id', user.id)
+        .maybeSingle()
+
       setKycCompleted(profile?.kyc_completed || false)
+      setKycSubmitted(!!kycData) // KYC has been submitted if kyc_data exists
     } catch (error: any) {
       console.error('Failed to check KYC status:', error)
       setKycCompleted(false)
+      setKycSubmitted(false)
     }
   }
 
@@ -290,17 +301,42 @@ export default function DashboardPage() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4"
+              className={`mb-6 border rounded-lg p-4 ${
+                kycSubmitted 
+                  ? 'bg-blue-50 border-blue-200' 
+                  : 'bg-yellow-50 border-yellow-200'
+              }`}
             >
               <div className="flex items-start">
-                <Clock className="h-5 w-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
+                {kycSubmitted ? (
+                  <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
+                ) : (
+                  <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
+                )}
                 <div className="flex-1">
-                  <h3 className="text-sm font-semibold text-yellow-800 mb-1">
-                    KYC Verification Pending
+                  <h3 className={`text-sm font-semibold mb-1 ${
+                    kycSubmitted ? 'text-blue-800' : 'text-yellow-800'
+                  }`}>
+                    {kycSubmitted 
+                      ? 'KYC Submission Received' 
+                      : 'KYC Verification Required'}
                   </h3>
-                  <p className="text-sm text-yellow-700">
-                    Your KYC submission is awaiting review by our team. You won't be able to make payments or upload files until your KYC is approved. We'll notify you once it's been reviewed.
+                  <p className={`text-sm mb-3 ${
+                    kycSubmitted ? 'text-blue-700' : 'text-yellow-700'
+                  }`}>
+                    {kycSubmitted 
+                      ? 'Your KYC submission has been received and is awaiting review by our admin team. We\'ll notify you via email once it\'s been reviewed and approved. You won\'t be able to make payments or upload files until your KYC is approved.'
+                      : 'Please complete your KYC (Know Your Customer) verification to continue. You won\'t be able to make payments or upload files until your KYC is approved.'}
                   </p>
+                  {!kycSubmitted && (
+                    <button
+                      onClick={() => router.push('/kyc')}
+                      className="inline-flex items-center px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-medium rounded-lg transition-colors"
+                    >
+                      Complete KYC Verification
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </button>
+                  )}
                 </div>
               </div>
             </motion.div>
