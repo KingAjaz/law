@@ -232,17 +232,11 @@ export default function KYCPage() {
       }
 
       toast.success('KYC submission received! Our admin team will review it as soon as possible. You\'ll receive an email notification once it\'s been reviewed.')
-      // Update status to show pending message
-      setKycStatus('pending')
-      // Reload KYC data to show updated status
-      const { data: updatedKyc } = await supabase
-        .from('kyc_data')
-        .select('*')
-        .eq('user_id', user.id)
-        .single()
-      if (updatedKyc) {
-        setKycData(updatedKyc)
-      }
+      
+      // Redirect to dashboard after successful submission
+      setTimeout(() => {
+        router.push('/dashboard')
+      }, 1500) // Give user time to see the success message
     } catch (error: any) {
       toast.error(error.message || 'Failed to submit KYC')
     } finally {
