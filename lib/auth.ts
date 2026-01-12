@@ -172,20 +172,41 @@ export async function updatePassword(newPassword: string) {
 
 /**
  * Resend email confirmation
+ * Note: Supabase's resend() may send emails even for non-existent users
+ * Use server-side /api/auth/resend-verification instead for better security
  */
 export async function resendEmailConfirmation(email: string) {
   const supabase = createSupabaseClient()
   
-  const { data, error } = await supabase.auth.resend({
-    type: 'signup',
-    email,
-    options: {
-      emailRedirectTo: `${window.location.origin}/auth/verify-email`,
-    },
-  })
+  // Use server-side API instead for better security (checks if user exists)
+  try {
+    const response = await fetch('/api/auth/resend-verification', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    })
+    
+    const data = await response.json()
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to resend verification email')
+    }
+    
+    return data
+  } catch (error: any) {
+    // Fallback to client-side method if server-side fails
+    // But note: this may send emails for non-existent users
+    const { data, error: resendError } = await supabase.auth.resend({
+      type: 'signup',
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback?type=signup`,
+      },
+    })
 
-  if (error) throw error
-  return data
+    if (resendError) throw resendError
+    return data
+  }
 }
 
 /**

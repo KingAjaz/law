@@ -44,15 +44,17 @@ function LoginForm() {
       router.push(redirect)
     } catch (error: any) {
       // Check if error is due to unverified email
+      // IMPORTANT: Only show resend verification if Supabase explicitly says "email not confirmed"
+      // Don't show it for generic "Invalid credentials" to prevent email enumeration
       const errorMessage = error.message || ''
       const isEmailNotConfirmed = 
-        errorMessage.includes('email not confirmed') || 
-        errorMessage.includes('Email not confirmed') ||
-        errorMessage.includes('email_not_confirmed') ||
-        errorMessage === 'EMAIL_NOT_CONFIRMED' ||
-        error.status === 400 && errorMessage.includes('Invalid login credentials')
+        errorMessage.toLowerCase().includes('email not confirmed') || 
+        errorMessage.toLowerCase().includes('email_not_confirmed') ||
+        errorMessage === 'EMAIL_NOT_CONFIRMED'
       
       if (isEmailNotConfirmed) {
+        // Only show resend verification if we're certain the email exists and is unverified
+        // This happens when Supabase explicitly says "email not confirmed"
         toast.error('Please verify your email before logging in. Check your inbox for the verification link.', {
           duration: 6000,
         })
@@ -64,11 +66,12 @@ function LoginForm() {
       } else if (errorMessage.includes('Invalid login credentials') || 
                  errorMessage.includes('invalid_credentials') ||
                  errorMessage.includes('Invalid credentials')) {
-        toast.error('Invalid email or password. Please check your credentials. If you just signed up, verify your email first.', {
+        // Don't show resend verification for invalid credentials
+        // This could be wrong email, wrong password, or non-existent user
+        // Showing resend option would reveal whether email exists (security issue)
+        toast.error('Invalid email or password. Please check your credentials.', {
           duration: 6000,
         })
-        // Show resend verification option in case they haven't verified
-        setShowResendVerification(true)
       } else {
         toast.error(errorMessage || 'Failed to login')
       }

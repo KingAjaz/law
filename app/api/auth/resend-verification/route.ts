@@ -44,9 +44,14 @@ export async function POST(request: NextRequest) {
     const user = users.users.find(u => u.email === email)
 
     if (!user) {
+      // Security: Don't reveal whether email exists or not
+      // Return generic message to prevent email enumeration
       return NextResponse.json(
-        { error: 'User not found with this email address' },
-        { status: 404 }
+        { 
+          success: true,
+          message: 'If an account exists with this email and is unverified, a verification email has been sent.',
+        },
+        { status: 200 }
       )
     }
 
