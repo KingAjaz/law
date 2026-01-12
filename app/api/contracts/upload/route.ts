@@ -3,6 +3,7 @@ import { createSupabaseServer } from '@/lib/supabase/server'
 import { validateFile } from '@/lib/file-validation'
 import { rateLimiters, createRateLimitHeaders } from '@/lib/rate-limit'
 import { logger } from '@/lib/logger'
+import { sendFileUploadNotificationToAdmin, getAdminEmails } from '@/lib/email'
 
 /**
  * API route to upload file for a contract after payment
@@ -113,6 +114,35 @@ export async function POST(request: NextRequest) {
     }
 
     logger.info('Contract file uploaded', { contractId, userId: user.id })
+
+    // Send notification to admin
+    try {
+      const { data: userProfile } = await supabase
+        .from('profiles')
+        .select('email, full_name')
+        .eq('id', user.id)
+        .single()
+
+      if (userProfile) {
+        const adminEmails = await getAdminEmails()
+        for (const adminEmail of adminEmails) {
+          await sendFileUploadNotificationToAdmin(
+            adminEmail,
+            userProfile.email,
+            userProfile.full_name || userProfile.email.split('@')[0],
+            contract.title || file.name,
+            contractId,
+            file.name
+          ).catch((error) => {
+            logger.error('Failed to send file upload notification to admin', { adminEmail, contractId, error })
+            // Don't fail the request if email fails
+          })
+        }
+      }
+    } catch (emailError) {
+      logger.error('Error sending file upload notification', { contractId, error: emailError })
+      // Don't fail the request if email fails
+    }
 
     const headers = createRateLimitHeaders(rateLimitResult)
     return NextResponse.json(

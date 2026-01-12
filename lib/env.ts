@@ -108,6 +108,16 @@ const ENV_VARS: EnvVar[] = [
     description: 'Email sender address (optional, has default)',
   },
   {
+    name: 'ADMIN_EMAIL',
+    required: false,
+    description: 'Admin email address for notifications (optional, defaults to NEXT_PUBLIC_CONTACT_EMAIL)',
+  },
+  {
+    name: 'RESEND_API_KEY',
+    required: false,
+    description: 'Resend API key for sending emails (required if EMAIL_SERVICE=resend)',
+  },
+  {
     name: 'NEXT_PUBLIC_SOCIAL_FACEBOOK',
     required: false,
     description: 'Facebook page URL (optional)',

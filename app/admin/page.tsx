@@ -79,11 +79,11 @@ export default function AdminPage() {
 
       setContracts(contractsData || [])
 
-      // Load lawyers
+      // Load lawyers and admins (since admins can also act as lawyers)
       const { data: lawyersData } = await supabase
         .from('profiles')
         .select('*')
-        .eq('role', 'lawyer')
+        .in('role', ['lawyer', 'admin'])
         .order('created_at', { ascending: false })
 
       setLawyers(lawyersData || [])
@@ -496,6 +496,7 @@ export default function AdminPage() {
                           {lawyers.map((lawyer) => (
                             <option key={lawyer.id} value={lawyer.id}>
                               {lawyer.full_name || lawyer.email}
+                              {lawyer.role === 'admin' ? ' (Admin)' : ''}
                             </option>
                           ))}
                         </select>
@@ -549,7 +550,7 @@ export default function AdminPage() {
               animate={{ opacity: 1, y: 0 }}
               className="card"
             >
-              <h2 className="text-xl font-semibold mb-4">All Lawyers</h2>
+              <h2 className="text-xl font-semibold mb-4">All Lawyers & Admins</h2>
               <div className="space-y-4">
                 {lawyers.map((lawyer) => {
                   const assignedContracts = contracts.filter((c) => c.lawyer_id === lawyer.id)
@@ -557,7 +558,14 @@ export default function AdminPage() {
                     <div key={lawyer.id} className="p-4 bg-gray-50 rounded-lg">
                       <div className="flex justify-between items-center">
                         <div>
-                          <h3 className="font-semibold">{lawyer.full_name || lawyer.email}</h3>
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-semibold">{lawyer.full_name || lawyer.email}</h3>
+                            {lawyer.role === 'admin' && (
+                              <span className="px-2 py-0.5 text-xs bg-purple-100 text-purple-700 rounded-full">
+                                Admin
+                              </span>
+                            )}
+                          </div>
                           <p className="text-sm text-gray-600">{lawyer.email}</p>
                         </div>
                         <div className="text-right">

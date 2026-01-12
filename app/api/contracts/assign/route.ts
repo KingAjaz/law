@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { getEnvVar } from '@/lib/env'
-import { sendContractAssignmentEmail } from '@/lib/email'
+import { sendContractAssignmentEmail, sendContractAssignmentNotificationToUser } from '@/lib/email'
 import { rateLimiters, createRateLimitHeaders } from '@/lib/rate-limit'
 import { logger } from '@/lib/logger'
 
@@ -60,16 +60,17 @@ export async function POST(request: NextRequest) {
       .eq('id', contract.user_id)
       .single()
 
-    // Get lawyer details
+    // Get lawyer details (can be lawyer or admin since admins can act as lawyers)
     const { data: lawyerProfile } = await supabase
       .from('profiles')
-      .select('email, full_name')
+      .select('email, full_name, role')
       .eq('id', lawyerId)
+      .in('role', ['lawyer', 'admin'])
       .single()
 
     if (!lawyerProfile) {
       return NextResponse.json(
-        { error: 'Lawyer not found' },
+        { error: 'Lawyer or admin not found. Only users with lawyer or admin role can be assigned contracts.' },
         { status: 404 }
       )
     }
@@ -110,6 +111,19 @@ export async function POST(request: NextRequest) {
         contract.pricing_tier
       ).catch((error) => {
         logger.error('Failed to send contract assignment email', { contractId, lawyerId, error }, error instanceof Error ? error : new Error(error.message))
+        // Don't fail the request if email fails
+      })
+    }
+
+    // Send email notification to user
+    if (userProfile && contract && lawyerProfile) {
+      await sendContractAssignmentNotificationToUser(
+        userProfile.email,
+        userProfile.full_name || userProfile.email.split('@')[0],
+        contract.title,
+        lawyerProfile.full_name || lawyerProfile.email.split('@')[0]
+      ).catch((error) => {
+        logger.error('Failed to send contract assignment notification to user', { contractId, userId: contract.user_id, error }, error instanceof Error ? error : new Error(error.message))
         // Don't fail the request if email fails
       })
     }

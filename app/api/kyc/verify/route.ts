@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { getEnvVar } from '@/lib/env'
 import { rateLimiters, createRateLimitHeaders } from '@/lib/rate-limit'
 import { logger } from '@/lib/logger'
+import { sendKYCApprovalEmail, sendKYCRejectionEmail, getAdminEmails } from '@/lib/email'
 
 /**
  * API route to verify (approve or reject) KYC submission
@@ -123,8 +124,38 @@ export async function POST(request: NextRequest) {
       rejectionReason: action === 'reject' ? reason : undefined,
     })
 
-    // TODO: Send email notification to user about KYC status change
-    // This should use the email service we created earlier
+    // Send email notification to user
+    try {
+      const { data: userProfile } = await supabase
+        .from('profiles')
+        .select('email, full_name')
+        .eq('id', userId)
+        .single()
+
+      if (userProfile) {
+        if (action === 'approve') {
+          await sendKYCApprovalEmail(
+            userProfile.email,
+            userProfile.full_name || userProfile.email.split('@')[0]
+          ).catch((error) => {
+            logger.error('Failed to send KYC approval email', { userId, error })
+            // Don't fail the request if email fails
+          })
+        } else if (action === 'reject') {
+          await sendKYCRejectionEmail(
+            userProfile.email,
+            userProfile.full_name || userProfile.email.split('@')[0],
+            reason
+          ).catch((error) => {
+            logger.error('Failed to send KYC rejection email', { userId, error })
+            // Don't fail the request if email fails
+          })
+        }
+      }
+    } catch (emailError) {
+      logger.error(`Error sending KYC ${action} email`, { userId, error: emailError })
+      // Don't fail the request if email fails
+    }
 
     const headers = createRateLimitHeaders(rateLimitResult)
     return NextResponse.json(

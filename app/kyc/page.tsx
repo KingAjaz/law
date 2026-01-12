@@ -173,6 +173,28 @@ export default function KYCPage() {
 
       if (updateStatusError) throw updateStatusError
 
+      // Get KYC data ID for email notification
+      const { data: kycData } = await supabase
+        .from('kyc_data')
+        .select('id')
+        .eq('user_id', user.id)
+        .single()
+
+      // Send notification to admin (non-blocking)
+      if (kycData) {
+        fetch('/api/emails/send-notification', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'kyc_submission',
+            data: { kycId: kycData.id },
+          }),
+        }).catch((error) => {
+          console.error('Failed to send KYC submission notification', error)
+          // Don't fail the submission if notification fails
+        })
+      }
+
       toast.success('KYC submission received! It will be reviewed by our team shortly.')
       // Show message but stay on page - user can see status
     } catch (error: any) {

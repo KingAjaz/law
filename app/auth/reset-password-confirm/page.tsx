@@ -71,6 +71,15 @@ function ResetPasswordConfirmForm() {
       setSuccess(true)
       toast.success('Password updated successfully!')
       
+      // Send password reset completion email (non-blocking)
+      fetch('/api/auth/password-reset-complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      }).catch((error) => {
+        console.error('Failed to send password reset completion email', error)
+        // Don't fail the password reset if email fails
+      })
+      
       // Redirect to login after 2 seconds
       setTimeout(() => {
         router.push('/login')

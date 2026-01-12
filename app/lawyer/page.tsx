@@ -152,15 +152,31 @@ export default function LawyerPage() {
   const updateStatus = async (contractId: string, status: string) => {
     setUpdatingStatus(contractId)
     try {
-      const { error } = await supabase
+      // Get current status before updating
+      const { data: currentContract } = await supabase
         .from('contracts')
-        .update({
-          status,
-          updated_at: new Date().toISOString(),
-        })
+        .select('status')
         .eq('id', contractId)
+        .single()
 
-      if (error) throw error
+      // Update status via API route (sends email notifications)
+      const response = await fetch('/api/contracts/update-status', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contractId,
+          status,
+          previousStatus: currentContract?.status,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to update status')
+      }
 
       toast.success('Status updated successfully')
       await loadContracts()

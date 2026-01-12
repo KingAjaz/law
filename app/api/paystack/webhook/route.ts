@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
 import { getEnvVar } from '@/lib/env'
-import { sendPaymentConfirmationEmail } from '@/lib/email'
+import { sendPaymentConfirmationEmail, sendPaymentNotificationToAdmin, sendPaymentFailedEmail, sendPaymentFailedNotificationToAdmin, getAdminEmails } from '@/lib/email'
 import { logger } from '@/lib/logger'
 
 export async function POST(request: NextRequest) {
@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
           .eq('id', payment.user_id)
           .single()
 
-        // Send payment confirmation email
+        // Send payment confirmation email to user
         if (userProfile && contract) {
           const amountInNaira = Number(payment.amount) / 100 // Convert from kobo
           logger.logPaymentEvent('payment_success', {
@@ -119,6 +119,8 @@ export async function POST(request: NextRequest) {
             contractId: payment.contract_id,
             status: 'success',
           })
+          
+          // Send email to user
           await sendPaymentConfirmationEmail(
             userProfile.email,
             userProfile.full_name || userProfile.email.split('@')[0],
@@ -127,8 +129,123 @@ export async function POST(request: NextRequest) {
             reference
           ).catch((error) => {
             logger.error('Failed to send payment confirmation email', { reference, error })
-            // Don't fail the webhook if email fails
           })
+
+          // Send notification to admin
+          const adminEmails = await getAdminEmails()
+          for (const adminEmail of adminEmails) {
+            await sendPaymentNotificationToAdmin(
+              adminEmail,
+              userProfile.email,
+              userProfile.full_name || userProfile.email.split('@')[0],
+              amountInNaira,
+              contract.title,
+              reference,
+              payment.contract_id
+            ).catch((error) => {
+              logger.error('Failed to send payment notification to admin', { adminEmail, reference, error })
+            })
+          }
+        }
+      }
+    }
+
+    // Handle payment failure
+    if (event.event === 'charge.failed') {
+      const { reference, amount, customer } = event.data
+
+      const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+        },
+      })
+
+      // Update payment status
+      const { error: paymentError } = await supabase
+        .from('payments')
+        .update({
+          status: 'failed',
+          updated_at: new Date().toISOString(),
+        })
+        .eq('paystack_reference', reference)
+
+      if (paymentError) {
+        logger.error('Payment update error (failed)', { reference, error: paymentError })
+      }
+
+      // Get payment and update contract status
+      const { data: payment } = await supabase
+        .from('payments')
+        .select('contract_id, user_id, amount')
+        .eq('paystack_reference', reference)
+        .single()
+
+      if (payment) {
+        // Update contract payment status
+        await supabase
+          .from('contracts')
+          .update({
+            payment_status: 'failed',
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', payment.contract_id)
+
+        // Get user and contract details for email notification
+        const { data: contract } = await supabase
+          .from('contracts')
+          .select('title, pricing_tier')
+          .eq('id', payment.contract_id)
+          .single()
+
+        const { data: userProfile } = await supabase
+          .from('profiles')
+          .select('email, full_name')
+          .eq('id', payment.user_id)
+          .single()
+
+        // Send payment failed email to user
+        if (userProfile && contract) {
+          const amountInNaira = Number(payment.amount) / 100 // Convert from kobo
+          const failureReason = event.data?.gateway_response || event.data?.message || 'Payment processing failed'
+          
+          logger.logPaymentEvent('payment_failed', {
+            reference,
+            amount: amountInNaira,
+            userId: payment.user_id,
+            contractId: payment.contract_id,
+            status: 'failed',
+            reason: failureReason,
+          })
+          
+          // Send email to user
+          await sendPaymentFailedEmail(
+            userProfile.email,
+            userProfile.full_name || userProfile.email.split('@')[0],
+            amountInNaira,
+            contract.title,
+            reference,
+            failureReason
+          ).catch((error) => {
+            logger.error('Failed to send payment failed email to user', { reference, error })
+          })
+
+          // Send notification to admin
+          const adminEmails = await getAdminEmails()
+          for (const adminEmail of adminEmails) {
+            await sendPaymentFailedNotificationToAdmin(
+              adminEmail,
+              userProfile.email,
+              userProfile.full_name || userProfile.email.split('@')[0],
+              amountInNaira,
+              contract.title,
+              reference,
+              payment.contract_id,
+              failureReason
+            ).catch((error) => {
+              logger.error('Failed to send payment failed notification to admin', { adminEmail, reference, error })
+            })
+          }
         }
       }
     }

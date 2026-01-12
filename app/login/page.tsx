@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { signInWithEmail, signInWithMagicLink, signInWithOAuth } from '@/lib/auth'
+import { signInWithEmail, signInWithMagicLink, signInWithOAuth, resendEmailConfirmation } from '@/lib/auth'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import toast from 'react-hot-toast'
@@ -18,6 +18,8 @@ function LoginForm() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [magicLinkLoading, setMagicLinkLoading] = useState(false)
+  const [resendingVerification, setResendingVerification] = useState(false)
+  const [showResendVerification, setShowResendVerification] = useState(false)
   const [authMethod, setAuthMethod] = useState<'password' | 'magic-link'>('password')
   
   // Handle error messages from query params (e.g., OAuth errors)
@@ -41,7 +43,35 @@ function LoginForm() {
       toast.success('Login successful!')
       router.push(redirect)
     } catch (error: any) {
-      toast.error(error.message || 'Failed to login')
+      // Check if error is due to unverified email
+      const errorMessage = error.message || ''
+      const isEmailNotConfirmed = 
+        errorMessage.includes('email not confirmed') || 
+        errorMessage.includes('Email not confirmed') ||
+        errorMessage.includes('email_not_confirmed') ||
+        errorMessage === 'EMAIL_NOT_CONFIRMED' ||
+        error.status === 400 && errorMessage.includes('Invalid login credentials')
+      
+      if (isEmailNotConfirmed) {
+        toast.error('Please verify your email before logging in. Check your inbox for the verification link.', {
+          duration: 6000,
+        })
+        setShowResendVerification(true)
+        // Optionally redirect to verification page after a delay
+        setTimeout(() => {
+          router.push(`/auth/verify-email?email=${encodeURIComponent(email)}`)
+        }, 3000)
+      } else if (errorMessage.includes('Invalid login credentials') || 
+                 errorMessage.includes('invalid_credentials') ||
+                 errorMessage.includes('Invalid credentials')) {
+        toast.error('Invalid email or password. Please check your credentials. If you just signed up, verify your email first.', {
+          duration: 6000,
+        })
+        // Show resend verification option in case they haven't verified
+        setShowResendVerification(true)
+      } else {
+        toast.error(errorMessage || 'Failed to login')
+      }
     } finally {
       setLoading(false)
     }
@@ -180,6 +210,37 @@ function LoginForm() {
                     </Link>
                   </div>
                 </div>
+
+                {showResendVerification && (
+                  <div className="p-3 bg-yellow-900/20 border border-yellow-700/50 rounded-lg">
+                    <p className="text-sm text-yellow-300 mb-2">
+                      Haven't verified your email yet?
+                    </p>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (!email) {
+                          toast.error('Please enter your email address first')
+                          return
+                        }
+                        setResendingVerification(true)
+                        try {
+                          await resendEmailConfirmation(email)
+                          toast.success('Verification email sent! Check your inbox.')
+                          setShowResendVerification(false)
+                        } catch (error: any) {
+                          toast.error(error.message || 'Failed to resend verification email')
+                        } finally {
+                          setResendingVerification(false)
+                        }
+                      }}
+                      disabled={resendingVerification || !email}
+                      className="text-sm text-primary-400 hover:text-primary-300 underline disabled:opacity-50"
+                    >
+                      {resendingVerification ? 'Sending...' : 'Resend verification email'}
+                    </button>
+                  </div>
+                )}
 
                 <button
                   type="submit"

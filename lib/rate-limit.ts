@@ -146,6 +146,13 @@ export const rateLimiters = {
     message: 'Too many requests. Please try again in a minute.',
   }),
 
+  // Auth operations - 10 requests per 5 minutes
+  auth: rateLimit({
+    windowMs: 5 * 60 * 1000, // 5 minutes
+    maxRequests: 10,
+    message: 'Too many authentication requests. Please try again in 5 minutes.',
+  }),
+
   // Health check - 100 requests per minute
   health: rateLimit({
     windowMs: 60 * 1000, // 1 minute

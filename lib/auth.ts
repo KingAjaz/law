@@ -81,7 +81,11 @@ export async function signInWithEmail(email: string, password: string) {
     password,
   })
 
-  if (error) throw error
+  if (error) {
+    // Supabase returns "Invalid login credentials" for unverified emails
+    // We'll handle this in the UI layer with better messaging
+    throw error
+  }
   return data
 }
 
