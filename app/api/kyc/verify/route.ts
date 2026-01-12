@@ -135,7 +135,8 @@ export async function POST(request: NextRequest) {
       { headers }
     )
   } catch (error: any) {
-    logger.error('KYC verification error', { userId, action, error }, error instanceof Error ? error : new Error(error.message))
+    // Don't reference userId/action here as they may not be in scope if error occurs before destructuring
+    logger.error('KYC verification error', { error }, error instanceof Error ? error : new Error(error.message))
     const headers = createRateLimitHeaders(rateLimitResult)
     return NextResponse.json(
       { error: error.message || 'Internal server error' },
