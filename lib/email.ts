@@ -444,6 +444,37 @@ export async function sendPasswordResetCompletionEmail(
 }
 
 /**
+ * Send email verification email with verification link
+ */
+export async function sendEmailVerificationEmail(
+  userEmail: string,
+  userName: string,
+  verificationLink: string
+): Promise<boolean> {
+  const subject = 'Verify Your Email - LegalEase'
+  const content = `
+    <p>Dear ${userName || 'there'},</p>
+    
+    <p>Welcome to LegalEase! Please verify your email address to complete your account setup and access all features.</p>
+    
+    <p>Click the button below to verify your email address. This link will expire in 1 hour.</p>
+    
+    <p>If you didn't create an account with LegalEase, please ignore this email.</p>
+  `
+
+  const html = getEmailTemplate(
+    'Verify Your Email',
+    content,
+    'Verify Email Address',
+    verificationLink
+  )
+
+  const text = `Verify Your Email\n\nDear ${userName || 'there'},\n\nWelcome to LegalEase! Please verify your email address to complete your account setup.\n\nClick this link to verify: ${verificationLink}\n\nThis link will expire in 1 hour.\n\nIf you didn't create an account with LegalEase, please ignore this email.`
+
+  return await sendEmail({ to: userEmail, subject, html, text })
+}
+
+/**
  * Send email verification reminder
  */
 export async function sendEmailVerificationReminder(

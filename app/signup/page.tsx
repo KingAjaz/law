@@ -38,7 +38,8 @@ export default function SignUpPage() {
     try {
       await signUpWithEmail(formData.email, formData.password, formData.fullName)
       toast.success('Account created! Please check your email to verify your account.')
-      router.push('/login')
+      // Redirect to verify-email page with email pre-filled
+      router.push(`/auth/verify-email?email=${encodeURIComponent(formData.email)}`)
     } catch (error: any) {
       toast.error(error.message || 'Failed to create account')
     } finally {

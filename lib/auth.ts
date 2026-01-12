@@ -62,11 +62,27 @@ export async function signUpWithEmail(email: string, password: string, fullName?
       data: {
         full_name: fullName || email.split('@')[0],
       },
-      emailRedirectTo: `${window.location.origin}/auth/verify-email`,
+      emailRedirectTo: `${window.location.origin}/auth/callback?type=signup`,
     },
   })
 
   if (error) throw error
+  
+  // Also send verification email via our email service as a fallback
+  // This ensures emails are sent even if Supabase SMTP fails
+  if (data.user && !data.user.email_confirmed_at) {
+    try {
+      await fetch('/api/auth/send-verification-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, fullName: fullName || email.split('@')[0] }),
+      })
+    } catch (emailError) {
+      // Don't fail signup if our email service fails, Supabase might have sent it
+      console.warn('Failed to send verification email via our service:', emailError)
+    }
+  }
+  
   return data
 }
 

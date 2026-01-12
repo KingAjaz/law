@@ -16,11 +16,12 @@ function VerifyEmailForm() {
   const searchParams = useSearchParams()
   const token = searchParams.get('token')
   const type = searchParams.get('type')
+  const emailParam = searchParams.get('email')
   const supabase = createSupabaseClient()
   const [verified, setVerified] = useState(false)
   const [loading, setLoading] = useState(true)
   const [resending, setResending] = useState(false)
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState(emailParam || '')
 
   useEffect(() => {
     const verifyEmail = async () => {
@@ -45,7 +46,10 @@ function VerifyEmailForm() {
           }, 2000)
         } else if (user) {
           // User is logged in but email not verified
-          setEmail(user.email || '')
+          setEmail(user.email || emailParam || '')
+        } else if (emailParam) {
+          // Email provided via query param (from signup)
+          setEmail(emailParam)
         }
         setLoading(false)
       } catch (error: any) {
@@ -65,10 +69,29 @@ function VerifyEmailForm() {
 
     setResending(true)
     try {
-      await resendEmailConfirmation(email)
-      toast.success('Verification email sent! Check your inbox.')
+      // Try server-side API first (uses our email service, more reliable)
+      try {
+        const response = await fetch('/api/auth/resend-verification', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        })
+        const data = await response.json()
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to resend verification email')
+        }
+        
+        toast.success(data.message || 'Verification email sent! Check your inbox and spam folder.')
+      } catch (apiError: any) {
+        // Fallback to client-side method
+        console.warn('Server-side resend failed, trying client-side:', apiError)
+        await resendEmailConfirmation(email)
+        toast.success('Verification email sent! Check your inbox and spam folder.')
+      }
     } catch (error: any) {
-      toast.error(error.message || 'Failed to resend verification email')
+      console.error('Resend verification error:', error)
+      toast.error(error.message || 'Failed to resend verification email. Please check your email configuration.')
     } finally {
       setResending(false)
     }

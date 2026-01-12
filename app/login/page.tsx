@@ -225,11 +225,31 @@ function LoginForm() {
                         }
                         setResendingVerification(true)
                         try {
-                          await resendEmailConfirmation(email)
-                          toast.success('Verification email sent! Check your inbox.')
-                          setShowResendVerification(false)
+                          // Try server-side API first (uses admin API, more reliable)
+                          try {
+                            const response = await fetch('/api/auth/resend-verification', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ email }),
+                            })
+                            const data = await response.json()
+                            
+                            if (!response.ok) {
+                              throw new Error(data.error || 'Failed to resend verification email')
+                            }
+                            
+                            toast.success(data.message || 'Verification email sent! Check your inbox and spam folder.')
+                            setShowResendVerification(false)
+                          } catch (apiError: any) {
+                            // Fallback to client-side method
+                            console.warn('Server-side resend failed, trying client-side:', apiError)
+                            await resendEmailConfirmation(email)
+                            toast.success('Verification email sent! Check your inbox and spam folder.')
+                            setShowResendVerification(false)
+                          }
                         } catch (error: any) {
-                          toast.error(error.message || 'Failed to resend verification email')
+                          console.error('Resend verification error:', error)
+                          toast.error(error.message || 'Failed to resend verification email. Check Supabase SMTP settings.')
                         } finally {
                           setResendingVerification(false)
                         }
