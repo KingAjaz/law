@@ -61,19 +61,41 @@ export async function POST(request: NextRequest) {
     }
 
     // Create profile using admin client (bypasses RLS)
+    // Use upsert to handle race conditions where profile might be created between check and insert
     const { data: newProfile, error: createError } = await adminSupabase
       .from('profiles')
-      .insert({
+      .upsert({
         id: user.id,
         email: user.email || '',
         full_name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || '',
         role: 'user',
+      }, {
+        onConflict: 'id',
       })
       .select()
       .single()
 
     if (createError) {
       logger.error('Failed to create profile', { userId: user.id, error: createError }, createError)
+      
+      // If it's a unique constraint violation, profile might have been created by trigger
+      // Check again to see if it exists now
+      if (createError.code === '23505' || createError.message.includes('duplicate')) {
+        const { data: existingProfileAfterError } = await adminSupabase
+          .from('profiles')
+          .select('id')
+          .eq('id', user.id)
+          .maybeSingle()
+        
+        if (existingProfileAfterError) {
+          return NextResponse.json({
+            success: true,
+            message: 'Profile already exists (created by trigger)',
+            profile: existingProfileAfterError,
+          })
+        }
+      }
+      
       return NextResponse.json(
         { error: 'Failed to create profile', details: createError.message },
         { status: 500 }
