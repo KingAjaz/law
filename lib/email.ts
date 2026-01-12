@@ -27,11 +27,59 @@ interface EmailData {
 }
 
 /**
+ * Normalize and validate email FROM field for Resend
+ * Resend requires: "email@example.com" or "Name <email@example.com>"
+ */
+function normalizeEmailFrom(emailFrom: string): string {
+  if (!emailFrom || typeof emailFrom !== 'string') {
+    throw new Error('EMAIL_FROM is required and must be a string')
+  }
+
+  // Trim whitespace
+  emailFrom = emailFrom.trim()
+
+  // If it's already in correct format "email@domain.com", return as is
+  const simpleEmailRegex = /^[^\s<>]+@[^\s<>]+\.[^\s<>]+$/
+  if (simpleEmailRegex.test(emailFrom)) {
+    return emailFrom
+  }
+
+  // Check if it matches "Name <email@domain.com>" format
+  const nameEmailRegex = /^[^<>]+<([^\s<>]+@[^\s<>]+\.[^\s<>]+)>$/
+  const match = emailFrom.match(nameEmailRegex)
+  if (match && match[1]) {
+    return emailFrom // Already in correct format
+  }
+
+  // Try to extract email from various formats
+  const emailMatch = emailFrom.match(/([^\s<>]+@[^\s<>]+\.[^\s<>]+)/)
+  if (emailMatch && emailMatch[1]) {
+    // Extract just the email address
+    return emailMatch[1]
+  }
+
+  // If we can't parse it, throw error
+  throw new Error(`Invalid EMAIL_FROM format: "${emailFrom}". Must be "email@example.com" or "Name <email@example.com>"`)
+}
+
+/**
  * Send email using Resend API
  */
 async function sendEmail({ to, subject, html, text }: EmailData): Promise<boolean> {
   try {
-    const emailFrom = process.env.EMAIL_FROM || getEnvVar('NEXT_PUBLIC_CONTACT_EMAIL', 'LegalEase <noreply@legalease.com>')
+    const emailFromRaw = process.env.EMAIL_FROM || getEnvVar('NEXT_PUBLIC_CONTACT_EMAIL', 'noreply@legalease.com')
+    
+    // Normalize and validate email FROM field
+    let emailFrom: string
+    try {
+      emailFrom = normalizeEmailFrom(emailFromRaw)
+    } catch (error: any) {
+      console.error('Invalid EMAIL_FROM format:', error.message)
+      console.error('Current EMAIL_FROM value:', emailFromRaw)
+      console.error('Resend requires format: "email@example.com" or "Name <email@example.com>"')
+      return false
+    }
+
     const emailService = process.env.EMAIL_SERVICE || 'console'
 
     // Convert single email to array for Resend
