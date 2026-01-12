@@ -146,6 +146,33 @@ export default function KYCPage() {
 
       if (!user) throw new Error('Not authenticated')
 
+      // Ensure profile exists before submitting KYC (fixes foreign key constraint)
+      const { data: existingProfile, error: profileCheckError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', user.id)
+        .maybeSingle()
+
+      if (profileCheckError) {
+        throw new Error(`Failed to check profile: ${profileCheckError.message}`)
+      }
+
+      // If profile doesn't exist, create it
+      if (!existingProfile) {
+        const { error: createProfileError } = await supabase
+          .from('profiles')
+          .insert({
+            id: user.id,
+            email: user.email || '',
+            full_name: user.user_metadata?.full_name || user.user_metadata?.name || data.firstName + ' ' + data.lastName,
+            role: 'user',
+          })
+
+        if (createProfileError) {
+          throw new Error(`Failed to create profile: ${createProfileError.message}`)
+        }
+      }
+
       // Upload ID document if not already uploaded
       let idDocumentUrl = null
       if (idDocument) {
