@@ -151,13 +151,17 @@ export async function GET(request: NextRequest) {
           } else if (profileError) {
             // Profile doesn't exist yet, might be a very new OAuth signup
             // Will be created by the database trigger, but we can still check and send notification
-            setTimeout(() => {
-              sendSignupNotifications(
-                data.session.user.id,
-                data.session.user.email,
-                data.session.user.user_metadata?.full_name || data.session.user.user_metadata?.name || ''
-              )
-            }, 2000) // Wait 2 seconds for trigger to create profile
+            const userEmail = data.session.user.email
+            const userName = data.session.user.user_metadata?.full_name || data.session.user.user_metadata?.name || ''
+            if (userEmail) {
+              setTimeout(() => {
+                sendSignupNotifications(
+                  data.session.user.id,
+                  userEmail,
+                  userName
+                )
+              }, 2000) // Wait 2 seconds for trigger to create profile
+            }
           }
         }
         
