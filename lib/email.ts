@@ -50,6 +50,14 @@ async function sendEmail({ to, subject, html, text }: EmailData): Promise<boolea
           subject,
           html,
           text: text || html.replace(/<[^>]*>/g, ''), // Strip HTML for plain text
+          // Add headers to improve deliverability
+          headers: {
+            'X-Entity-Ref-ID': `${Date.now()}-${Math.random().toString(36).substring(7)}`,
+            'List-Unsubscribe': `<${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/unsubscribe>`,
+            'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+          },
+          // Add reply-to for better deliverability
+          replyTo: process.env.EMAIL_REPLY_TO || process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'support@legalease.com',
         })
 
         if (result.error) {
