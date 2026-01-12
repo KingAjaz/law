@@ -20,6 +20,7 @@ export default function DashboardPage() {
   const supabase = createSupabaseClient()
   const [contracts, setContracts] = useState<Contract[]>([])
   const [loading, setLoading] = useState(true)
+  const [kycCompleted, setKycCompleted] = useState<boolean | null>(null)
   const [uploading, setUploading] = useState(false)
   const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null)
   const [showUploadModal, setShowUploadModal] = useState(false)
@@ -31,7 +32,29 @@ export default function DashboardPage() {
 
   useEffect(() => {
     loadContracts()
+    checkKYCStatus()
   }, [])
+
+  const checkKYCStatus = async () => {
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      if (!user) return
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('kyc_completed')
+        .eq('id', user.id)
+        .single()
+
+      setKycCompleted(profile?.kyc_completed || false)
+    } catch (error: any) {
+      console.error('Failed to check KYC status:', error)
+      setKycCompleted(false)
+    }
+  }
 
   const loadContracts = async () => {
     try {
@@ -63,6 +86,12 @@ export default function DashboardPage() {
   const handlePaymentInitiation = async () => {
     if (!selectedTier) {
       toast.error('Please select a pricing tier')
+      return
+    }
+
+    // Check KYC status
+    if (!kycCompleted) {
+      toast.error('Please complete KYC verification before making a payment. Your KYC is awaiting admin review.')
       return
     }
 
@@ -128,6 +157,12 @@ export default function DashboardPage() {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, contractId: string) => {
     const file = e.target.files?.[0]
     if (!file) return
+
+    // Check KYC status
+    if (!kycCompleted) {
+      toast.error('Please complete KYC verification before uploading files. Your KYC is awaiting admin review.')
+      return
+    }
 
     // Validate file with strict rules
     const validation = validateFile(file, 'contract')
@@ -241,12 +276,35 @@ export default function DashboardPage() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               onClick={() => setShowPaymentModal(true)}
-              className="btn btn-primary"
+              disabled={!kycCompleted}
+              className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              title={!kycCompleted ? 'Please complete KYC verification first' : ''}
             >
               <CreditCard className="h-5 w-5 mr-2" />
               New Contract Review
             </motion.button>
           </div>
+
+          {/* KYC Status Banner */}
+          {kycCompleted === false && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4"
+            >
+              <div className="flex items-start">
+                <Clock className="h-5 w-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
+                <div className="flex-1">
+                  <h3 className="text-sm font-semibold text-yellow-800 mb-1">
+                    KYC Verification Pending
+                  </h3>
+                  <p className="text-sm text-yellow-700">
+                    Your KYC submission is awaiting review by our team. You won't be able to make payments or upload files until your KYC is approved. We'll notify you once it's been reviewed.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          )}
 
           {/* Payment Modal - Select Tier and Pay */}
           {showPaymentModal && (
@@ -302,8 +360,9 @@ export default function DashboardPage() {
                     </button>
                     <button
                       onClick={handlePaymentInitiation}
-                      disabled={!selectedTier || processingPayment}
+                      disabled={!selectedTier || processingPayment || !kycCompleted}
                       className="btn btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                      title={!kycCompleted ? 'Please complete KYC verification first' : ''}
                     >
                       {processingPayment ? 'Processing...' : (
                         <>
@@ -409,7 +468,12 @@ export default function DashboardPage() {
                 <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-2">No contracts yet</h3>
                 <p className="text-gray-600 mb-6">Select a pricing tier and make payment to get started</p>
-                <button onClick={() => setShowPaymentModal(true)} className="btn btn-primary">
+                <button 
+                  onClick={() => setShowPaymentModal(true)} 
+                  disabled={!kycCompleted}
+                  className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                  title={!kycCompleted ? 'Please complete KYC verification first' : ''}
+                >
                   <CreditCard className="h-5 w-5 mr-2 inline" />
                   Start Contract Review
                 </button>
@@ -451,11 +515,16 @@ export default function DashboardPage() {
                       {contract.status === 'awaiting_upload' && (
                         <button
                           onClick={() => {
+                            if (!kycCompleted) {
+                              toast.error('Please complete KYC verification before uploading files. Your KYC is awaiting admin review.')
+                              return
+                            }
                             setUploadingContractId(contract.id)
                             setShowUploadModal(true)
                           }}
-                          className="btn btn-primary"
-                          title="Upload contract file"
+                          disabled={!kycCompleted}
+                          className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                          title={!kycCompleted ? 'Please complete KYC verification first' : 'Upload contract file'}
                         >
                           <Upload className="h-4 w-4 mr-2" />
                           Upload File

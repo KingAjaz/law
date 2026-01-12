@@ -16,70 +16,26 @@ If you see "bucket not available" when uploading files (KYC documents, contracts
    - You can configure RLS policies later for more security
 7. Click **"Create bucket"**
 
-### Step 2: Configure RLS Policies (Optional but Recommended)
+### Step 2: Configure RLS Policies (Required!)
 
-After creating the bucket, you can add Row Level Security (RLS) policies for better security. Go to **Storage > Policies** and add the policies from `supabase/storage-setup.md`, or run this SQL in the SQL Editor:
+After creating the bucket, you **must** add Row Level Security (RLS) policies or uploads will fail with "new row violates row-level security policy".
 
-```sql
--- Enable RLS on storage.objects (if not already enabled)
-ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+**⚠️ Important:** Storage RLS policies cannot be created via SQL in the dashboard (you'll get a "must be owner of table objects" error). You need to create them through the Supabase Dashboard UI.
 
--- Allow authenticated users to upload KYC documents
-CREATE POLICY "Users can upload KYC documents"
-ON storage.objects FOR INSERT
-TO authenticated
-WITH CHECK (
-  bucket_id = 'documents' 
-  AND name LIKE 'kyc-documents/%'
-  AND (storage.foldername(name))[2] LIKE auth.uid()::text || '-%'
-);
+**Follow the guide in `STORAGE_RLS_SETUP_DASHBOARD.md` for step-by-step instructions on creating policies via the Dashboard UI.**
 
--- Allow users to read their own KYC documents
-CREATE POLICY "Users can read their own KYC documents"
-ON storage.objects FOR SELECT
-TO authenticated
-USING (
-  bucket_id = 'documents' 
-  AND name LIKE 'kyc-documents/%'
-  AND (storage.foldername(name))[2] LIKE auth.uid()::text || '-%'
-);
-
--- Allow users to upload contract files
-CREATE POLICY "Users can upload contracts"
-ON storage.objects FOR INSERT
-TO authenticated
-WITH CHECK (
-  bucket_id = 'documents' 
-  AND (name LIKE 'contracts/%' OR name LIKE 'reviewed-contracts/%')
-);
-
--- Allow users to read contract files
-CREATE POLICY "Users can read contracts"
-ON storage.objects FOR SELECT
-TO authenticated
-USING (
-  bucket_id = 'documents' 
-  AND (
-    name LIKE 'contracts/%' 
-    OR name LIKE 'reviewed-contracts/%'
-    OR name LIKE 'kyc-documents/%'
-  )
-);
-
--- Allow admins to read all files
-CREATE POLICY "Admins can read all files"
-ON storage.objects FOR SELECT
-TO authenticated
-USING (
-  bucket_id = 'documents' 
-  AND EXISTS (
-    SELECT 1 FROM profiles
-    WHERE id = auth.uid() AND role = 'admin'
-  )
-);
-```
-
-**Note:** For a quick fix, you can skip the RLS policies and just make the bucket public. You can add security policies later.
+**Quick Summary:**
+1. Go to **Storage** → Click on **`documents`** bucket → **Policies** tab
+2. Create a policy for **INSERT** operations:
+   - Name: `Users can upload KYC documents`
+   - Operation: `INSERT`
+   - Role: `authenticated`
+   - WITH CHECK: `bucket_id = 'documents' AND name LIKE 'kyc-documents/%'`
+3. Create a policy for **SELECT** operations:
+   - Name: `Users can read KYC documents`
+   - Operation: `SELECT`
+   - Role: `authenticated`
+   - USING: `bucket_id = 'documents' AND name LIKE 'kyc-documents/%'`
 
 ## Test It
 After creating the bucket:

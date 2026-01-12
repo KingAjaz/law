@@ -165,8 +165,7 @@ export default function KYCPage() {
 
       if (kycError) throw kycError
 
-      // Don't update kyc_completed immediately - wait for admin approval
-      // Set status to 'pending' (default) for admin review
+      // Set status to 'pending' for admin review (default, but explicit)
       const { error: updateStatusError } = await supabase
         .from('kyc_data')
         .update({ status: 'pending' })
@@ -175,7 +174,7 @@ export default function KYCPage() {
       if (updateStatusError) throw updateStatusError
 
       toast.success('KYC submission received! It will be reviewed by our team shortly.')
-      // Don't redirect - let user know it's pending
+      // Show message but stay on page - user can see status
     } catch (error: any) {
       toast.error(error.message || 'Failed to submit KYC')
     } finally {
