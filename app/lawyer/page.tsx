@@ -263,8 +263,13 @@ export default function LawyerPage() {
 
                   <div className="flex gap-4 mb-4">
                     <button
-                      onClick={() => handleDownload(contract.original_file_url, contract.title)}
-                      className="btn btn-outline"
+                      onClick={() => {
+                        if (contract.original_file_url) {
+                          handleDownload(contract.original_file_url, contract.title)
+                        }
+                      }}
+                      disabled={!contract.original_file_url}
+                      className="btn btn-outline disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <Download className="h-4 w-4 mr-2" />
                       Download Original
