@@ -62,7 +62,8 @@ export async function POST(request: NextRequest) {
     const headers = createRateLimitHeaders(rateLimitResult)
     return NextResponse.json(data, { headers })
   } catch (error: any) {
-    logger.error('Payment initialization error', { email, amount, reference, error }, error instanceof Error ? error : new Error(error.message))
+    // Don't reference email/amount/reference here as they may not be in scope if error occurs before destructuring
+    logger.error('Payment initialization error', { error }, error instanceof Error ? error : new Error(error.message))
     const headers = createRateLimitHeaders(rateLimitResult)
     return NextResponse.json(
       { error: error.message || 'Internal server error' },
