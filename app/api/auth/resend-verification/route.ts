@@ -62,8 +62,9 @@ export async function POST(request: NextRequest) {
 
     // Generate a new confirmation token and send email
     // Using admin API to generate confirmation link
+    // For existing users, use 'magiclink' type which doesn't require password
     const { data: generateLinkData, error: generateLinkError } = await supabase.auth.admin.generateLink({
-      type: 'signup',
+      type: 'magiclink',
       email: email,
       options: {
         redirectTo: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/auth/callback?type=signup`,

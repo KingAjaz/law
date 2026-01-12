@@ -61,9 +61,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate verification link using Supabase Admin API
+    // Use 'magiclink' type for email verification (works for unverified users)
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
     const { data: generateLinkData, error: generateLinkError } = await supabase.auth.admin.generateLink({
-      type: 'signup',
+      type: 'magiclink',
       email: email,
       options: {
         redirectTo: `${appUrl}/auth/callback?type=signup`,
