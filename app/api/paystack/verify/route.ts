@@ -113,7 +113,8 @@ export async function GET(request: NextRequest) {
     const headers = createRateLimitHeaders(rateLimitResult)
     return NextResponse.json(data, { headers })
   } catch (error: any) {
-    logger.error('Unexpected error in payment verification', { reference, error }, error instanceof Error ? error : new Error(error.message))
+    // Don't reference reference here as it may not be in scope if error occurs before destructuring
+    logger.error('Unexpected error in payment verification', { error }, error instanceof Error ? error : new Error(error.message))
     const headers = createRateLimitHeaders(rateLimitResult)
     return NextResponse.json(
       { error: error.message || 'An unexpected error occurred while verifying payment' },
