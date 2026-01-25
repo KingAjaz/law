@@ -24,6 +24,7 @@ export default function DashboardPage() {
   const [kycSubmitted, setKycSubmitted] = useState<boolean>(false)
   const [uploading, setUploading] = useState(false)
   const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null)
+  const [paymentStep, setPaymentStep] = useState<'selection' | 'invoice'>('selection')
   const [showUploadModal, setShowUploadModal] = useState(false)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [processingPayment, setProcessingPayment] = useState(false)
@@ -35,6 +36,13 @@ export default function DashboardPage() {
     loadContracts()
     checkKYCStatus()
   }, [])
+
+  useEffect(() => {
+    if (showPaymentModal) {
+      setPaymentStep('selection')
+      setSelectedTier(null)
+    }
+  }, [showPaymentModal])
 
   const checkKYCStatus = async () => {
     try {
@@ -117,7 +125,7 @@ export default function DashboardPage() {
 
       // Create contract record with tier but no file yet
       const paymentRef = `payment-${Date.now()}-${user.id}`
-      
+
       const { data: contract, error: contractError } = await supabase
         .from('contracts')
         .insert({
@@ -301,11 +309,10 @@ export default function DashboardPage() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`mb-6 border rounded-lg p-4 ${
-                kycSubmitted 
-                  ? 'bg-blue-50 border-blue-200' 
-                  : 'bg-yellow-50 border-yellow-200'
-              }`}
+              className={`mb-6 border rounded-lg p-4 ${kycSubmitted
+                ? 'bg-blue-50 border-blue-200'
+                : 'bg-yellow-50 border-yellow-200'
+                }`}
             >
               <div className="flex items-start">
                 {kycSubmitted ? (
@@ -314,17 +321,15 @@ export default function DashboardPage() {
                   <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
                 )}
                 <div className="flex-1">
-                  <h3 className={`text-sm font-semibold mb-1 ${
-                    kycSubmitted ? 'text-blue-800' : 'text-yellow-800'
-                  }`}>
-                    {kycSubmitted 
-                      ? 'KYC Submission Received' 
+                  <h3 className={`text-sm font-semibold mb-1 ${kycSubmitted ? 'text-blue-800' : 'text-yellow-800'
+                    }`}>
+                    {kycSubmitted
+                      ? 'KYC Submission Received'
                       : 'KYC Verification Required'}
                   </h3>
-                  <p className={`text-sm mb-3 ${
-                    kycSubmitted ? 'text-blue-700' : 'text-yellow-700'
-                  }`}>
-                    {kycSubmitted 
+                  <p className={`text-sm mb-3 ${kycSubmitted ? 'text-blue-700' : 'text-yellow-700'
+                    }`}>
+                    {kycSubmitted
                       ? 'Your KYC submission has been received and is awaiting review by our admin team. We\'ll notify you via email once it\'s been reviewed and approved. You won\'t be able to make payments or upload files until your KYC is approved.'
                       : 'Please complete your KYC (Know Your Customer) verification to continue. You won\'t be able to make payments or upload files until your KYC is approved.'}
                   </p>
@@ -342,7 +347,7 @@ export default function DashboardPage() {
             </motion.div>
           )}
 
-          {/* Payment Modal - Select Tier and Pay */}
+          {/* Payment Modal - Select Tier / Invoice / Pay */}
           {showPaymentModal && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
               <motion.div
@@ -350,65 +355,141 @@ export default function DashboardPage() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="card max-w-2xl w-full max-h-[90vh] overflow-y-auto"
               >
-                <h2 className="text-2xl font-semibold mb-6">Select Pricing Tier & Pay</h2>
+                {paymentStep === 'selection' ? (
+                  <>
+                    <h2 className="text-2xl font-semibold mb-6">Select Pricing Tier</h2>
+                    <div className="space-y-6">
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Select Service *</label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {Object.entries(PRICING_TIERS)
+                            .filter(([_, details]) => !details.deprecated)
+                            .map(([tier, details]) => (
+                              <button
+                                key={tier}
+                                type="button"
+                                onClick={() => setSelectedTier(tier as PricingTier)}
+                                className={`p-4 border-2 rounded-lg text-left transition-all ${selectedTier === tier
+                                  ? 'border-primary-700 bg-primary-50'
+                                  : 'border-gray-200 hover:border-primary-300'
+                                  }`}
+                              >
+                                <h3 className="font-semibold mb-1">{details.name}</h3>
+                                <p className="text-2xl font-bold text-primary-700 mb-2">
+                                  ₦{details.price.toLocaleString()}
+                                </p>
+                                <p className="text-sm text-gray-600 line-clamp-2">{details.description}</p>
+                              </button>
+                            ))}
+                        </div>
+                      </div>
 
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Select Pricing Tier *</label>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {Object.entries(PRICING_TIERS).map(([tier, details]) => (
+                      <div className="flex gap-4">
                         <button
-                          key={tier}
-                          type="button"
-                          onClick={() => setSelectedTier(tier as PricingTier)}
-                          className={`p-4 border-2 rounded-lg text-left transition-all ${
-                            selectedTier === tier
-                              ? 'border-primary-700 bg-primary-50'
-                              : 'border-gray-200 hover:border-primary-300'
-                          }`}
+                          onClick={() => {
+                            setShowPaymentModal(false)
+                            setSelectedTier(null)
+                          }}
+                          className="btn btn-secondary flex-1"
                         >
-                          <h3 className="font-semibold mb-1">{details.name}</h3>
-                          <p className="text-2xl font-bold text-primary-700 mb-2">
-                            ₦{details.price.toLocaleString()}
-                          </p>
-                          <p className="text-sm text-gray-600">{details.description}</p>
+                          Cancel
                         </button>
-                      ))}
+                        <button
+                          onClick={() => setPaymentStep('invoice')}
+                          disabled={!selectedTier}
+                          className="btn btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Generate Invoice
+                          <ArrowRight className="h-4 w-4 ml-2" />
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  </>
+                ) : (
+                  <>
+                    <h2 className="text-2xl font-semibold mb-6">Proforma Invoice</h2>
 
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <p className="text-sm text-blue-800">
-                      <strong>Note:</strong> After payment is confirmed, you'll be able to upload your contract file for review.
-                    </p>
-                  </div>
+                    {selectedTier && (
+                      <div className="space-y-6">
+                        <div className="bg-white border rounded-lg overflow-hidden">
+                          <div className="bg-gray-50 px-6 py-4 border-b flex justify-between items-center">
+                            <div>
+                              <p className="text-sm text-gray-500 uppercase tracking-wider font-semibold">Invoice Preview</p>
+                              <p className="text-xs text-gray-400">Date: {new Date().toLocaleDateString()}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-bold text-primary-900">LegalEase</p>
+                            </div>
+                          </div>
 
-                  <div className="flex gap-4">
-                    <button
-                      onClick={() => {
-                        setShowPaymentModal(false)
-                        setSelectedTier(null)
-                      }}
-                      className="btn btn-secondary flex-1"
-                      disabled={processingPayment}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handlePaymentInitiation}
-                      disabled={!selectedTier || processingPayment || !kycCompleted}
-                      className="btn btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
-                      title={!kycCompleted ? 'Please complete KYC verification first' : ''}
-                    >
-                      {processingPayment ? 'Processing...' : (
-                        <>
-                          <CreditCard className="h-5 w-5 mr-2 inline" />
-                          Pay ₦{selectedTier ? PRICING_TIERS[selectedTier].price.toLocaleString() : ''}
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
+                          <div className="p-6">
+                            <div className="flex justify-between items-start mb-8">
+                              <div>
+                                <h3 className="text-lg font-bold mb-1">Bill To:</h3>
+                                <p className="text-gray-600">User ID: {contracts[0]?.user_id || 'Current User'}</p>
+                              </div>
+                            </div>
+
+                            <table className="w-full mb-8">
+                              <thead>
+                                <tr className="border-b-2 border-gray-200">
+                                  <th className="text-left py-2 font-semibold text-gray-600">Service Description</th>
+                                  <th className="text-right py-2 font-semibold text-gray-600">Amount</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr className="border-b border-gray-100">
+                                  <td className="py-4">
+                                    <p className="font-medium">{PRICING_TIERS[selectedTier].name}</p>
+                                    <p className="text-sm text-gray-500">{PRICING_TIERS[selectedTier].description}</p>
+                                  </td>
+                                  <td className="text-right py-4 font-medium">
+                                    ₦{PRICING_TIERS[selectedTier].price.toLocaleString()}
+                                  </td>
+                                </tr>
+                              </tbody>
+                              <tfoot>
+                                <tr>
+                                  <td className="pt-4 text-right font-bold text-lg">Total Due:</td>
+                                  <td className="pt-4 text-right font-bold text-lg text-primary-700">
+                                    ₦{PRICING_TIERS[selectedTier].price.toLocaleString()}
+                                  </td>
+                                </tr>
+                              </tfoot>
+                            </table>
+
+                            <div className="bg-blue-50 border border-blue-200 rounded p-4 text-sm text-blue-800 mb-4">
+                              <p><strong>Note:</strong> This is a generated invoice preview. Proceeding to payment constitutes acceptance of these charges.</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-4">
+                          <button
+                            onClick={() => setPaymentStep('selection')}
+                            className="btn btn-secondary flex-1"
+                            disabled={processingPayment}
+                          >
+                            Back to Selection
+                          </button>
+                          <button
+                            onClick={handlePaymentInitiation}
+                            disabled={processingPayment || !kycCompleted}
+                            className="btn btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                            title={!kycCompleted ? 'Please complete KYC verification first' : ''}
+                          >
+                            {processingPayment ? 'Processing Payment...' : (
+                              <>
+                                <CreditCard className="h-5 w-5 mr-2 inline" />
+                                Proceed to Checkout
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
               </motion.div>
             </div>
           )}
@@ -504,8 +585,8 @@ export default function DashboardPage() {
                 <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-2">No contracts yet</h3>
                 <p className="text-gray-600 mb-6">Select a pricing tier and make payment to get started</p>
-                <button 
-                  onClick={() => setShowPaymentModal(true)} 
+                <button
+                  onClick={() => setShowPaymentModal(true)}
                   disabled={!kycCompleted}
                   className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
                   title={!kycCompleted ? 'Please complete KYC verification first' : ''}

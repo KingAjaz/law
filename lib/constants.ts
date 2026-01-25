@@ -1,32 +1,78 @@
 import { PricingTier } from './types'
 
-export const PRICING_TIERS: Record<PricingTier, { name: string; price: number; description: string; features: string[] }> = {
-  nda: {
-    name: 'NDA Review',
+export const PRICING_TIERS: Record<PricingTier, { name: string; price: number; description: string; features: string[]; deprecated?: boolean }> = {
+  nda_basic: {
+    name: 'NDA Review (Basic)',
     price: 60000,
-    description: 'Non-Disclosure Agreement review with counterparty consultation',
+    description: 'Basic Non-Disclosure Agreement review',
+    features: [
+      '1 review',
+    ],
+  },
+  nda_premium: {
+    name: 'NDA Review (Premium)',
+    price: 120000,
+    description: 'Premium Non-Disclosure Agreement review with negotiation',
     features: [
       '2 reviews',
-      '30-min virtual review call with counterparty',
+      '30 min contract negotiation call with counterparty',
     ],
+  },
+  sla_basic: {
+    name: 'SLA Review (Basic)',
+    price: 160000,
+    description: 'Basic Service Level Agreement review',
+    features: [
+      '2 reviews',
+    ],
+  },
+  sla_premium: {
+    name: 'SLA Review (Premium)',
+    price: 240000,
+    description: 'Premium Service Level Agreement review with negotiation',
+    features: [
+      '3 reviews',
+      '60 min contract negotiation call with counterparty',
+    ],
+  },
+  tech_msa_basic: {
+    name: 'SaaS/MSA Review (Basic)',
+    price: 220000,
+    description: 'Basic SaaS Order Form or MSA review',
+    features: [
+      '2 reviews',
+    ],
+  },
+  tech_msa_premium: {
+    name: 'SaaS/MSA Review (Premium)',
+    price: 300000,
+    description: 'Premium SaaS Order Form or MSA review with negotiation',
+    features: [
+      '3 reviews',
+      '60 min contract negotiation call with counterparty',
+    ],
+  },
+  // Legacy Tiers (approximated for display)
+  nda: {
+    name: 'NDA Review (Legacy)',
+    price: 60000,
+    description: 'Non-Disclosure Agreement review',
+    features: ['Legacy'],
+    deprecated: true,
   },
   sla: {
-    name: 'SLA and Service Agreement Reviews',
+    name: 'SLA Review (Legacy)',
     price: 100000,
-    description: 'Service Level Agreement and service agreement review with consultation',
-    features: [
-      '2 reviews',
-      '30-min virtual review call with counterparty',
-    ],
+    description: 'Service Level Agreement review',
+    features: ['Legacy'],
+    deprecated: true,
   },
   tech_msa: {
-    name: 'Tech MSAs and Order Forms',
+    name: 'Tech MSA (Legacy)',
     price: 150000,
-    description: 'Technology Master Service Agreements and order forms review',
-    features: [
-      '2 reviews',
-      '1-hour virtual review call with counterparty',
-    ],
+    description: 'Technology Master Service Agreements',
+    features: ['Legacy'],
+    deprecated: true,
   },
 }
 

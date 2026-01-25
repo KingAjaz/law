@@ -1,0 +1,182 @@
+Total pages: 5
+
+================================================================================
+PAGE 1
+================================================================================
+
+1  
+➢ Change header from ‘On -Demand Contract Review and Fractional General 
+Counsel Services’ to  ‘Legal Process Outsourcing and Fractional GC Services’  
+➢ Delete all the pictures on the landing page except the skyscraper picture, I’ll send 
+images to you tomorrow.  
+ 
+ 
+➢ You can delete this page  
+ 
+ 
+ 
+➢ You can delete this page  
+ 
+  
+
+
+================================================================================
+PAGE 2
+================================================================================
+
+2  
+➢ Change ‘Service/Expertise’ to just ‘Our Services’  
+➢ Change ‘On -Demand Contract Review’ to ‘Legal Process Outsourcing’  
+➢ Change ‘ Our reviews give you clear summaries, risk flags, and concise advice  — all 
+delivered securely on your schedule .’ to ‘Our reviews give you clear summaries, risk 
+flags, and concise advice  — all delivered securely on schedule . 
+ 
+ 
+Our Services  
+ 
+Legal Process Outsourcing  
+Precise Contract Reviews — Fast Turnaround  
+ 
+We focus on the contracts that matter to your operations. We review operational agreements 
+such as:  
+● NDAs & Confidentiality Agreements  
+ 
+● Service Level Agreements (SLAs)  
+ 
+● Master Service Agreements (MSAs)  
+ 
+● Vendor & Partnership Agreements  
+ 
+● Other operational documents  
+ 
+Our reviews give you clear summaries, risk flags, and concise advice  — all delivered securely 
+on schedule.  
+Call To Action:  
+      Request Contract Review  
+ 
+Fractional General Counsel  
+Strategic Counsel — Fractional & Scalable  
+ 
+Not ready for a full -time GC? We provide flexible counsel for:  
+● Regulatory advisory  
+ 
+● Contract review  
+ 
+
+
+================================================================================
+PAGE 3
+================================================================================
+
+3 ● Legal strategy  
+ 
+● Data and IP Protection  
+ 
+● Cross -functional risk alignment  
+ 
+● Legal operations  
+ 
+Call To Action:  
+      Engage a Fractional Counsel  
+ 
+Recruitment & Training  
+Grow Your Legal Team — With Support  
+ 
+Need to recruit or train your in -house legal team? We support you with:  
+● Hiring guidance for legal roles  
+ 
+● Onboarding and training frameworks  
+ 
+● Practical workshops for contract management and legal operations  
+ 
+Call To Action:  
+      Contact us to learn more  
+ 
+ 
+  
+
+================================================================================
+PAGE 4
+================================================================================
+
+4  
+➢ No need to show pricing on this page, just a call to action redirecting them to the 
+Pricing Page  
+➢ Call to action - See Full Pricing & Plans  
+ 
+Pricing Plan  
+ 
+➢ Legal Process Outsourcing  
+○ NDA Review  
+■ Basic - 1 review - NGN 60,000  
+■ Premium - 2 reviews and 30 minute contract negotiation call with the 
+counterparty - NGN 120,000  
+○ SLA and Service Agreement Review  
+■ Basic - 2 reviews - NGN 160,000  
+■ Premium - 3 reviews and 60 minute contract negotiation call with the 
+counterparty - NGN 240,000  
+○ SaaS Order Forms and MSAs  
+■ Basic - 2 reviews - NGN 220,000  
+■ Premium - 3 reviews and 60 minute  contract negotiation call with the 
+counterparty - NGN 300,000  
+ 
+➢ Fractional GC Services  
+○ Half-Yearly/Annual Support  
+■ Legal Advisory & Strategy: Provide proactive, sound, and pragmatic legal 
+advice to the CEO, Board of Directors, and all internal departments on a 
+wide range of legal and regulatory matters.  
+■ Contract Management: Draft, review, and negotiate commercial 
+agreements, including vendor contracts, partnership agreements, 
+licensing agreements, API agreements, master services agreements and 
+terms of service.  
+■ Product Development Support: Partner with product and engineering 
+teams to ensure new products and services (e.g., lending, payments, 
+etc.) are structured in line with regulatory expectations from the outset.  
+■ Risk Management: Identify potential legal and regulatory risks, developing 
+strategies and internal controls to mitigate exposure and protect the 
+company's interests.  
+■ Data Privacy : Advise on data protection and security issues, ensuring 
+compliance with the Nigeria Data Protection Act (NDPA)  
+
+
+================================================================================
+PAGE 5
+================================================================================
+
+5 ■ IP: Advise on IP protection framework.  
+■ Litigation & Dispute Resolution: Manage all disputes, regulatory inquiries, 
+and litigation matters, coordinating with external counsel when necessary.  
+■ Team Leadership: Develop and mentor an in -house legal team, fostering 
+a strong culture of compliance and ethical conduct across the 
+organisation.  
+  
+Call to action - Get a quote  
+ 
+ 
+ 
+Recruitment & Training  
+● Grow Your Legal Team — With Support  
+ 
+Need to recruit or train your in -house legal team? We support you with:  
+● Hiring guidance for legal roles  
+ 
+● Onboarding and training frameworks  
+ 
+● Practical workshops for contract management and legal operations  
+ 
+Call to action - Get a quote  
+ 
+ 
+ 
+ 
+ 
+Other Updates  
+ 
+➢ Replace the bulb picture on the landing page with the one here  
+➢ Emails sent to info@legaleaseadvisory and counsel@legaleaseadvisory are not 
+delivered.  
+➢ Need to update the payments page to generate invoice based on selections before 
+proceeding to checkout  
+➢ Checkout page should be paystack for small businesses  
+➢ To update KYC page for signing on  
+ 

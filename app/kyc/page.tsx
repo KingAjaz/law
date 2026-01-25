@@ -146,23 +146,6 @@ export default function KYCPage() {
 
       if (!user) throw new Error('Not authenticated')
 
-      // Ensure profile exists before submitting KYC (fixes foreign key constraint)
-      // Use API endpoint to bypass RLS and create profile if needed
-      try {
-        const ensureProfileResponse = await fetch('/api/profiles/ensure', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-        })
-
-        if (!ensureProfileResponse.ok) {
-          const errorData = await ensureProfileResponse.json()
-          throw new Error(errorData.error || 'Failed to ensure profile exists')
-        }
-      } catch (profileError: any) {
-        // If profile creation fails, throw error to show to user
-        throw new Error(`Failed to create profile: ${profileError.message}`)
-      }
-
       // Upload ID document if not already uploaded
       let idDocumentUrl = null
       if (idDocument) {
@@ -232,11 +215,17 @@ export default function KYCPage() {
       }
 
       toast.success('KYC submission received! Our admin team will review it as soon as possible. You\'ll receive an email notification once it\'s been reviewed.')
-      
-      // Redirect to dashboard after successful submission
-      setTimeout(() => {
-        router.push('/dashboard')
-      }, 1500) // Give user time to see the success message
+      // Update status to show pending message
+      setKycStatus('pending')
+      // Reload KYC data to show updated status
+      const { data: updatedKyc } = await supabase
+        .from('kyc_data')
+        .select('*')
+        .eq('user_id', user.id)
+        .single()
+      if (updatedKyc) {
+        setKycData(updatedKyc)
+      }
     } catch (error: any) {
       toast.error(error.message || 'Failed to submit KYC')
     } finally {

@@ -36,6 +36,25 @@ export default function PricingPage() {
       router.push('/signup')
     }
   }
+  // Group pricing tiers by category
+  const categories = [
+    {
+      id: 'nda',
+      title: 'NDA Review',
+      tiers: ['nda_basic', 'nda_premium']
+    },
+    {
+      id: 'sla',
+      title: 'SLA and Service Agreement',
+      tiers: ['sla_basic', 'sla_premium']
+    },
+    {
+      id: 'tech_msa',
+      title: 'SaaS Order Forms and MSAs',
+      tiers: ['tech_msa_basic', 'tech_msa_premium']
+    }
+  ]
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
@@ -59,46 +78,72 @@ export default function PricingPage() {
             </p>
           </motion.div>
 
-          {/* Contract Review Plans */}
+          {/* Legal Process Outsourcing */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mb-16"
+            className="mb-20"
           >
             <h3 className="text-3xl font-bold text-brand-700 mb-8 text-center">
-              Contract Review Plans
+              Legal Process Outsourcing
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {Object.entries(PRICING_TIERS).map(([tier, details], index) => (
-                <div 
-                  key={tier} 
-                  className={`card ${tier === 'sla' ? 'border-2 border-brand-600' : ''}`}
-                >
-                  {tier === 'sla' && (
-                    <div className="badge badge-info mb-4 mx-auto w-fit">Popular</div>
-                  )}
-                  <h4 className="text-xl font-bold text-brand-700 mb-4">{details.name}</h4>
-                  <div className="mb-6">
-                    <span className="text-3xl font-bold text-brand-700">
-                      ₦{details.price.toLocaleString()}
-                    </span>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {categories.map((category) => (
+                <div key={category.id} className="flex flex-col gap-6">
+                  <div className="bg-brand-50 rounded-xl p-6 h-full flex flex-col border border-brand-100">
+                    <h4 className="text-xl font-bold text-brand-700 mb-6 text-center h-14 flex items-center justify-center">
+                      {category.title}
+                    </h4>
+
+                    <div className="space-y-6 flex-1">
+                      {category.tiers.map((tierKey) => {
+                        // Cast to handle the string indexing, though in a real app better typing is preferred
+                        // @ts-ignore
+                        const tier = PRICING_TIERS[tierKey]
+                        if (!tier) return null
+
+                        const isPremium = tierKey.includes('premium')
+
+                        return (
+                          <div
+                            key={tierKey}
+                            className={`bg-white rounded-lg p-6 shadow-sm border ${isPremium ? 'border-brand-400 ring-1 ring-brand-100' : 'border-gray-100'}`}
+                          >
+                            <div className="flex justify-between items-start mb-2">
+                              <span className={`text-sm font-bold px-2 py-1 rounded ${isPremium ? 'bg-brand-100 text-brand-800' : 'bg-gray-100 text-gray-600'}`}>
+                                {isPremium ? 'Premium' : 'Basic'}
+                              </span>
+                            </div>
+
+                            <div className="mb-4">
+                              <span className="text-2xl font-bold text-brand-700">
+                                ₦{tier.price.toLocaleString()}
+                              </span>
+                            </div>
+
+                            <ul className="space-y-2 mb-6 min-h-[80px]">
+                              {tier.features.map((feature: string, idx: number) => (
+                                <li key={idx} className="flex items-start">
+                                  <CheckCircle className="h-4 w-4 text-brand-600 mr-2 mt-1 flex-shrink-0" />
+                                  <span className="text-gray-600 text-sm leading-snug">{feature}</span>
+                                </li>
+                              ))}
+                            </ul>
+
+                            <Link
+                              href={isAuthenticated ? "/dashboard" : "/signup"}
+                              onClick={(e) => handleGetStarted(e, tierKey)}
+                              className={`btn w-full text-center text-sm ${isPremium ? 'btn-primary-beige' : 'btn-secondary'}`}
+                            >
+                              Get Started
+                            </Link>
+                          </div>
+                        )
+                      })}
+                    </div>
                   </div>
-                  <ul className="space-y-3 mb-6">
-                    {details.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-brand-600 mr-2 mt-0.5 flex-shrink-0" />
-                        <span className="text-brand-700 text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Link 
-                    href={isAuthenticated ? "/dashboard" : "/signup"} 
-                    onClick={(e) => handleGetStarted(e, tier)}
-                    className="btn btn-primary-beige w-full text-center"
-                  >
-                    Get Started
-                  </Link>
                 </div>
               ))}
             </div>
@@ -112,73 +157,105 @@ export default function PricingPage() {
             className="mb-16"
           >
             <h3 className="text-3xl font-bold text-brand-700 mb-4 text-center">
-              Fractional GC Plans
+              Fractional GC Services
             </h3>
-            <div className="card max-w-4xl mx-auto">
-              <h4 className="text-2xl font-bold text-brand-700 mb-4">Half-Yearly/Annual Support</h4>
-              <div className="mb-6">
-                <span className="text-3xl font-bold text-brand-700">NGN18,000</span>
-                <span className="text-brand-700 ml-2">per hour</span>
+            <div className="card max-w-5xl mx-auto">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-gray-100 pb-6">
+                <div>
+                  <h4 className="text-2xl font-bold text-brand-700 mb-2">Half-Yearly/Annual Support</h4>
+                  <p className="text-gray-600">Comprehensive legal support for your growing business</p>
+                </div>
+                <div className="mt-4 md:mt-0">
+                  <Link
+                    href="/contact"
+                    className="btn btn-primary-beige px-8"
+                  >
+                    Get a Quote
+                  </Link>
+                </div>
               </div>
-              <ul className="space-y-3">
-                <li className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-0.5 flex-shrink-0" />
-                  <span className="text-brand-700 text-sm">
-                    <strong>Legal Advisory & Strategy:</strong> Provide proactive, sound, and pragmatic legal advice
-                    to the CEO, Board of Directors, and all internal departments on a wide range of
-                    legal and regulatory matters.
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-0.5 flex-shrink-0" />
-                  <span className="text-brand-700 text-sm">
-                    <strong>Contract Management:</strong> Draft, review, and negotiate commercial agreements, including vendor contracts, partnership agreements, licensing agreements, API agreements, master services agreements and terms of service.
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-0.5 flex-shrink-0" />
-                  <span className="text-brand-700 text-sm">
-                    <strong>Product Development Support:</strong> Partner with product and engineering teams to ensure new products and services (e.g., lending, payments, etc.) are structured in line with regulatory expectations from the outset.
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-0.5 flex-shrink-0" />
-                  <span className="text-brand-700 text-sm">
-                    <strong>Risk Management:</strong> Identify potential legal and regulatory risks, developing strategies and internal controls to mitigate exposure and protect the company's interests.
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-0.5 flex-shrink-0" />
-                  <span className="text-brand-700 text-sm">
-                    <strong>Data Privacy:</strong> Advise on data protection and security issues, ensuring compliance with the Nigeria Data Protection Act (NDPA).
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-0.5 flex-shrink-0" />
-                  <span className="text-brand-700 text-sm">
-                    <strong>IP:</strong> Advise on IP protection framework.
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-0.5 flex-shrink-0" />
-                  <span className="text-brand-700 text-sm">
-                    <strong>Litigation & Dispute Resolution:</strong> Manage all disputes, regulatory inquiries, and litigation matters, coordinating with external counsel when necessary.
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-0.5 flex-shrink-0" />
-                  <span className="text-brand-700 text-sm">
-                    <strong>Team Leadership:</strong> Develop and mentor an in-house legal team, fostering a strong culture of compliance and ethical conduct across the organisation.
-                  </span>
-                </li>
-              </ul>
-              <Link 
-                href={isAuthenticated ? "/dashboard" : "/signup"} 
-                onClick={handleGetStarted}
-                className="btn btn-primary-beige w-full text-center mt-6"
-              >
-                Get Started
-              </Link>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                <div className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <div>
+                    <strong className="text-brand-700 block mb-1">Legal Advisory & Strategy</strong>
+                    <span className="text-gray-600 text-sm leading-relaxed">
+                      Provide proactive, sound, and pragmatic legal advice to the CEO, Board of Directors, and all internal departments.
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <div>
+                    <strong className="text-brand-700 block mb-1">Contract Management</strong>
+                    <span className="text-gray-600 text-sm leading-relaxed">
+                      Draft, review, and negotiate commercial agreements, including vendor contracts, partnership agreements, licensing agreements, and MSAs.
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <div>
+                    <strong className="text-brand-700 block mb-1">Product Development Support</strong>
+                    <span className="text-gray-600 text-sm leading-relaxed">
+                      Partner with product teams to ensure new products (lending, payments, etc.) are structured in line with regulatory expectations.
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <div>
+                    <strong className="text-brand-700 block mb-1">Risk Management</strong>
+                    <span className="text-gray-600 text-sm leading-relaxed">
+                      Identify potential legal and regulatory risks, developing strategies and internal controls to mitigate exposure.
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <div>
+                    <strong className="text-brand-700 block mb-1">Data Privacy</strong>
+                    <span className="text-gray-600 text-sm leading-relaxed">
+                      Advise on data protection and security issues, ensuring compliance with the Nigeria Data Protection Act (NDPA).
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <div>
+                    <strong className="text-brand-700 block mb-1">IP Protection</strong>
+                    <span className="text-gray-600 text-sm leading-relaxed">
+                      Advise on IP protection framework and strategy.
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <div>
+                    <strong className="text-brand-700 block mb-1">Litigation & Dispute Resolution</strong>
+                    <span className="text-gray-600 text-sm leading-relaxed">
+                      Manage all disputes, regulatory inquiries, and litigation matters, coordinating with external counsel when necessary.
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <div>
+                    <strong className="text-brand-700 block mb-1">Team Leadership</strong>
+                    <span className="text-gray-600 text-sm leading-relaxed">
+                      Develop and mentor an in-house legal team, fostering a strong culture of compliance and ethical conduct.
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </motion.div>
 
@@ -193,30 +270,33 @@ export default function PricingPage() {
               Recruitment & Training
             </h3>
             <div className="card max-w-4xl mx-auto">
-              <h4 className="text-2xl font-bold text-brand-700 mb-4">Grow Your Legal Team — With Support</h4>
-              <p className="text-brand-700 mb-6">
-                Need to recruit or train your in-house legal team? We support you with:
-              </p>
-              <ul className="space-y-3 mb-6">
-                <li className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-0.5 flex-shrink-0" />
-                  <span className="text-brand-700 text-sm">Hiring guidance for legal roles</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-0.5 flex-shrink-0" />
-                  <span className="text-brand-700 text-sm">Onboarding and training frameworks</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-0.5 flex-shrink-0" />
-                  <span className="text-brand-700 text-sm">Practical workshops for contract management and legal operations</span>
-                </li>
-              </ul>
-              <div className="mb-6">
-                <span className="text-2xl font-bold text-brand-700">Customized per request</span>
+              <div className="text-center mb-8">
+                <h4 className="text-2xl font-bold text-brand-700 mb-2">Grow Your Legal Team — With Support</h4>
+                <p className="text-brand-700">
+                  Need to recruit or train your in-house legal team? We support you with:
+                </p>
               </div>
-              <Link href="/contact" className="btn btn-primary-beige w-full text-center">
-                Contact Us
-              </Link>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="bg-brand-50 rounded-lg p-6 text-center">
+                  <h5 className="font-semibold text-brand-700 mb-2">Hiring Guidance</h5>
+                  <p className="text-sm text-gray-600">Expert support for legal roles</p>
+                </div>
+                <div className="bg-brand-50 rounded-lg p-6 text-center">
+                  <h5 className="font-semibold text-brand-700 mb-2">Onboarding</h5>
+                  <p className="text-sm text-gray-600">Training frameworks & workshops</p>
+                </div>
+                <div className="bg-brand-50 rounded-lg p-6 text-center">
+                  <h5 className="font-semibold text-brand-700 mb-2">Operations</h5>
+                  <p className="text-sm text-gray-600">Contract management best practices</p>
+                </div>
+              </div>
+
+              <div className="text-center">
+                <Link href="/contact" className="btn btn-primary-beige px-10">
+                  Get a Quote
+                </Link>
+              </div>
             </div>
           </motion.div>
         </div>

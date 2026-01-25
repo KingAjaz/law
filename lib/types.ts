@@ -8,7 +8,12 @@ export type ContractStatus =
   | 'under_review'
   | 'completed'
 
-export type PricingTier = 'nda' | 'sla' | 'tech_msa'
+export type PricingTier =
+  | 'nda_basic' | 'nda_premium'
+  | 'sla_basic' | 'sla_premium'
+  | 'tech_msa_basic' | 'tech_msa_premium'
+  // Legacy tiers
+  | 'nda' | 'sla' | 'tech_msa'
 
 export interface User {
   id: string

@@ -16,19 +16,19 @@ interface BannerSlide {
 const bannerSlides: BannerSlide[] = [
   {
     id: 1,
-    image: '/peopletalk.jpeg',
+    image: '/IMG_9911.PNG',
   },
   {
     id: 2,
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1280&q=75&auto=format&fit=crop',
+    image: '/IMG_9912.PNG',
   },
   {
     id: 3,
-    image: '/bolb.jpeg',
+    image: '/IMG_9912 (1).PNG',
   },
   {
     id: 4,
-    image: '/peoplemap.jpeg',
+    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1280&q=75&auto=format&fit=crop',
   },
 ]
 
@@ -72,7 +72,7 @@ export function HeroBanner() {
   // Preload all images for faster transitions
   useEffect(() => {
     if (typeof window === 'undefined') return
-    
+
     const preloadImages = () => {
       bannerSlides.forEach((slide, index) => {
         // Check if link already exists to avoid duplicates
@@ -143,16 +143,16 @@ export function HeroBanner() {
       <div className="absolute inset-0 bg-black">
         {bannerSlides.map((slide, index) => {
           const isActive = index === currentSlide
-          
+
           return (
             <motion.div
               key={slide.id}
               initial={false}
-              animate={{ 
+              animate={{
                 opacity: isActive ? 1 : 0,
               }}
-              transition={{ 
-                duration: 1.5, 
+              transition={{
+                duration: 1.5,
                 ease: [0.4, 0, 0.2, 1]
               }}
               className="absolute inset-0"
@@ -177,15 +177,15 @@ export function HeroBanner() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="max-w-4xl">
             {/* Primary Headline (H1) - Static */}
-            <h1 
+            <h1
               className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 text-white leading-tight"
               style={{
                 textShadow: '-1px -1px 0 #5B002D, 1px -1px 0 #5B002D, -1px 1px 0 #5B002D, 1px 1px 0 #5B002D, 2px 2px 4px rgba(91, 0, 45, 0.5)'
               }}
             >
-              On-Demand Contract Review and Fractional General Counsel Services
+              Legal Process Outsourcing and Fractional GC Services
             </h1>
-            
+
             {/* Dynamic Rotating Sub-Headline */}
             <div className="h-12 md:h-16 mb-8 flex items-center">
               <AnimatePresence mode="wait">
@@ -243,11 +243,10 @@ export function HeroBanner() {
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 ${
-              index === currentSlide
-                ? 'bg-brand-500 w-8'
-                : 'bg-white/40 hover:bg-white/60'
-            }`}
+            className={`w-3 h-3 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 ${index === currentSlide
+              ? 'bg-brand-500 w-8'
+              : 'bg-white/40 hover:bg-white/60'
+              }`}
             aria-label={`Go to slide ${index + 1}`}
             aria-current={index === currentSlide ? 'true' : 'false'}
           />
