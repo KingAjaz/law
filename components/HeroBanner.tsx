@@ -16,15 +16,15 @@ interface BannerSlide {
 const bannerSlides: BannerSlide[] = [
   {
     id: 1,
-    image: '/IMG_9911.PNG',
+    image: '/amazing-night-panorama-of-dubai-marina-dubai-uni-2026-01-07-01-25-06-utc (2).jpg',
   },
   {
     id: 2,
-    image: '/IMG_9912.PNG',
+    image: '/burj-khalifa-in-dubai-downtown-skyscrapers-highris-2026-01-09-09-10-41-utc (2).jpg',
   },
   {
     id: 3,
-    image: '/IMG_9912 (1).PNG',
+    image: '/low-angle-of-axel-towers-an-iconic-mixed-use-offi-2026-01-07-07-25-36-utc (2).jpg',
   },
   {
     id: 4,
