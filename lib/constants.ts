@@ -102,5 +102,5 @@ export const SOCIAL_MEDIA_LINKS = {
   facebook: process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK || null,
   twitter: process.env.NEXT_PUBLIC_SOCIAL_TWITTER || null,
   instagram: process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM || null,
-  linkedin: process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN || null,
+  linkedin: process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN || 'https://www.linkedin.com/company/legalease',
 }
