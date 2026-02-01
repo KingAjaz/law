@@ -187,15 +187,16 @@ export function HeroBanner() {
             </h1>
 
             {/* Dynamic Rotating Sub-Headline */}
-            <div className="h-12 md:h-16 mb-8 flex items-center">
+            {/* Dynamic Rotating Sub-Headline */}
+            <div className="relative min-h-[9rem] md:min-h-[6rem] mb-8">
               <AnimatePresence mode="wait">
                 <motion.p
                   key={currentSubHeadline}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
+                  exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-                  className="text-lg md:text-xl lg:text-2xl text-gray-200 leading-relaxed"
+                  className="text-lg md:text-xl lg:text-2xl text-gray-200 leading-relaxed absolute top-0 left-0 w-full"
                   style={{
                     textShadow: '-1px -1px 0 #5B002D, 1px -1px 0 #5B002D, -1px 1px 0 #5B002D, 1px 1px 0 #5B002D, 2px 2px 4px rgba(91, 0, 45, 0.5)'
                   }}
@@ -217,25 +218,29 @@ export function HeroBanner() {
                 {isAuthenticated ? "Go to Dashboard" : "Get Started"}
               </Link>
             </motion.div>
+
+            {/* Mobile Navigation Arrows */}
+            <div className="flex gap-4 mt-8">
+              <button
+                onClick={goToPrevious}
+                className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                aria-label="Previous slide"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+              <button
+                onClick={goToNext}
+                className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                aria-label="Next slide"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Navigation Arrows */}
-      <button
-        onClick={goToPrevious}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500"
-        aria-label="Previous slide"
-      >
-        <ChevronLeft className="h-6 w-6" />
-      </button>
-      <button
-        onClick={goToNext}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500"
-        aria-label="Next slide"
-      >
-        <ChevronRight className="h-6 w-6" />
-      </button>
+
 
       {/* Dots Indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2" aria-label="Slide indicators">
