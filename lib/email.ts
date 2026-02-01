@@ -68,7 +68,7 @@ function normalizeEmailFrom(emailFrom: string): string {
 async function sendEmail({ to, subject, html, text }: EmailData): Promise<boolean> {
   try {
     const emailFromRaw = process.env.EMAIL_FROM || getEnvVar('NEXT_PUBLIC_CONTACT_EMAIL', 'noreply@legalease.com')
-    
+
     // Normalize and validate email FROM field
     let emailFrom: string
     try {
@@ -334,7 +334,7 @@ export async function sendContractAssignmentEmail(
   pricingTier: string
 ): Promise<boolean> {
   const tierInfo = PRICING_TIERS[pricingTier as keyof typeof PRICING_TIERS]
-  
+
   const subject = 'New Contract Assigned - LegalEase'
   const content = `
     <p>Dear ${lawyerName || 'there'},</p>
@@ -793,7 +793,7 @@ export async function getAdminEmails(): Promise<string[]> {
     // Try to fetch admin emails from database
     const supabaseUrl = getEnvVar('NEXT_PUBLIC_SUPABASE_URL')
     const supabaseServiceKey = getEnvVar('SUPABASE_SERVICE_ROLE_KEY')
-    
+
     if (supabaseUrl && supabaseServiceKey) {
       const supabase = createClient(supabaseUrl, supabaseServiceKey, {
         auth: {
@@ -801,12 +801,12 @@ export async function getAdminEmails(): Promise<string[]> {
           persistSession: false,
         },
       })
-      
+
       const { data: admins, error } = await supabase
         .from('profiles')
         .select('email')
         .eq('role', 'admin')
-      
+
       if (!error && admins && admins.length > 0) {
         return admins.map((admin: { email: string }) => admin.email).filter(Boolean) as string[]
       }
@@ -815,8 +815,64 @@ export async function getAdminEmails(): Promise<string[]> {
     // Fallback to environment variables if database fetch fails
     console.warn('Failed to fetch admin emails from database, using environment variables:', error)
   }
-  
+
   // Fallback to environment variable or default
   const adminEmail = process.env.ADMIN_EMAIL || process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'admin@legalease.com'
   return [adminEmail]
+}
+
+/**
+ * Send contact form submission email to admin
+ */
+export async function sendContactFormEmailToAdmin(
+  name: string,
+  email: string,
+  message: string,
+  company?: string,
+  phone?: string,
+  service?: string
+): Promise<boolean> {
+  const adminEmails = await getAdminEmails()
+
+  const subject = `New Contact Form Submission - ${name}`
+  const content = `
+    <p>You have received a new message from the contact form:</p>
+    
+    <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+      <p style="margin: 0;"><strong>Name:</strong> ${name}</p>
+      <p style="margin: 5px 0 0 0;"><strong>Email:</strong> ${email}</p>
+      ${company ? `<p style="margin: 5px 0 0 0;"><strong>Company:</strong> ${company}</p>` : ''}
+      ${phone ? `<p style="margin: 5px 0 0 0;"><strong>Phone:</strong> ${phone}</p>` : ''}
+      ${service ? `<p style="margin: 5px 0 0 0;"><strong>Interest:</strong> ${service}</p>` : ''}
+      
+      <div style="background: white; padding: 15px; border-left: 4px solid #667eea; margin-top: 15px;">
+        <p style="margin: 0; white-space: pre-wrap;">${message.replace(/\n/g, '<br>')}</p>
+      </div>
+    </div>
+    
+    <p>You can reply directly to this email to contact the user at ${email}.</p>
+  `
+
+  const html = getEmailTemplate(
+    'New Contact Message',
+    content,
+    'View Admin Dashboard',
+    `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/admin/messages`
+  )
+
+  const text = `New Contact Message\n\nName: ${name}\nEmail: ${email}\n${company ? `Company: ${company}\n` : ''}${phone ? `Phone: ${phone}\n` : ''}${service ? `Interest: ${service}\n` : ''}\nMessage:\n${message}\n\nReply to: ${email}`
+
+  // Send to all admins
+  let success = true
+  for (const adminEmail of adminEmails) {
+    const result = await sendEmail({
+      to: adminEmail,
+      subject,
+      html,
+      text
+    })
+    if (!result) success = false
+  }
+
+  return success
 }

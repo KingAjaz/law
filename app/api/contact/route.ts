@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { getEnvVar } from '@/lib/env'
 import { rateLimiters, createRateLimitHeaders } from '@/lib/rate-limit'
 import { logger } from '@/lib/logger'
+import { sendContactFormEmailToAdmin } from '@/lib/email'
 
 export async function POST(request: NextRequest) {
   // Rate limiting
@@ -71,8 +72,14 @@ export async function POST(request: NextRequest) {
       service,
     })
 
-    // TODO: Send email notification to admin (implement when email service is configured)
-    // This could use Resend, SendGrid, or Supabase's email service
+    // Send email notification to admin
+    try {
+      await sendContactFormEmailToAdmin(name, email, message, company, phone, service)
+      logger.info('Contact notification email sent to admin')
+    } catch (emailError) {
+      // Don't fail the request if email sending fails, just log it
+      logger.error('Failed to send contact notification email', { error: emailError })
+    }
 
     const headers = createRateLimitHeaders(rateLimitResult)
     return NextResponse.json(

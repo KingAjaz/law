@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { createSupabaseClient } from '@/lib/supabase/client'
@@ -418,7 +419,14 @@ export default function DashboardPage() {
                               <p className="text-xs text-gray-400">Date: {new Date().toLocaleDateString()}</p>
                             </div>
                             <div className="text-right">
-                              <p className="font-bold text-primary-900">LegalEase</p>
+                              <div className="relative w-32 h-10">
+                                <Image
+                                  src="/LegalEase Logo backless.png"
+                                  alt="LegalEase Logo"
+                                  fill
+                                  className="object-contain object-right"
+                                />
+                              </div>
                             </div>
                           </div>
 

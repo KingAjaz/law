@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useAuth } from '@/app/providers'
@@ -29,11 +30,11 @@ export function Navbar() {
 
       const navbarRect = navbar.getBoundingClientRect()
       const navbarBottom = navbarRect.bottom
-      
+
       // Get the element at the center-bottom of the navbar
       const centerX = navbarRect.left + navbarRect.width / 2
       const pointY = navbarBottom + 1 // Just below the navbar
-      
+
       const elementBelow = document.elementFromPoint(centerX, pointY)
       if (!elementBelow || !(elementBelow instanceof HTMLElement)) {
         setIsOverWhite(false)
@@ -47,20 +48,20 @@ export function Navbar() {
           const section = currentElement
           const bgColor = window.getComputedStyle(section).backgroundColor
           const computedBg = bgColor.toLowerCase()
-          
+
           // Check if section has white background
-          const isWhite = section.classList.contains('bg-white') || 
-                         computedBg.includes('rgb(255, 255, 255)') ||
-                         computedBg === '#ffffff' ||
-                         computedBg === 'white' ||
-                         computedBg === 'rgba(255, 255, 255, 1)'
-          
+          const isWhite = section.classList.contains('bg-white') ||
+            computedBg.includes('rgb(255, 255, 255)') ||
+            computedBg === '#ffffff' ||
+            computedBg === 'white' ||
+            computedBg === 'rgba(255, 255, 255, 1)'
+
           setIsOverWhite(isWhite)
           return
         }
         currentElement = currentElement.parentElement
       }
-      
+
       setIsOverWhite(false)
     }
 
@@ -105,7 +106,7 @@ export function Navbar() {
 
   const logoTextClass = isOverWhite || !isHomePage ? 'text-brand-700' : 'text-white'
   const subLabelClass = isOverWhite || !isHomePage ? 'text-brand-600' : 'text-white/80'
-  const linkClass = (linkHref: string) => 
+  const linkClass = (linkHref: string) =>
     `${isOverWhite || !isHomePage ? 'text-brand-600 hover:text-brand-700' : 'text-white/80 hover:text-white'} 
     ${pathname === linkHref ? (isOverWhite || !isHomePage ? 'text-brand-700' : 'text-white') : ''}`
   const authLinkClass = isOverWhite || !isHomePage ? 'text-brand-600 hover:text-brand-700' : 'text-white/80 hover:text-white'
@@ -117,8 +118,14 @@ export function Navbar() {
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center" aria-label="LegalEase home">
-            <div>
-              <span className={`text-xl font-bold transition-colors ${logoTextClass}`}>LegalEase</span>
+            <div className="relative w-40 h-12">
+              <Image
+                src="/LegalEase Logo backless.png"
+                alt="LegalEase Logo"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
           </Link>
 
@@ -145,8 +152,8 @@ export function Navbar() {
                 <Link href="/dashboard" className={`btn text-sm ${isOverWhite || !isHomePage ? 'btn-secondary' : 'btn-secondary-beige'}`}>
                   Dashboard
                 </Link>
-                <button 
-                  onClick={handleSignOut} 
+                <button
+                  onClick={handleSignOut}
                   className={`btn text-sm ${isOverWhite || !isHomePage ? 'btn-ghost' : 'btn-ghost-beige'}`}
                   aria-label="Sign out"
                 >
