@@ -120,7 +120,7 @@ export default function DashboardPage() {
         scale: 2,
         logging: false,
         useCORS: true
-      })
+      } as any)
 
       const imgData = canvas.toDataURL('image/png')
       const pdf = new jsPDF({
