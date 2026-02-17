@@ -35,6 +35,7 @@ export default function DashboardPage() {
   const [deletingContract, setDeletingContract] = useState<string | null>(null)
   const [contractToDelete, setContractToDelete] = useState<Contract | null>(null)
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
+  const [userName, setUserName] = useState<string>('')
   const invoiceRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -60,7 +61,7 @@ export default function DashboardPage() {
       // Check profile for kyc_completed status
       const { data: profile } = await supabase
         .from('profiles')
-        .select('kyc_completed')
+        .select('kyc_completed, full_name')
         .eq('id', user.id)
         .single()
 
@@ -72,6 +73,7 @@ export default function DashboardPage() {
         .maybeSingle()
 
       setKycCompleted(profile?.kyc_completed || false)
+      setUserName(profile?.full_name || user.email || 'Client')
       setKycSubmitted(!!kycData) // KYC has been submitted if kyc_data exists
     } catch (error: any) {
       console.error('Failed to check KYC status:', error)
@@ -474,7 +476,8 @@ export default function DashboardPage() {
                             <div className="flex justify-between items-start mb-8">
                               <div>
                                 <h3 className="text-lg font-bold mb-1">Bill To:</h3>
-                                <p className="text-gray-600">User ID: {contracts[0]?.user_id || 'Current User'}</p>
+                                <p className="text-gray-600 font-medium">{userName}</p>
+                                <p className="text-sm text-gray-500">User ID: {contracts[0]?.user_id || 'Current User'}</p>
                               </div>
                             </div>
 
@@ -523,7 +526,7 @@ export default function DashboardPage() {
                           <button
                             onClick={handleDownloadPdf}
                             disabled={isGeneratingPdf}
-                            className="btn btn-outline flex-1"
+                            className="btn btn-secondary flex-1"
                           >
                             {isGeneratingPdf ? (
                               <>
@@ -533,7 +536,7 @@ export default function DashboardPage() {
                             ) : (
                               <>
                                 <Download className="h-4 w-4 mr-2 inline" />
-                                Download PDF
+                                Download Invoice PDF
                               </>
                             )}
                           </button>
