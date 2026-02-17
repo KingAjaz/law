@@ -457,6 +457,7 @@ export default function DashboardPage() {
                         <div ref={invoiceRef} className="bg-white border rounded-lg overflow-hidden">
                           <div className="bg-gray-50 px-6 py-4 border-b flex justify-between items-center">
                             <div>
+                              <h1 className="text-xl font-bold text-primary-900 mb-1">LegalEase</h1>
                               <p className="text-sm text-gray-500 uppercase tracking-wider font-semibold">Invoice Preview</p>
                               <p className="text-xs text-gray-400">Date: {new Date().toLocaleDateString()}</p>
                             </div>
