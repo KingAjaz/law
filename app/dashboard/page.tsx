@@ -1,10 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { createSupabaseClient } from '@/lib/supabase/client'
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import toast from 'react-hot-toast'
@@ -32,6 +34,8 @@ export default function DashboardPage() {
   const [uploadingContractId, setUploadingContractId] = useState<string | null>(null)
   const [deletingContract, setDeletingContract] = useState<string | null>(null)
   const [contractToDelete, setContractToDelete] = useState<Contract | null>(null)
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
+  const invoiceRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     loadContracts()
@@ -103,6 +107,42 @@ export default function DashboardPage() {
   }
 
   // Handle payment initiation (before file upload)
+
+  const handleDownloadPdf = async () => {
+    if (!invoiceRef.current) return
+
+    setIsGeneratingPdf(true)
+
+    try {
+      const canvas = await html2canvas(invoiceRef.current, {
+        scale: 2,
+        logging: false,
+        useCORS: true
+      })
+
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      })
+
+      const imgProps = pdf.getImageProperties(imgData)
+      const pdfWidth = pdf.internal.pageSize.getWidth()
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width
+
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
+      pdf.save(`Invoice-${selectedTier}-${Date.now()}.pdf`)
+
+      toast.success('Invoice downloaded successfully')
+    } catch (error) {
+      console.error('Error generating PDF:', error)
+      toast.error('Failed to generate PDF')
+    } finally {
+      setIsGeneratingPdf(false)
+    }
+  }
+
   const handlePaymentInitiation = async () => {
     if (!selectedTier) {
       toast.error('Please select a pricing tier')
@@ -412,7 +452,7 @@ export default function DashboardPage() {
 
                     {selectedTier && (
                       <div className="space-y-6">
-                        <div className="bg-white border rounded-lg overflow-hidden">
+                        <div ref={invoiceRef} className="bg-white border rounded-lg overflow-hidden">
                           <div className="bg-gray-50 px-6 py-4 border-b flex justify-between items-center">
                             <div>
                               <p className="text-sm text-gray-500 uppercase tracking-wider font-semibold">Invoice Preview</p>
@@ -479,6 +519,23 @@ export default function DashboardPage() {
                             disabled={processingPayment}
                           >
                             Back to Selection
+                          </button>
+                          <button
+                            onClick={handleDownloadPdf}
+                            disabled={isGeneratingPdf}
+                            className="btn btn-outline flex-1"
+                          >
+                            {isGeneratingPdf ? (
+                              <>
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-600 mr-2 inline-block"></div>
+                                Generating...
+                              </>
+                            ) : (
+                              <>
+                                <Download className="h-4 w-4 mr-2 inline" />
+                                Download PDF
+                              </>
+                            )}
                           </button>
                           <button
                             onClick={handlePaymentInitiation}
