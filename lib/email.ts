@@ -470,6 +470,44 @@ export async function sendPaymentFailedEmail(
 }
 
 /**
+ * Send password reset request email with reset link
+ */
+export async function sendPasswordResetRequestEmail(
+  userEmail: string,
+  userName: string,
+  resetLink: string
+): Promise<boolean> {
+  const subject = 'Reset Your Password - LegalEase'
+  const content = `
+    <p>Dear ${userName || 'there'},</p>
+    
+    <p>We received a request to reset the password associated with your LegalEase account.</p>
+    
+    <p>Click the button below to set a new password. This link will expire in <strong>1 hour</strong> for security reasons.</p>
+    
+    <div style="background: #f8f9fa; border-left: 4px solid #667eea; padding: 15px; margin: 20px 0; border-radius: 4px;">
+      <p style="margin: 0; color: #555; font-size: 14px;">
+        <strong>🔒 Security Notice:</strong> If you did not request this password reset, you can safely ignore this email. Your password will remain unchanged and your account is secure.
+      </p>
+    </div>
+    
+    <p style="color: #888; font-size: 13px;">If the button above doesn't work, copy and paste this link into your browser:</p>
+    <p style="word-break: break-all; font-size: 12px; color: #667eea;">${resetLink}</p>
+  `
+
+  const html = getEmailTemplate(
+    'Reset Your Password',
+    content,
+    'Reset Password',
+    resetLink
+  )
+
+  const text = `Reset Your Password\n\nDear ${userName || 'there'},\n\nWe received a request to reset the password associated with your LegalEase account.\n\nClick this link to reset your password: ${resetLink}\n\nThis link will expire in 1 hour.\n\nIf you did not request this password reset, you can safely ignore this email. Your password will remain unchanged.\n\n© ${new Date().getFullYear()} LegalEase. All rights reserved.`
+
+  return await sendEmail({ to: userEmail, subject, html, text })
+}
+
+/**
  * Send password reset completion email
  */
 export async function sendPasswordResetCompletionEmail(

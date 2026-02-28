@@ -144,16 +144,36 @@ export async function signInWithOAuth(
 
 /**
  * Reset password for email
+ * Uses custom API to send a professional branded email via Resend
  */
 export async function resetPassword(email: string) {
-  const supabase = createSupabaseClient()
+  // Try the custom API first (sends a professional branded email)
+  try {
+    const response = await fetch('/api/auth/send-reset-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    })
 
-  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/auth/reset-password-confirm`,
-  })
+    const data = await response.json()
 
-  if (error) throw error
-  return data
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to send reset email')
+    }
+
+    return data
+  } catch (apiError: any) {
+    // Fallback to Supabase's built-in reset
+    console.warn('Custom reset email failed, falling back to Supabase:', apiError)
+    const supabase = createSupabaseClient()
+
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/reset-password-confirm`,
+    })
+
+    if (error) throw error
+    return data
+  }
 }
 
 /**
