@@ -4,8 +4,9 @@ import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import { Providers } from './providers'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { AuthHashHandler } from '@/components/AuthHashHandler'
 
-const poppins = Poppins({ 
+const poppins = Poppins({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700'],
   variable: '--font-poppins'
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
     'SLA review',
     'MSA review',
   ],
-    authors: [{ name: 'LegalEase' }],
+  authors: [{ name: 'LegalEase' }],
   creator: 'LegalEase',
   publisher: 'LegalEase',
   formatDetection: {
@@ -88,9 +89,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-              return (
-                <html lang="en">
-                  <body className={poppins.className}>
+  return (
+    <html lang="en">
+      <body className={poppins.className}>
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-brand-600 focus:text-white focus:rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-600"
@@ -99,11 +100,12 @@ export default function RootLayout({
         </a>
         <ErrorBoundary>
           <Providers>
+            <AuthHashHandler />
             {children}
             <Toaster position="top-right" />
           </Providers>
         </ErrorBoundary>
       </body>
-                </html>
-              )
+    </html>
+  )
 }
