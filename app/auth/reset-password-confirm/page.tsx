@@ -20,35 +20,54 @@ function ResetPasswordConfirmForm() {
 
   useEffect(() => {
     // Check if there's a valid session (user must be authenticated via the reset link)
+    const { createSupabaseClient } = require('@/lib/supabase/client')
+    const supabase = createSupabaseClient()
+    let settled = false
+
+    // Listen for the PASSWORD_RECOVERY event fired when the Supabase
+    // client processes the #access_token hash fragment.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event: string) => {
+        if (event === 'PASSWORD_RECOVERY') {
+          settled = true
+          // Session is ready — the form is already displayed, nothing else to do
+        }
+      }
+    )
+
+    // Also poll for an existing session (covers the PKCE / code flow)
     const checkSession = async () => {
       try {
-        const { createSupabaseClient } = await import('@/lib/supabase/client')
-        const supabase = createSupabaseClient()
-        const {
-          data: { session },
-        } = await supabase.auth.getSession()
+        // Try multiple times over 5 seconds to allow time for hash processing
+        for (let i = 0; i < 5; i++) {
+          if (settled) return
+          const { data: { session } } = await supabase.auth.getSession()
+          if (session) {
+            settled = true
+            return
+          }
+          await new Promise(resolve => setTimeout(resolve, 1000))
+        }
 
-        if (!session) {
-          // Wait a bit and check again (in case session is still being set up)
-          setTimeout(async () => {
-            const {
-              data: { session: retrySession },
-            } = await supabase.auth.getSession()
-            
-            if (!retrySession) {
-              toast.error('Invalid or expired reset link. Please request a new one.')
-              router.push('/reset-password')
-            }
-          }, 1000)
+        // If still no session after retries, redirect
+        if (!settled) {
+          toast.error('Invalid or expired reset link. Please request a new one.')
+          router.push('/reset-password')
         }
       } catch (error) {
         console.error('Session check error:', error)
-        toast.error('An error occurred. Please try again.')
-        router.push('/reset-password')
+        if (!settled) {
+          toast.error('An error occurred. Please try again.')
+          router.push('/reset-password')
+        }
       }
     }
 
     checkSession()
+
+    return () => {
+      subscription.unsubscribe()
+    }
   }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -70,7 +89,7 @@ function ResetPasswordConfirmForm() {
       await updatePassword(password)
       setSuccess(true)
       toast.success('Password updated successfully!')
-      
+
       // Send password reset completion email (non-blocking)
       fetch('/api/auth/password-reset-complete', {
         method: 'POST',
@@ -79,7 +98,7 @@ function ResetPasswordConfirmForm() {
         console.error('Failed to send password reset completion email', error)
         // Don't fail the password reset if email fails
       })
-      
+
       // Redirect to login after 2 seconds
       setTimeout(() => {
         router.push('/login')
