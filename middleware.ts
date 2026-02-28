@@ -11,7 +11,7 @@ function ensureEnvValidated() {
   if (!envValidated) {
     envValidationResult = validateEnv(true) // Server-side validation
     envValidated = true
-    
+
     if (!envValidationResult.valid) {
       console.error('\n❌ Environment Variable Validation Failed:\n')
       envValidationResult.errors.forEach((error) => console.error(`  ${error}`))
@@ -53,13 +53,13 @@ export async function middleware(req: NextRequest) {
     if (publicRoutes.some((route) => pathname === route || pathname.startsWith(route))) {
       return NextResponse.next()
     }
-    
+
     // Redirect protected routes to login
     return NextResponse.redirect(new URL('/login', req.url))
   }
 
   const res = NextResponse.next()
-  
+
   try {
     const supabase = createMiddlewareClient({ req, res })
 
@@ -69,7 +69,7 @@ export async function middleware(req: NextRequest) {
 
     // Auth routes (redirect if already logged in)
     const authRoutes = ['/login', '/signup', '/reset-password']
-    
+
     // Auth callback routes (public, but handle differently)
     const authCallbackRoutes = ['/auth']
 
@@ -130,7 +130,7 @@ export async function middleware(req: NextRequest) {
     if (publicRoutes.some((route) => pathname === route || pathname.startsWith(route))) {
       return NextResponse.next()
     }
-    
+
     return NextResponse.redirect(new URL('/login', req.url))
   }
 
@@ -141,11 +141,12 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
+     * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - public folder
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }

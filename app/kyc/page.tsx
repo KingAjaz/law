@@ -14,10 +14,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 
 const kycSchema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  phoneNumber: z.string().min(10, 'Valid phone number is required'),
-  address: z.string().min(1, 'Address is required'),
+  nameOrCompany: z.string().min(1, 'Name or Company Name is required'),
+  email: z.string().email('Invalid email address'),
+  contactNumber: z.string().min(10, 'Valid contact number is required'),
+  officeAddress: z.string().min(1, 'Office Address is required'),
   city: z.string().min(1, 'City is required'),
   state: z.string().min(1, 'State is required'),
   country: z.string().default('Nigeria'),
@@ -43,6 +43,7 @@ export default function KYCPage() {
     handleSubmit,
     formState: { errors },
     setValue,
+    getValues,
     watch,
   } = useForm<KYCFormData>({
     resolver: zodResolver(kycSchema),
@@ -61,6 +62,10 @@ export default function KYCPage() {
       } = await supabase.auth.getUser()
 
       if (user) {
+        // Pre-fill email
+        if (!getValues('email') && user.email) {
+          setValue('email', user.email)
+        }
         // Check profile for kyc_completed status
         const { data: profile } = await supabase
           .from('profiles')
@@ -168,10 +173,10 @@ export default function KYCPage() {
       // Save KYC data
       const { error: kycError } = await supabase.from('kyc_data').insert({
         user_id: user.id,
-        first_name: data.firstName,
-        last_name: data.lastName,
-        phone_number: data.phoneNumber,
-        address: data.address,
+        first_name: data.nameOrCompany,
+        contact_email: data.email,
+        phone_number: data.contactNumber,
+        address: data.officeAddress,
         city: data.city,
         state: data.state,
         country: data.country,
@@ -246,11 +251,11 @@ export default function KYCPage() {
           >
             <h1 className="text-3xl font-bold text-primary-900 mb-2">KYC Verification</h1>
             <p className="text-gray-600">
-              {kycStatus === 'pending' 
+              {kycStatus === 'pending'
                 ? 'Your KYC submission is being reviewed'
                 : kycStatus === 'rejected'
-                ? 'Please review and resubmit your KYC'
-                : 'Complete your Know Your Customer verification to access the dashboard'}
+                  ? 'Please review and resubmit your KYC'
+                  : 'Complete your Know Your Customer verification to access the dashboard'}
             </p>
           </motion.div>
 
@@ -268,8 +273,8 @@ export default function KYCPage() {
                     KYC Submission Received
                   </h3>
                   <p className="text-sm text-blue-700">
-                    Your KYC submission has been received and is awaiting review by our admin team. 
-                    We'll notify you via email once it's been reviewed and approved. 
+                    Your KYC submission has been received and is awaiting review by our admin team.
+                    We'll notify you via email once it's been reviewed and approved.
                     This process usually takes 1-2 business days.
                   </p>
                 </div>
@@ -321,28 +326,29 @@ export default function KYCPage() {
             <form onSubmit={handleSubmit(onSubmit)} className={`space-y-6 ${kycStatus === 'pending' ? 'opacity-50 pointer-events-none' : ''}`}>
               {/* Personal Information */}
               <div>
-                <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
+                <h2 className="text-xl font-semibold mb-4">Personal / Company Information</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">First Name *</label>
+                    <label className="block text-sm font-medium mb-2">Name / Company Name *</label>
                     <input
-                      {...register('firstName')}
+                      {...register('nameOrCompany')}
                       className="input"
-                      placeholder="John"
+                      placeholder="John Doe or Acme Corp"
                     />
-                    {errors.firstName && (
-                      <p className="text-red-600 text-sm mt-1">{errors.firstName.message}</p>
+                    {errors.nameOrCompany && (
+                      <p className="text-red-600 text-sm mt-1">{errors.nameOrCompany.message}</p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Last Name *</label>
+                    <label className="block text-sm font-medium mb-2">Email Address *</label>
                     <input
-                      {...register('lastName')}
+                      {...register('email')}
                       className="input"
-                      placeholder="Doe"
+                      type="email"
+                      placeholder="john@example.com"
                     />
-                    {errors.lastName && (
-                      <p className="text-red-600 text-sm mt-1">{errors.lastName.message}</p>
+                    {errors.email && (
+                      <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
                     )}
                   </div>
                 </div>
@@ -353,26 +359,26 @@ export default function KYCPage() {
                 <h2 className="text-xl font-semibold mb-4">Contact Information</h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Phone Number *</label>
+                    <label className="block text-sm font-medium mb-2">Contact Number *</label>
                     <input
-                      {...register('phoneNumber')}
+                      {...register('contactNumber')}
                       type="tel"
                       className="input"
                       placeholder="+234 XXX XXX XXXX"
                     />
-                    {errors.phoneNumber && (
-                      <p className="text-red-600 text-sm mt-1">{errors.phoneNumber.message}</p>
+                    {errors.contactNumber && (
+                      <p className="text-red-600 text-sm mt-1">{errors.contactNumber.message}</p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Address *</label>
+                    <label className="block text-sm font-medium mb-2">Office Address *</label>
                     <input
-                      {...register('address')}
+                      {...register('officeAddress')}
                       className="input"
                       placeholder="Street address"
                     />
-                    {errors.address && (
-                      <p className="text-red-600 text-sm mt-1">{errors.address.message}</p>
+                    {errors.officeAddress && (
+                      <p className="text-red-600 text-sm mt-1">{errors.officeAddress.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

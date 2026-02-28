@@ -196,7 +196,7 @@ export function HeroBanner() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-                  className="text-lg md:text-xl lg:text-2xl text-gray-200 leading-relaxed absolute top-0 left-0 w-full"
+                  className="text-lg md:text-xl lg:text-2xl font-bold text-gray-200 leading-relaxed absolute top-0 left-0 w-full"
                   style={{
                     textShadow: '-1px -1px 0 #5B002D, 1px -1px 0 #5B002D, -1px 1px 0 #5B002D, 1px 1px 0 #5B002D, 2px 2px 4px rgba(91, 0, 45, 0.5)'
                   }}

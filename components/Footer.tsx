@@ -139,11 +139,21 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/20 text-center text-sm text-white/70">
+        <div className="pt-8 border-t border-white/20 flex flex-col md:flex-row justify-between items-center text-sm text-white/70">
           <p>
             Copyright © {new Date().getFullYear()} LegalEase. All rights reserved.
           </p>
-
+          <div className="flex gap-6 mt-4 md:mt-0">
+            <Link href="/legal/terms-and-conditions.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+              Terms & Conditions
+            </Link>
+            <Link href="/legal/privacy-policy.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/legal/cookie-policy.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+              Cookie Policy
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

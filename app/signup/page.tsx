@@ -17,6 +17,7 @@ export default function SignUpPage() {
     email: '',
     password: '',
     confirmPassword: '',
+    agreedToLegal: false,
   })
   const [loading, setLoading] = useState(false)
 
@@ -30,6 +31,11 @@ export default function SignUpPage() {
 
     if (formData.password.length < 6) {
       toast.error('Password must be at least 6 characters')
+      return
+    }
+
+    if (!formData.agreedToLegal) {
+      toast.error('You must agree to the legal documents')
       return
     }
 
@@ -77,98 +83,128 @@ export default function SignUpPage() {
 
           <div className="card">
             <form onSubmit={handleEmailSignup} className="space-y-6">
-                <div>
-                  <label htmlFor="fullName" className="block text-sm font-medium mb-2">
-                    Full Name
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      id="fullName"
-                      name="fullName"
-                      type="text"
-                      required
-                      value={formData.fullName}
-                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                      className="input pl-10"
-                      placeholder="John Doe"
-                    />
-                  </div>
+              <div>
+                <label htmlFor="fullName" className="block text-sm font-medium mb-2">
+                  Full Name
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    id="fullName"
+                    name="fullName"
+                    type="text"
+                    required
+                    value={formData.fullName}
+                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    className="input pl-10"
+                    placeholder="John Doe"
+                  />
                 </div>
+              </div>
 
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium mb-2">
-                    Email address
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      required
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="input pl-10"
-                      placeholder="you@example.com"
-                    />
-                  </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium mb-2">
+                  Email address
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="input pl-10"
+                    placeholder="you@example.com"
+                  />
                 </div>
+              </div>
 
-                <div>
-                  <label htmlFor="password" className="block text-sm font-medium mb-2">
-                    Password
-                  </label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      id="password"
-                      name="password"
-                      type="password"
-                      autoComplete="new-password"
-                      required
-                      value={formData.password}
-                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      className="input pl-10"
-                      placeholder="••••••••"
-                    />
-                  </div>
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="new-password"
+                    required
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    className="input pl-10"
+                    placeholder="••••••••"
+                  />
                 </div>
+              </div>
 
-                <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium mb-2">
-                    Confirm Password
-                  </label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type="password"
-                      autoComplete="new-password"
-                      required
-                      value={formData.confirmPassword}
-                      onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                      className="input pl-10"
-                      placeholder="••••••••"
-                    />
-                  </div>
+              <div>
+                <label htmlFor="confirmPassword" className="block text-sm font-medium mb-2">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    autoComplete="new-password"
+                    required
+                    value={formData.confirmPassword}
+                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                    className="input pl-10"
+                    placeholder="••••••••"
+                  />
                 </div>
+              </div>
 
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="btn btn-primary w-full"
-                >
-                  {loading ? 'Creating account...' : (
-                    <>
-                      Create account
-                      <ArrowRight className="ml-2 h-4 w-4 inline" />
-                    </>
-                  )}
-                </button>
-              </form>
+              <div className="flex items-start">
+                <div className="flex items-center h-5">
+                  <input
+                    id="legal-agreement"
+                    name="legal-agreement"
+                    type="checkbox"
+                    required
+                    checked={formData.agreedToLegal}
+                    onChange={(e) => setFormData({ ...formData, agreedToLegal: e.target.checked })}
+                    className="h-4 w-4 bg-dark-800 border-dark-600 rounded text-primary-500 focus:ring-primary-500 focus:ring-offset-dark-900"
+                  />
+                </div>
+                <div className="ml-3 text-sm">
+                  <label htmlFor="legal-agreement" className="font-medium text-gray-300">
+                    I agree to the{' '}
+                    <Link href="/legal/terms-and-conditions.pdf" target="_blank" rel="noopener noreferrer" className="text-primary-400 hover:text-primary-300">
+                      Terms and Conditions
+                    </Link>
+                    ,{' '}
+                    <Link href="/legal/privacy-policy.pdf" target="_blank" rel="noopener noreferrer" className="text-primary-400 hover:text-primary-300">
+                      Privacy Policy
+                    </Link>
+                    , and{' '}
+                    <Link href="/legal/cookie-policy.pdf" target="_blank" rel="noopener noreferrer" className="text-primary-400 hover:text-primary-300">
+                      Cookie Policy
+                    </Link>
+                  </label>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn btn-primary w-full"
+              >
+                {loading ? 'Creating account...' : (
+                  <>
+                    Create account
+                    <ArrowRight className="ml-2 h-4 w-4 inline" />
+                  </>
+                )}
+              </button>
+            </form>
 
             <div className="mt-6">
               <div className="relative">

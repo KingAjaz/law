@@ -1,0 +1,1 @@
+ALTER TABLE public.kyc_data ADD COLUMN IF NOT EXISTS contact_email TEXT, ALTER COLUMN last_name DROP NOT NULL;

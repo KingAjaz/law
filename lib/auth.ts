@@ -29,13 +29,13 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
 
   return profile
     ? {
-        id: profile.id,
-        email: profile.email,
-        full_name: profile.full_name,
-        role: profile.role as UserRole,
-        kyc_completed: profile.kyc_completed,
-        email_verified: session.user.email_confirmed_at !== null,
-      }
+      id: profile.id,
+      email: profile.email,
+      full_name: profile.full_name,
+      role: profile.role as UserRole,
+      kyc_completed: profile.kyc_completed,
+      email_verified: session.user.email_confirmed_at !== null,
+    }
     : null
 }
 
@@ -54,7 +54,7 @@ export async function signOut() {
  */
 export async function signUpWithEmail(email: string, password: string, fullName?: string) {
   const supabase = createSupabaseClient()
-  
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -67,7 +67,7 @@ export async function signUpWithEmail(email: string, password: string, fullName?
   })
 
   if (error) throw error
-  
+
   // Also send verification email via our email service as a fallback
   // This ensures emails are sent even if Supabase SMTP fails
   if (data.user && !data.user.email_confirmed_at) {
@@ -82,7 +82,7 @@ export async function signUpWithEmail(email: string, password: string, fullName?
       console.warn('Failed to send verification email via our service:', emailError)
     }
   }
-  
+
   return data
 }
 
@@ -91,7 +91,7 @@ export async function signUpWithEmail(email: string, password: string, fullName?
  */
 export async function signInWithEmail(email: string, password: string) {
   const supabase = createSupabaseClient()
-  
+
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -110,7 +110,7 @@ export async function signInWithEmail(email: string, password: string) {
  */
 export async function signInWithMagicLink(email: string, redirectTo?: string) {
   const supabase = createSupabaseClient()
-  
+
   const { data, error } = await supabase.auth.signInWithOtp({
     email,
     options: {
@@ -130,7 +130,7 @@ export async function signInWithOAuth(
   redirectTo?: string
 ) {
   const supabase = createSupabaseClient()
-  
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
@@ -147,9 +147,9 @@ export async function signInWithOAuth(
  */
 export async function resetPassword(email: string) {
   const supabase = createSupabaseClient()
-  
+
   const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/auth/reset-password-confirm`,
+    redirectTo: `${window.location.origin}/auth/callback?type=recovery`,
   })
 
   if (error) throw error
@@ -161,7 +161,7 @@ export async function resetPassword(email: string) {
  */
 export async function updatePassword(newPassword: string) {
   const supabase = createSupabaseClient()
-  
+
   const { data, error } = await supabase.auth.updateUser({
     password: newPassword,
   })
@@ -177,7 +177,7 @@ export async function updatePassword(newPassword: string) {
  */
 export async function resendEmailConfirmation(email: string) {
   const supabase = createSupabaseClient()
-  
+
   // Use server-side API instead for better security (checks if user exists)
   try {
     const response = await fetch('/api/auth/resend-verification', {
@@ -185,13 +185,13 @@ export async function resendEmailConfirmation(email: string) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email }),
     })
-    
+
     const data = await response.json()
-    
+
     if (!response.ok) {
       throw new Error(data.error || 'Failed to resend verification email')
     }
-    
+
     return data
   } catch (error: any) {
     // Fallback to client-side method if server-side fails

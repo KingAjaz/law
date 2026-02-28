@@ -36,6 +36,7 @@ export default function DashboardPage() {
   const [contractToDelete, setContractToDelete] = useState<Contract | null>(null)
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
   const [userName, setUserName] = useState<string>('')
+  const [userAddress, setUserAddress] = useState<string>('')
   const invoiceRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -58,22 +59,28 @@ export default function DashboardPage() {
 
       if (!user) return
 
-      // Check profile for kyc_completed status
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('kyc_completed, full_name')
-        .eq('id', user.id)
-        .single()
+      const [profileResult, kycResult] = await Promise.all([
+        // Check profile for kyc_completed status
+        supabase
+          .from('profiles')
+          .select('kyc_completed, full_name')
+          .eq('id', user.id)
+          .single(),
 
-      // Check if KYC has been submitted (even if not approved yet)
-      const { data: kycData } = await supabase
-        .from('kyc_data')
-        .select('id, status')
-        .eq('user_id', user.id)
-        .maybeSingle()
+        // Fetch kyc_data to check if submitted and get address
+        supabase
+          .from('kyc_data')
+          .select('id, status, address')
+          .eq('user_id', user.id)
+          .maybeSingle()
+      ])
+
+      const { data: profile } = profileResult
+      const { data: kycData } = kycResult
 
       setKycCompleted(profile?.kyc_completed || false)
       setUserName(profile?.full_name || user.email || 'Client')
+      setUserAddress(kycData?.address || '')
       setKycSubmitted(!!kycData) // KYC has been submitted if kyc_data exists
     } catch (error: any) {
       console.error('Failed to check KYC status:', error)
@@ -458,6 +465,10 @@ export default function DashboardPage() {
                           <div className="bg-gray-50 px-6 py-4 border-b flex justify-between items-center">
                             <div>
                               <h1 className="text-xl font-bold text-primary-900 mb-1">LegalEase</h1>
+                              <p className="text-sm font-semibold text-gray-700">TIN: 338500790001</p>
+                              <p className="text-sm text-gray-600 mb-3 max-w-xs">
+                                22, Dr. Omon Ebhomenye Street, off Admiralty Way, Lekki I, Lagos, Nigeria.
+                              </p>
                               <p className="text-sm text-gray-500 uppercase tracking-wider font-semibold">Invoice Preview</p>
                               <p className="text-xs text-gray-400">Date: {new Date().toLocaleDateString()}</p>
                             </div>
@@ -478,7 +489,8 @@ export default function DashboardPage() {
                               <div>
                                 <h3 className="text-lg font-bold mb-1">Bill To:</h3>
                                 <p className="text-gray-600 font-medium">{userName}</p>
-                                <p className="text-sm text-gray-500">User ID: {contracts[0]?.user_id || 'Current User'}</p>
+                                {userAddress && <p className="text-gray-600 text-sm">{userAddress}</p>}
+                                <p className="text-sm text-gray-500 mt-1">User ID: {contracts[0]?.user_id || 'Current User'}</p>
                               </div>
                             </div>
 

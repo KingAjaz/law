@@ -24,7 +24,7 @@ export default function AdminPage() {
   const [assigningContract, setAssigningContract] = useState<string | null>(null)
   const [verifyingKyc, setVerifyingKyc] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'contracts' | 'lawyers' | 'kyc'>('overview')
-  
+
   // Filtering and pagination state for contracts
   const [contractSearch, setContractSearch] = useState('')
   const [contractStatusFilter, setContractStatusFilter] = useState<string>('all')
@@ -174,22 +174,22 @@ export default function AdminPage() {
     if (contractSearch && !contract.title.toLowerCase().includes(contractSearch.toLowerCase())) {
       return false
     }
-    
+
     // Status filter
     if (contractStatusFilter !== 'all' && contract.status !== contractStatusFilter) {
       return false
     }
-    
+
     // Tier filter
     if (contractTierFilter !== 'all' && contract.pricing_tier !== contractTierFilter) {
       return false
     }
-    
+
     // Payment status filter
     if (contractPaymentFilter !== 'all' && contract.payment_status !== contractPaymentFilter) {
       return false
     }
-    
+
     return true
   })
 
@@ -252,11 +252,10 @@ export default function AdminPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                    activeTab === tab.id
+                  className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
                       ? 'border-primary-700 text-primary-700'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
+                    }`}
                 >
                   {tab.label}
                 </button>
@@ -399,7 +398,7 @@ export default function AdminPage() {
                       className="input pl-10 w-full"
                     />
                   </div>
-                  
+
                   {/* Status Filter */}
                   <div className="relative">
                     <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -416,7 +415,7 @@ export default function AdminPage() {
                       ))}
                     </select>
                   </div>
-                  
+
                   {/* Tier Filter */}
                   <select
                     value={contractTierFilter}
@@ -430,7 +429,7 @@ export default function AdminPage() {
                       </option>
                     ))}
                   </select>
-                  
+
                   {/* Payment Status Filter */}
                   <select
                     value={contractPaymentFilter}
@@ -443,7 +442,7 @@ export default function AdminPage() {
                     <option value="failed">Failed</option>
                   </select>
                 </div>
-                
+
                 {/* Results count */}
                 <div className="text-sm text-gray-600">
                   Showing {startIndex + 1}-{Math.min(endIndex, filteredContracts.length)} of {filteredContracts.length} contracts
@@ -467,51 +466,51 @@ export default function AdminPage() {
               ) : (
                 <>
                   {paginatedContracts.map((contract) => (
-                <div key={contract.id} className="card">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold mb-2">{contract.title}</h3>
-                      <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-2">
-                        <span>Status: <span className="font-medium">{CONTRACT_STATUS_LABELS[contract.status]}</span></span>
-                        <span>Tier: <span className="font-medium">{PRICING_TIERS[contract.pricing_tier].name}</span></span>
-                        <span>Payment: <span className="font-medium">{contract.payment_status}</span></span>
-                      </div>
-                      <p className="text-sm text-gray-500">
-                        Created: {new Date(contract.created_at).toLocaleString()}
-                      </p>
-                    </div>
-                    {contract.status === 'payment_confirmed' && !contract.lawyer_id && (
-                      <div className="flex gap-2 items-center">
-                        <select
-                          onChange={(e) => {
-                            if (e.target.value) {
-                              assignContract(contract.id, e.target.value)
-                            }
-                          }}
-                          className="input"
-                          defaultValue=""
-                          disabled={assigningContract === contract.id}
-                        >
-                          <option value="">Assign to lawyer...</option>
-                          {lawyers.map((lawyer) => (
-                            <option key={lawyer.id} value={lawyer.id}>
-                              {lawyer.full_name || lawyer.email}
-                              {lawyer.role === 'admin' ? ' (Admin)' : ''}
-                            </option>
-                          ))}
-                        </select>
-                        {assigningContract === contract.id && (
-                          <div className="flex items-center text-primary-600">
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-700"></div>
-                            <span className="ml-2 text-sm">Assigning...</span>
+                    <div key={contract.id} className="card">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold mb-2">{contract.title}</h3>
+                          <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-2">
+                            <span>Status: <span className="font-medium">{CONTRACT_STATUS_LABELS[contract.status]}</span></span>
+                            <span>Tier: <span className="font-medium">{PRICING_TIERS[contract.pricing_tier].name}</span></span>
+                            <span>Payment: <span className="font-medium">{contract.payment_status}</span></span>
+                          </div>
+                          <p className="text-sm text-gray-500">
+                            Created: {new Date(contract.created_at).toLocaleString()}
+                          </p>
+                        </div>
+                        {contract.status === 'payment_confirmed' && !contract.lawyer_id && (
+                          <div className="flex gap-2 items-center">
+                            <select
+                              onChange={(e) => {
+                                if (e.target.value) {
+                                  assignContract(contract.id, e.target.value)
+                                }
+                              }}
+                              className="input"
+                              defaultValue=""
+                              disabled={assigningContract === contract.id}
+                            >
+                              <option value="">Assign to lawyer...</option>
+                              {lawyers.map((lawyer) => (
+                                <option key={lawyer.id} value={lawyer.id}>
+                                  {lawyer.full_name || lawyer.email}
+                                  {lawyer.role === 'admin' ? ' (Admin)' : ''}
+                                </option>
+                              ))}
+                            </select>
+                            {assigningContract === contract.id && (
+                              <div className="flex items-center text-primary-600">
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-700"></div>
+                                <span className="ml-2 text-sm">Assigning...</span>
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
-                    )}
-                  </div>
-                </div>
+                    </div>
                   ))}
-                  
+
                   {/* Pagination */}
                   {totalPages > 1 && (
                     <div className="flex items-center justify-between mt-6">
@@ -615,13 +614,12 @@ export default function AdminPage() {
                               {kyc.full_name || kyc.email}
                             </h3>
                             <span
-                              className={`badge ${
-                                kyc.status === 'approved'
+                              className={`badge ${kyc.status === 'approved'
                                   ? 'badge-success'
                                   : kyc.status === 'rejected'
-                                  ? 'badge-error'
-                                  : 'badge-warning'
-                              }`}
+                                    ? 'badge-error'
+                                    : 'badge-warning'
+                                }`}
                             >
                               {kyc.status === 'pending' ? 'Pending' : kyc.status === 'approved' ? 'Approved' : 'Rejected'}
                             </span>
@@ -630,15 +628,19 @@ export default function AdminPage() {
 
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                             <div>
-                              <p className="text-gray-500">Name</p>
-                              <p className="font-medium">{kyc.first_name} {kyc.last_name}</p>
+                              <p className="text-gray-500">Name / Company Name</p>
+                              <p className="font-medium">{kyc.first_name}</p>
                             </div>
                             <div>
-                              <p className="text-gray-500">Phone</p>
+                              <p className="text-gray-500">Contact Number</p>
                               <p className="font-medium">{kyc.phone_number}</p>
                             </div>
                             <div>
-                              <p className="text-gray-500">Address</p>
+                              <p className="text-gray-500">Contact Email</p>
+                              <p className="font-medium">{kyc.contact_email || kyc.email}</p>
+                            </div>
+                            <div>
+                              <p className="text-gray-500">Office Address</p>
                               <p className="font-medium">{kyc.address}</p>
                             </div>
                             <div>
@@ -692,7 +694,7 @@ export default function AdminPage() {
                             View ID Document
                           </a>
                         )}
-                        
+
                         {kyc.status === 'pending' && (
                           <>
                             <button
