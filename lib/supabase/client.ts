@@ -1,9 +1,21 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { createClient } from '@supabase/supabase-js'
 
 // Client-side Supabase client
+// Using implicit flow instead of PKCE to avoid code_verifier cookie issues
+// when the redirect domain doesn't match (e.g. www vs non-www)
 export const createSupabaseClient = () => {
-  return createClientComponentClient()
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      auth: {
+        flowType: 'implicit',
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+      },
+    }
+  )
 }
 
 // Server-side Supabase client with service role
