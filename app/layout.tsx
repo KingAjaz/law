@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import { Providers } from './providers'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { AuthHashHandler } from '@/components/AuthHashHandler'
+import { Suspense } from 'react'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -100,7 +101,9 @@ export default function RootLayout({
         </a>
         <ErrorBoundary>
           <Providers>
-            <AuthHashHandler />
+            <Suspense fallback={null}>
+              <AuthHashHandler />
+            </Suspense>
             {children}
             <Toaster position="top-right" />
           </Providers>
