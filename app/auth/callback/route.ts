@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
 
   if (code) {
     const supabase = createRouteHandlerClient({ cookies })
-    
+
     try {
       // Exchange the code for a session
       const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
@@ -39,7 +39,19 @@ export async function GET(request: NextRequest) {
       }
 
       // Handle different authentication types
-      if (type === 'recovery' || type === 'reset') {
+      // When Supabase rejects the redirectTo, the code lands on the homepage
+      // and gets forwarded here WITHOUT a type parameter. Detect recovery
+      // by checking if the user recently requested a password reset.
+      let effectiveType = type
+      if (!effectiveType && data.user?.recovery_sent_at) {
+        const recoverySentAt = new Date(data.user.recovery_sent_at)
+        const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000)
+        if (recoverySentAt > tenMinutesAgo) {
+          effectiveType = 'recovery'
+        }
+      }
+
+      if (effectiveType === 'recovery' || effectiveType === 'reset') {
         // Password reset flow - redirect to password reset confirmation
         return NextResponse.redirect(new URL('/auth/reset-password-confirm', requestUrl.origin))
       }
@@ -53,20 +65,20 @@ export async function GET(request: NextRequest) {
             .select('created_at, full_name, email')
             .eq('id', userId)
             .single()
-          
+
           if (profile) {
             const profileCreatedAt = new Date(profile.created_at)
             const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000)
-            
+
             // Only send notifications if profile was created recently (new signup)
             if (profileCreatedAt > fiveMinutesAgo) {
               const displayName = profile.full_name || userName || profile.email.split('@')[0]
-              
+
               // Send welcome email to user
               sendWelcomeEmail(profile.email, displayName).catch((error) => {
                 logger.error('Failed to send welcome email', { userId, error })
               })
-              
+
               // Send admin notification
               const adminEmails = await getAdminEmails()
               for (const adminEmail of adminEmails) {
@@ -79,7 +91,7 @@ export async function GET(request: NextRequest) {
                   logger.error('Failed to send new user signup email to admin', { adminEmail, userId, error })
                 })
               }
-              
+
               logger.logAuthEvent('user_signup', {
                 userId,
                 email: profile.email,
@@ -104,7 +116,7 @@ export async function GET(request: NextRequest) {
               data.session.user.user_metadata?.full_name || data.session.user.user_metadata?.name || ''
             )
           }
-          
+
           // Check if user has completed KYC
           // Use maybeSingle() to handle case where profile doesn't exist yet
           const { data: profile, error: profileError } = await supabase
@@ -112,7 +124,7 @@ export async function GET(request: NextRequest) {
             .select('kyc_completed')
             .eq('id', data.session.user.id)
             .maybeSingle()
-          
+
           // If profile doesn't exist or KYC not completed, redirect to KYC page
           if (profileError || !profile || !profile.kyc_completed) {
             return NextResponse.redirect(new URL('/kyc', requestUrl.origin))
@@ -133,14 +145,14 @@ export async function GET(request: NextRequest) {
           .select('kyc_completed, created_at, full_name, email')
           .eq('id', data.session.user.id)
           .maybeSingle()
-        
+
         // Send signup notifications if this is a new user
         if (data.session.user.email) {
           // Check if profile is new (created within last 5 minutes)
           if (profile) {
             const profileCreatedAt = new Date(profile.created_at)
             const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000)
-            
+
             if (profileCreatedAt > fiveMinutesAgo) {
               sendSignupNotifications(
                 data.session.user.id,
@@ -164,7 +176,7 @@ export async function GET(request: NextRequest) {
             }
           }
         }
-        
+
         // If profile doesn't exist (new OAuth user), redirect to KYC
         // If profile exists but KYC not completed, redirect to KYC
         if (profileError || !profile || !profile.kyc_completed) {

@@ -5,14 +5,15 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import toast from 'react-hot-toast'
 
 /**
- * Global component that handles two Supabase auth redirect scenarios:
+ * Global component mounted in the root layout that intercepts
+ * Supabase auth redirects landing on the wrong page.
  *
- * 1. RECOVERY HASH: Supabase sends user to homepage with
- *    #access_token=...&type=recovery  → redirect to password reset form.
+ * Supabase may ignore our `redirectTo` if the URL isn't whitelisted, 
+ * falling back to the Site URL (homepage). This catches three scenarios:
  *
- * 2. ERROR PARAMS: Supabase sends user to homepage with
- *    ?error=access_denied&error_code=otp_expired  → show friendly toast
- *    and redirect to the "Request New Link" page.
+ *  1. ?code=xxx        → PKCE auth code on homepage → forward to /auth/callback
+ *  2. #access_token=…  → Implicit flow token        → forward to reset page
+ *  3. ?error=…         → Expired / invalid link      → show toast + redirect
  */
 export function AuthHashHandler() {
     const router = useRouter()
@@ -20,7 +21,18 @@ export function AuthHashHandler() {
     const pathname = usePathname()
 
     useEffect(() => {
-        // ── Handle error query params from Supabase ──────────────────────
+        // Only act on the homepage — other pages have their own handlers
+        if (pathname !== '/') return
+
+        // ── 1. PKCE code on homepage ─────────────────────────────────────
+        const code = params.get('code')
+        if (code) {
+            // Forward to the callback route which will exchange the code
+            window.location.replace(`/auth/callback?code=${encodeURIComponent(code)}`)
+            return
+        }
+
+        // ── 2. Error params from Supabase ────────────────────────────────
         const error = params.get('error')
         const errorCode = params.get('error_code')
         const errorDesc = params.get('error_description')
@@ -29,25 +41,21 @@ export function AuthHashHandler() {
             if (errorCode === 'otp_expired') {
                 toast.error('Your password reset link has expired. Please request a new one.', { duration: 6000 })
                 router.replace('/reset-password')
-                return
+            } else {
+                toast.error(errorDesc?.replace(/\+/g, ' ') || 'Authentication error. Please try again.', { duration: 6000 })
+                router.replace('/login')
             }
-            // Generic auth error
-            toast.error(errorDesc?.replace(/\+/g, ' ') || 'Authentication error. Please try again.', { duration: 6000 })
-            router.replace('/login')
             return
         }
 
-        // ── Handle recovery hash fragment ────────────────────────────────
+        // ── 3. Hash fragment (implicit flow) ─────────────────────────────
         const hash = window.location.hash
         if (!hash || hash.length < 2) return
 
         const hashParams = new URLSearchParams(hash.substring(1))
-        const type = hashParams.get('type')
-        const accessToken = hashParams.get('access_token')
         const hashError = hashParams.get('error')
         const hashErrCode = hashParams.get('error_code')
 
-        // Hash can also carry errors (Supabase puts them in both places)
         if (hashError) {
             if (hashErrCode === 'otp_expired') {
                 toast.error('Your password reset link has expired. Please request a new one.', { duration: 6000 })
@@ -59,12 +67,9 @@ export function AuthHashHandler() {
             return
         }
 
+        const type = hashParams.get('type')
+        const accessToken = hashParams.get('access_token')
         if (type === 'recovery' && accessToken) {
-            // Already on the reset page? Let the page handle it.
-            if (pathname === '/auth/reset-password-confirm') return
-
-            // Redirect immediately, PRESERVING the hash so the destination
-            // page's Supabase client can pick up the token and establish a session.
             window.location.replace('/auth/reset-password-confirm' + hash)
         }
     }, [router, params, pathname])
