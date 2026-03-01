@@ -62,27 +62,26 @@ export async function signUpWithEmail(email: string, password: string, fullName?
       data: {
         full_name: fullName || email.split('@')[0],
       },
-      emailRedirectTo: `${window.location.origin}/auth/callback?type=signup`,
     },
   })
 
   if (error) throw error
 
-  // Always send verification email via our Resend email service
-  // Supabase's built-in SMTP has poor Gmail deliverability, so this is the primary path
+  // Auto-confirm email and send welcome email via Resend
+  // This avoids relying on Supabase's built-in SMTP (poor Gmail delivery)
   if (data.user) {
     try {
-      const res = await fetch('/api/auth/send-verification-email', {
+      const res = await fetch('/api/auth/confirm-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, fullName: fullName || email.split('@')[0] }),
       })
       const result = await res.json()
       if (!res.ok) {
-        console.error('Verification email API error:', result)
+        console.error('Email confirmation API error:', result)
       }
-    } catch (emailError) {
-      console.error('Failed to send verification email via Resend:', emailError)
+    } catch (confirmError) {
+      console.error('Failed to auto-confirm email:', confirmError)
     }
   }
 
