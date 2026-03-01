@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { signInWithEmail, signInWithMagicLink, signInWithOAuth, resendEmailConfirmation } from '@/lib/auth'
+import { signInWithEmail, signInWithOAuth, resendEmailConfirmation } from '@/lib/auth'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import toast from 'react-hot-toast'
@@ -17,15 +17,13 @@ function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const [magicLinkLoading, setMagicLinkLoading] = useState(false)
   const [resendingVerification, setResendingVerification] = useState(false)
   const [showResendVerification, setShowResendVerification] = useState(false)
-  const [authMethod, setAuthMethod] = useState<'password' | 'magic-link'>('password')
-  
+
   // Handle error messages from query params (e.g., OAuth errors)
   const error = searchParams.get('error')
   const errorDescription = searchParams.get('error_description')
-  
+
   useEffect(() => {
     if (error) {
       toast.error(errorDescription || 'Authentication error occurred')
@@ -47,11 +45,11 @@ function LoginForm() {
       // IMPORTANT: Only show resend verification if Supabase explicitly says "email not confirmed"
       // Don't show it for generic "Invalid credentials" to prevent email enumeration
       const errorMessage = error.message || ''
-      const isEmailNotConfirmed = 
-        errorMessage.toLowerCase().includes('email not confirmed') || 
+      const isEmailNotConfirmed =
+        errorMessage.toLowerCase().includes('email not confirmed') ||
         errorMessage.toLowerCase().includes('email_not_confirmed') ||
         errorMessage === 'EMAIL_NOT_CONFIRMED'
-      
+
       if (isEmailNotConfirmed) {
         // Only show resend verification if we're certain the email exists and is unverified
         // This happens when Supabase explicitly says "email not confirmed"
@@ -63,9 +61,9 @@ function LoginForm() {
         setTimeout(() => {
           router.push(`/auth/verify-email?email=${encodeURIComponent(email)}`)
         }, 3000)
-      } else if (errorMessage.includes('Invalid login credentials') || 
-                 errorMessage.includes('invalid_credentials') ||
-                 errorMessage.includes('Invalid credentials')) {
+      } else if (errorMessage.includes('Invalid login credentials') ||
+        errorMessage.includes('invalid_credentials') ||
+        errorMessage.includes('Invalid credentials')) {
         // Don't show resend verification for invalid credentials
         // This could be wrong email, wrong password, or non-existent user
         // Showing resend option would reveal whether email exists (security issue)
@@ -80,20 +78,7 @@ function LoginForm() {
     }
   }
 
-  const handleMagicLinkLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setMagicLinkLoading(true)
 
-    try {
-      await signInWithMagicLink(email, `${window.location.origin}/auth/callback?redirect=${redirect}`)
-      toast.success('Check your email for the magic link!')
-      setAuthMethod('password')
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to send magic link')
-    } finally {
-      setMagicLinkLoading(false)
-    }
-  }
 
   const handleOAuthLogin = async (provider: 'google') => {
     try {
@@ -124,199 +109,131 @@ function LoginForm() {
           </div>
 
           <div className="card">
-            {/* Toggle between password and magic link */}
-            <div className="flex gap-2 mb-6">
-              <button
-                type="button"
-                onClick={() => setAuthMethod('password')}
-                className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
-                  authMethod === 'password'
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-dark-800 text-gray-400 hover:bg-dark-700'
-                }`}
-              >
-                <Lock className="h-4 w-4 inline mr-2" />
-                Password
-              </button>
-              <button
-                type="button"
-                onClick={() => setAuthMethod('magic-link')}
-                className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
-                  authMethod === 'magic-link'
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-dark-800 text-gray-400 hover:bg-dark-700'
-                }`}
-              >
-                <KeyRound className="h-4 w-4 inline mr-2" />
-                Magic Link
-              </button>
-            </div>
+            <form onSubmit={handleEmailLogin} className="space-y-6">
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium mb-2">
+                  Email address
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="input pl-10"
+                    placeholder="you@example.com"
+                  />
+                </div>
+              </div>
 
-            {authMethod === 'password' ? (
-              <form onSubmit={handleEmailLogin} className="space-y-6">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium mb-2">
-                    Email address
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="input pl-10"
+                    placeholder="••••••••"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <input
+                    id="remember-me"
+                    name="remember-me"
+                    type="checkbox"
+                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  />
+                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-300">
+                    Remember me
                   </label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="input pl-10"
-                      placeholder="you@example.com"
-                    />
-                  </div>
                 </div>
 
-                <div>
-                  <label htmlFor="password" className="block text-sm font-medium mb-2">
-                    Password
-                  </label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      id="password"
-                      name="password"
-                      type="password"
-                      autoComplete="current-password"
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="input pl-10"
-                      placeholder="••••••••"
-                    />
-                  </div>
+                <div className="text-sm">
+                  <Link href="/reset-password" className="font-medium text-primary-400 hover:text-primary-300">
+                    Forgot password?
+                  </Link>
                 </div>
+              </div>
 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <input
-                      id="remember-me"
-                      name="remember-me"
-                      type="checkbox"
-                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-                    />
-                    <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-300">
-                      Remember me
-                    </label>
-                  </div>
-
-                  <div className="text-sm">
-                    <Link href="/reset-password" className="font-medium text-primary-400 hover:text-primary-300">
-                      Forgot password?
-                    </Link>
-                  </div>
-                </div>
-
-                {showResendVerification && (
-                  <div className="p-3 bg-yellow-900/20 border border-yellow-700/50 rounded-lg">
-                    <p className="text-sm text-yellow-300 mb-2">
-                      Haven't verified your email yet?
-                    </p>
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        if (!email) {
-                          toast.error('Please enter your email address first')
-                          return
-                        }
-                        setResendingVerification(true)
-                        try {
-                          // Try server-side API first (uses admin API, more reliable)
-                          try {
-                            const response = await fetch('/api/auth/resend-verification', {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ email }),
-                            })
-                            const data = await response.json()
-                            
-                            if (!response.ok) {
-                              throw new Error(data.error || 'Failed to resend verification email')
-                            }
-                            
-                            toast.success(data.message || 'Verification email sent! Check your inbox and spam folder.')
-                            setShowResendVerification(false)
-                          } catch (apiError: any) {
-                            // Fallback to client-side method
-                            console.warn('Server-side resend failed, trying client-side:', apiError)
-                            await resendEmailConfirmation(email)
-                            toast.success('Verification email sent! Check your inbox and spam folder.')
-                            setShowResendVerification(false)
-                          }
-                        } catch (error: any) {
-                          console.error('Resend verification error:', error)
-                          toast.error(error.message || 'Failed to resend verification email. Check Supabase SMTP settings.')
-                        } finally {
-                          setResendingVerification(false)
-                        }
-                      }}
-                      disabled={resendingVerification || !email}
-                      className="text-sm text-primary-400 hover:text-primary-300 underline disabled:opacity-50"
-                    >
-                      {resendingVerification ? 'Sending...' : 'Resend verification email'}
-                    </button>
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="btn btn-primary w-full"
-                >
-                  {loading ? 'Signing in...' : (
-                    <>
-                      Sign in
-                      <ArrowRight className="ml-2 h-4 w-4 inline" />
-                    </>
-                  )}
-                </button>
-              </form>
-            ) : (
-              <form onSubmit={handleMagicLinkLogin} className="space-y-6">
-                <div>
-                  <label htmlFor="magic-email" className="block text-sm font-medium mb-2">
-                    Email address
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      id="magic-email"
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="input pl-10"
-                      placeholder="you@example.com"
-                    />
-                  </div>
-                  <p className="mt-2 text-sm text-gray-400">
-                    We'll send you a magic link to sign in without a password.
+              {showResendVerification && (
+                <div className="p-3 bg-yellow-900/20 border border-yellow-700/50 rounded-lg">
+                  <p className="text-sm text-yellow-300 mb-2">
+                    Haven't verified your email yet?
                   </p>
-                </div>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (!email) {
+                        toast.error('Please enter your email address first')
+                        return
+                      }
+                      setResendingVerification(true)
+                      try {
+                        // Try server-side API first (uses admin API, more reliable)
+                        try {
+                          const response = await fetch('/api/auth/resend-verification', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email }),
+                          })
+                          const data = await response.json()
 
-                <button
-                  type="submit"
-                  disabled={magicLinkLoading}
-                  className="btn btn-primary w-full"
-                >
-                  {magicLinkLoading ? 'Sending link...' : (
-                    <>
-                      Send magic link
-                      <KeyRound className="ml-2 h-4 w-4 inline" />
-                    </>
-                  )}
-                </button>
-              </form>
-            )}
+                          if (!response.ok) {
+                            throw new Error(data.error || 'Failed to resend verification email')
+                          }
+
+                          toast.success(data.message || 'Verification email sent! Check your inbox and spam folder.')
+                          setShowResendVerification(false)
+                        } catch (apiError: any) {
+                          // Fallback to client-side method
+                          console.warn('Server-side resend failed, trying client-side:', apiError)
+                          await resendEmailConfirmation(email)
+                          toast.success('Verification email sent! Check your inbox and spam folder.')
+                          setShowResendVerification(false)
+                        }
+                      } catch (error: any) {
+                        console.error('Resend verification error:', error)
+                        toast.error(error.message || 'Failed to resend verification email. Check Supabase SMTP settings.')
+                      } finally {
+                        setResendingVerification(false)
+                      }
+                    }}
+                    disabled={resendingVerification || !email}
+                    className="text-sm text-primary-400 hover:text-primary-300 underline disabled:opacity-50"
+                  >
+                    {resendingVerification ? 'Sending...' : 'Resend verification email'}
+                  </button>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn btn-primary w-full"
+              >
+                {loading ? 'Signing in...' : (
+                  <>
+                    Sign in
+                    <ArrowRight className="ml-2 h-4 w-4 inline" />
+                  </>
+                )}
+              </button>
+            </form>
 
             <div className="mt-6">
               <div className="relative">
