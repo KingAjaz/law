@@ -160,7 +160,7 @@ export default function DashboardPage() {
 
     // Check KYC status
     if (!kycCompleted) {
-      toast.error('Please complete KYC verification before making a payment. Your KYC is awaiting admin review.')
+      toast.error('Please complete your client information form before making a payment.')
       return
     }
 
@@ -229,7 +229,7 @@ export default function DashboardPage() {
 
     // Check KYC status
     if (!kycCompleted) {
-      toast.error('Please complete KYC verification before uploading files. Your KYC is awaiting admin review.')
+      toast.error('Please complete your client information form before uploading files.')
       return
     }
 
