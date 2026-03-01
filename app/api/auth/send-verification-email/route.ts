@@ -43,15 +43,9 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Check if email is already verified
-    if (user.email_confirmed_at) {
-      return NextResponse.json({
-        success: true,
-        message: 'Email is already verified',
-        email,
-        verified: true,
-      })
-    }
+    // Note: We intentionally do NOT check email_confirmed_at here.
+    // Even if Supabase auto-confirms the email, we still send our
+    // branded verification email via Resend for a better user experience.
 
     // Generate verification link using Supabase Admin API
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
