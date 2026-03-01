@@ -15,8 +15,7 @@ import * as z from 'zod'
 const clientInfoSchema = z.object({
   nameOrCompany: z.string().min(1, 'Name or Company Name is required'),
   email: z.string().email('Invalid email address'),
-  contactNumber: z.string().min(10, 'Valid contact number is required'),
-  officeAddress: z.string().min(1, 'Office Address is required'),
+  officeAddress: z.string().optional(),
   city: z.string().min(1, 'City is required'),
   state: z.string().min(1, 'State is required'),
   country: z.string().default('Nigeria'),
@@ -104,8 +103,7 @@ export default function ClientInfoPage() {
         user_id: user.id,
         first_name: data.nameOrCompany,
         contact_email: data.email,
-        phone_number: data.contactNumber,
-        address: data.officeAddress,
+        address: data.officeAddress || '',
         city: data.city,
         state: data.state,
         country: data.country,
@@ -197,27 +195,12 @@ export default function ClientInfoPage() {
                 <h2 className="text-xl font-semibold mb-4">Contact Information</h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Contact Number *</label>
-                    <input
-                      {...register('contactNumber')}
-                      type="tel"
-                      className="input"
-                      placeholder="+234 XXX XXX XXXX"
-                    />
-                    {errors.contactNumber && (
-                      <p className="text-red-600 text-sm mt-1">{errors.contactNumber.message}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Office Address *</label>
+                    <label className="block text-sm font-medium mb-2">Office Address</label>
                     <input
                       {...register('officeAddress')}
                       className="input"
-                      placeholder="Street address"
+                      placeholder="Street address (optional)"
                     />
-                    {errors.officeAddress && (
-                      <p className="text-red-600 text-sm mt-1">{errors.officeAddress.message}</p>
-                    )}
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
