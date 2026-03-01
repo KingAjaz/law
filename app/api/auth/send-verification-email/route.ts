@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     // Create Supabase admin client
     const supabaseUrl = getEnvVar('NEXT_PUBLIC_SUPABASE_URL')
     const supabaseServiceKey = getEnvVar('SUPABASE_SERVICE_ROLE_KEY')
-    
+
     const supabase = createClient(supabaseUrl, supabaseServiceKey, {
       auth: {
         autoRefreshToken: false,
@@ -31,21 +31,12 @@ export async function POST(request: NextRequest) {
     })
 
     // Get user by email
-    const { data: users, error: getUserError } = await supabase.auth.admin.listUsers()
-    
-    if (getUserError) {
-      logger.error('Failed to list users', { error: getUserError }, getUserError)
-      return NextResponse.json(
-        { error: 'Failed to find user' },
-        { status: 500 }
-      )
-    }
+    const { data: usersData, error: getUserError } = await supabase.auth.admin.listUsers()
 
-    const user = users.users.find(u => u.email === email)
+    const user = usersData?.users?.find(u => u.email === email)
 
-    if (!user) {
+    if (getUserError || !user) {
       // Security: Don't reveal whether email exists or not
-      // Return generic success message to prevent email enumeration
       return NextResponse.json({
         success: true,
         message: 'If an account exists with this email and is unverified, a verification email has been sent.',
@@ -63,7 +54,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate verification link using Supabase Admin API
-    // Use 'magiclink' type for email verification (works for unverified users)
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
     const { data: generateLinkData, error: generateLinkError } = await supabase.auth.admin.generateLink({
       type: 'magiclink',
@@ -76,7 +66,7 @@ export async function POST(request: NextRequest) {
     if (generateLinkError) {
       logger.error('Failed to generate verification link', { email, error: generateLinkError }, generateLinkError)
       return NextResponse.json(
-        { 
+        {
           error: 'Failed to generate verification link',
           details: generateLinkError.message,
         },
@@ -100,7 +90,7 @@ export async function POST(request: NextRequest) {
     if (!emailSent) {
       logger.error('Failed to send verification email via our service', { email })
       return NextResponse.json(
-        { 
+        {
           error: 'Failed to send verification email',
           verificationLink, // Return link as fallback
           note: 'Email service failed, but here is your verification link',

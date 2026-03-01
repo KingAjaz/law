@@ -105,7 +105,7 @@ async function sendEmail({ to, subject, html, text }: EmailData): Promise<boolea
             'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
           },
           // Add reply-to for better deliverability
-          replyTo: process.env.EMAIL_REPLY_TO || process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'support@legalease.com',
+          replyTo: process.env.EMAIL_REPLY_TO || process.env.NEXT_PUBLIC_CONTACT_EMAIL || emailFrom,
         })
 
         if (result.error) {
