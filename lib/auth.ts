@@ -68,7 +68,6 @@ export async function signUpWithEmail(email: string, password: string, fullName?
   if (error) throw error
 
   // Auto-confirm email and send welcome email via Resend
-  // This avoids relying on Supabase's built-in SMTP (poor Gmail delivery)
   if (data.user) {
     try {
       const res = await fetch('/api/auth/confirm-email', {
@@ -82,6 +81,16 @@ export async function signUpWithEmail(email: string, password: string, fullName?
       }
     } catch (confirmError) {
       console.error('Failed to auto-confirm email:', confirmError)
+    }
+
+    // Sign the user in now that email is confirmed
+    // This establishes a client-side session so they can access protected pages
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+    if (signInError) {
+      console.error('Auto sign-in after signup failed:', signInError)
     }
   }
 
