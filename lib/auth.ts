@@ -68,18 +68,21 @@ export async function signUpWithEmail(email: string, password: string, fullName?
 
   if (error) throw error
 
-  // Also send verification email via our email service as a fallback
-  // This ensures emails are sent even if Supabase SMTP fails
-  if (data.user && !data.user.email_confirmed_at) {
+  // Always send verification email via our Resend email service
+  // Supabase's built-in SMTP has poor Gmail deliverability, so this is the primary path
+  if (data.user) {
     try {
-      await fetch('/api/auth/send-verification-email', {
+      const res = await fetch('/api/auth/send-verification-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, fullName: fullName || email.split('@')[0] }),
       })
+      const result = await res.json()
+      if (!res.ok) {
+        console.error('Verification email API error:', result)
+      }
     } catch (emailError) {
-      // Don't fail signup if our email service fails, Supabase might have sent it
-      console.warn('Failed to send verification email via our service:', emailError)
+      console.error('Failed to send verification email via Resend:', emailError)
     }
   }
 
