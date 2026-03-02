@@ -184,7 +184,7 @@ export default function DashboardPage() {
           pricing_tier: selectedTier,
           status: 'awaiting_payment',
           payment_status: 'pending',
-          payment_id: paymentRef,
+          original_file_url: 'pending_upload', // Placeholder since file is uploaded AFTER payment
         })
         .select()
         .single()
