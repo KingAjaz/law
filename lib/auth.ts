@@ -67,6 +67,20 @@ export async function signUpWithEmail(email: string, password: string, fullName?
   })
 
   if (error) throw error
+
+  // Also send verification email via Resend for reliable Gmail delivery
+  if (data.user) {
+    try {
+      await fetch('/api/auth/send-verification-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, fullName: fullName || email.split('@')[0] }),
+      })
+    } catch (emailError) {
+      console.error('Resend verification email failed:', emailError)
+    }
+  }
+
   return data
 }
 
