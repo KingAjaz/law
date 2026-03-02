@@ -98,37 +98,26 @@ export default function ClientInfoPage() {
 
       if (!user) throw new Error('Not authenticated')
 
-      // Ensure profile exists (foreign key requirement for kyc_data)
-      const { data: existingProfile } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', user.id)
-        .maybeSingle()
-
-      if (!existingProfile) {
-        const { error: profileCreateError } = await supabase.from('profiles').insert({
-          id: user.id,
+      // Ensure profile exists via server API (bypasses RLS)
+      await fetch('/api/auth/ensure-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
           email: user.email,
-          full_name: user.user_metadata?.full_name || data.nameOrCompany,
-          role: 'user',
-          kyc_completed: false,
-        })
-        if (profileCreateError) throw profileCreateError
-      }
+          fullName: user.user_metadata?.full_name || data.nameOrCompany,
+        }),
+      })
 
       // Save client information
       const { error: insertError } = await supabase.from('kyc_data').insert({
         user_id: user.id,
         first_name: data.nameOrCompany,
         contact_email: data.email,
-        phone_number: '',
         address: data.officeAddress || '',
         city: data.city,
         state: data.state,
         country: data.country,
-        id_type: 'nin',
-        id_number: '',
-        id_document_url: '',
         terms_accepted: data.termsAccepted,
         privacy_accepted: data.privacyAccepted,
         status: 'approved',
