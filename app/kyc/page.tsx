@@ -108,7 +108,7 @@ export default function ClientInfoPage() {
         city: data.city,
         state: data.state,
         country: data.country,
-        id_type: 'none',
+        id_type: 'nin',
         id_number: '',
         id_document_url: '',
         terms_accepted: data.termsAccepted,
