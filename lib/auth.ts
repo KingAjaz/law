@@ -62,38 +62,11 @@ export async function signUpWithEmail(email: string, password: string, fullName?
       data: {
         full_name: fullName || email.split('@')[0],
       },
+      emailRedirectTo: `${window.location.origin}/auth/callback?type=signup`,
     },
   })
 
   if (error) throw error
-
-  // Auto-confirm email and send welcome email via Resend
-  if (data.user) {
-    try {
-      const res = await fetch('/api/auth/confirm-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, fullName: fullName || email.split('@')[0] }),
-      })
-      const result = await res.json()
-      if (!res.ok) {
-        console.error('Email confirmation API error:', result)
-      }
-    } catch (confirmError) {
-      console.error('Failed to auto-confirm email:', confirmError)
-    }
-
-    // Sign the user in now that email is confirmed
-    // This establishes a client-side session so they can access protected pages
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
-    if (signInError) {
-      console.error('Auto sign-in after signup failed:', signInError)
-    }
-  }
-
   return data
 }
 
