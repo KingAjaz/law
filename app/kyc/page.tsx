@@ -98,6 +98,24 @@ export default function ClientInfoPage() {
 
       if (!user) throw new Error('Not authenticated')
 
+      // Ensure profile exists (foreign key requirement for kyc_data)
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', user.id)
+        .maybeSingle()
+
+      if (!existingProfile) {
+        const { error: profileCreateError } = await supabase.from('profiles').insert({
+          id: user.id,
+          email: user.email,
+          full_name: user.user_metadata?.full_name || data.nameOrCompany,
+          role: 'user',
+          kyc_completed: false,
+        })
+        if (profileCreateError) throw profileCreateError
+      }
+
       // Save client information
       const { error: insertError } = await supabase.from('kyc_data').insert({
         user_id: user.id,
