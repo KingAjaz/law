@@ -121,6 +121,11 @@ export default function DashboardPage() {
     setIsGeneratingPdf(true)
 
     try {
+      const html2canvasModule = await import('html2canvas')
+      const html2canvas = html2canvasModule.default
+      const jsPDFModule = await import('jspdf')
+      const jsPDF = jsPDFModule.default
+
       const canvas = await html2canvas(invoiceRef.current, {
         scale: 2,
         logging: false,
