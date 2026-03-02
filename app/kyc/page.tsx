@@ -103,6 +103,7 @@ export default function ClientInfoPage() {
         user_id: user.id,
         first_name: data.nameOrCompany,
         contact_email: data.email,
+        phone_number: '',
         address: data.officeAddress || '',
         city: data.city,
         state: data.state,
