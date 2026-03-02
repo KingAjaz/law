@@ -35,17 +35,26 @@ export function AuthHashHandler() {
             handled.current = true
             const supabase = createSupabaseClient()
 
-            supabase.auth.exchangeCodeForSession(code).then(({ data, error }) => {
+            supabase.auth.exchangeCodeForSession(code).then(async ({ data, error }) => {
+                let sessionUser = data.user
+
                 if (error) {
-                    console.error('Code exchange failed:', error)
-                    toast.error('Link is invalid or expired. Please try again.', { duration: 6000 })
-                    router.replace('/login')
-                    return
+                    // It's highly likely that Next.js middleware already exchanged the code
+                    // server-side, making this client-side exchange fail. Check if we have a session.
+                    const { data: { session } } = await supabase.auth.getSession()
+                    if (session?.user) {
+                        sessionUser = session.user
+                    } else {
+                        console.error('Code exchange failed:', error)
+                        toast.error('Link is invalid or expired. Please try again.', { duration: 6000 })
+                        router.replace('/login')
+                        return
+                    }
                 }
 
                 // Check if this was a recovery flow
-                if (data.user?.recovery_sent_at) {
-                    const recoverySentAt = new Date(data.user.recovery_sent_at)
+                if (sessionUser?.recovery_sent_at) {
+                    const recoverySentAt = new Date(sessionUser.recovery_sent_at)
                     const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000)
                     if (recoverySentAt > tenMinutesAgo) {
                         router.replace('/auth/reset-password-confirm')
@@ -53,8 +62,18 @@ export function AuthHashHandler() {
                     }
                 }
 
-                // Email verification — go to client info form
-                router.replace('/kyc')
+                // Email verification or standard login — check KYC status
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('kyc_completed')
+                    .eq('id', sessionUser?.id)
+                    .maybeSingle()
+
+                if (profile && profile.kyc_completed) {
+                    router.replace('/dashboard')
+                } else {
+                    router.replace('/kyc')
+                }
             })
             return
         }
