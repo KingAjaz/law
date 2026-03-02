@@ -53,8 +53,8 @@ export function AuthHashHandler() {
                     }
                 }
 
-                // Email verification or other — go to dashboard/KYC
-                router.replace('/dashboard')
+                // Email verification — go to client info form
+                router.replace('/kyc')
             })
             return
         }

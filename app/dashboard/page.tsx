@@ -354,48 +354,35 @@ export default function DashboardPage() {
             </motion.button>
           </div>
 
-          {/* KYC Status Banner */}
+          {/* Client Info Banner */}
           {kycCompleted === false && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`mb-6 border rounded-lg p-4 ${kycSubmitted
-                ? 'bg-blue-50 border-blue-200'
-                : 'bg-yellow-50 border-yellow-200'
-                }`}
+              className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4"
             >
               <div className="flex items-start">
-                {kycSubmitted ? (
-                  <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
-                ) : (
-                  <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
-                )}
+                <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
                 <div className="flex-1">
-                  <h3 className={`text-sm font-semibold mb-1 ${kycSubmitted ? 'text-blue-800' : 'text-yellow-800'
-                    }`}>
-                    {kycSubmitted
-                      ? 'KYC Submission Received'
-                      : 'KYC Verification Required'}
+                  <h3 className="text-sm font-semibold mb-1 text-yellow-800">
+                    Complete Your Profile
                   </h3>
-                  <p className={`text-sm mb-3 ${kycSubmitted ? 'text-blue-700' : 'text-yellow-700'
-                    }`}>
-                    {kycSubmitted
-                      ? 'Your KYC submission has been received and is awaiting review by our admin team. We\'ll notify you via email once it\'s been reviewed and approved. You won\'t be able to make payments or upload files until your KYC is approved.'
-                      : 'Please complete your KYC (Know Your Customer) verification to continue. You won\'t be able to make payments or upload files until your KYC is approved.'}
+                  <p className="text-sm mb-3 text-yellow-700">
+                    Please complete your client information to access all features.
                   </p>
-                  {!kycSubmitted && (
-                    <button
-                      onClick={() => router.push('/kyc')}
-                      className="inline-flex items-center px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-medium rounded-lg transition-colors"
-                    >
-                      Complete KYC Verification
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </button>
-                  )}
+                  <button
+                    onClick={() => router.push('/kyc')}
+                    className="inline-flex items-center px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-medium rounded-lg transition-colors"
+                  >
+                    Complete Client Information
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </button>
                 </div>
               </div>
             </motion.div>
           )}
+
+
 
           {/* Payment Modal - Select Tier / Invoice / Pay */}
           {showPaymentModal && (
