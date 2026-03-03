@@ -545,9 +545,9 @@ export default function DashboardPage() {
                                 <div>
                                   <p className="text-xs text-gray-500 uppercase font-semibold mb-2">Bank Transfer</p>
                                   <div className="space-y-2">
-                                    <p className="text-sm"><span className="text-gray-500 w-24 inline-block">Bank:</span> <strong className="text-gray-900">GTBank</strong></p>
-                                    <p className="text-sm"><span className="text-gray-500 w-24 inline-block">Account Name:</span> <strong className="text-gray-900">LegalEase Tech Ltd</strong></p>
-                                    <p className="text-sm flex items-center"><span className="text-gray-500 w-24 inline-block">Account No:</span> <strong className="text-gray-900 font-mono text-lg tracking-widest text-primary-800 bg-white px-2 py-0.5 border border-gray-200 rounded">0123456789</strong></p>
+                                    <p className="text-sm text-gray-600 italic border-l-2 border-gray-300 pl-3 py-1">
+                                      Bank account details for direct transfer will be provided upon checkout completion and included in your final paid receipt.
+                                    </p>
                                   </div>
                                 </div>
                                 <div>
