@@ -389,11 +389,11 @@ export default function DashboardPage() {
 
           {/* Payment Modal - Select Tier / Invoice / Pay */}
           {showPaymentModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 overflow-y-auto p-4 flex justify-center items-start pt-10 pb-20">
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="card max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                className={`card w-full ${paymentStep === 'invoice' ? 'max-w-4xl' : 'max-w-2xl'}`}
               >
                 {paymentStep === 'selection' ? (
                   <>
@@ -451,70 +451,117 @@ export default function DashboardPage() {
 
                     {selectedTier && (
                       <div className="space-y-6">
-                        <div ref={invoiceRef} className="bg-white border rounded-lg overflow-hidden">
-                          <div className="bg-gray-50 px-6 py-4 border-b flex justify-between items-center">
-                            <div>
-                              <h1 className="text-xl font-bold text-primary-900 mb-1">LegalEase</h1>
-                              <p className="text-sm font-semibold text-gray-700">TIN: 338500790001</p>
-                              <p className="text-sm text-gray-600 mb-3 max-w-xs">
-                                22, Dr. Omon Ebhomenye Street, off Admiralty Way, Lekki I, Lagos, Nigeria.
-                              </p>
-                              <p className="text-sm text-gray-500 uppercase tracking-wider font-semibold">Invoice Preview</p>
-                              <p className="text-xs text-gray-400">Date: {new Date().toLocaleDateString()}</p>
+                        <div ref={invoiceRef} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden text-gray-800">
+                          {/* Header */}
+                          <div className="bg-gradient-to-r from-primary-900 to-primary-800 px-8 py-6 text-white flex justify-between items-center">
+                            <div className="flex items-center gap-4">
+                              <div className="relative w-16 h-16 bg-white rounded-lg p-2 flex items-center justify-center shadow-md">
+                                <Image src="/LegalEase Logo backless.png" alt="LegalEase Logo" fill className="object-contain p-1" />
+                              </div>
+                              <div>
+                                <h1 className="text-2xl font-bold tracking-tight">LegalEase</h1>
+                                <p className="text-primary-200 text-sm">Professional Legal Services</p>
+                              </div>
                             </div>
                             <div className="text-right">
-                              <div className="relative w-32 h-10">
-                                <Image
-                                  src="/LegalEase Logo backless.png"
-                                  alt="LegalEase Logo"
-                                  fill
-                                  className="object-contain object-right"
-                                />
+                              <h2 className="text-3xl font-light tracking-widest opacity-90">INVOICE</h2>
+                              <p className="text-sm text-primary-200 mt-1">#INV-{Date.now().toString().slice(-6)}</p>
+                            </div>
+                          </div>
+
+                          {/* Info Section */}
+                          <div className="px-8 py-8 flex flex-col md:flex-row justify-between gap-8 border-b border-gray-100">
+                            <div>
+                              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Billed To</h3>
+                              <p className="text-lg font-semibold text-gray-900">{userName || 'Valued Client'}</p>
+                              {userAddress ? (
+                                <p className="text-gray-600 text-sm mt-1 max-w-xs leading-relaxed">{userAddress}</p>
+                              ) : null}
+                              <p className="text-sm text-gray-500 mt-2">ID: {contracts[0]?.user_id?.split('-')[0] || 'Current User'}</p>
+                            </div>
+
+                            <div className="text-left md:text-right">
+                              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pay To</h3>
+                              <p className="text-base font-semibold text-gray-900">LegalEase Tech</p>
+                              <p className="text-gray-600 text-sm mt-1">TIN: 338500790001</p>
+                              <p className="text-gray-600 text-sm max-w-xs md:ml-auto leading-relaxed">
+                                22, Dr. Omon Ebhomenye Street, off Admiralty Way,<br />Lekki I, Lagos, Nigeria.
+                              </p>
+                              <p className="text-sm text-gray-500 mt-4">Date Issued: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                            </div>
+                          </div>
+
+                          {/* Line Items */}
+                          <div className="px-8 py-8">
+                            <table className="w-full">
+                              <thead>
+                                <tr className="border-b-2 border-gray-900 text-sm text-gray-900">
+                                  <th className="text-left py-3 font-semibold w-2/3">Service Description</th>
+                                  <th className="text-center py-3 font-semibold">Qty</th>
+                                  <th className="text-right py-3 font-semibold">Amount</th>
+                                </tr>
+                              </thead>
+                              <tbody className="text-gray-700">
+                                <tr className="border-b border-gray-100">
+                                  <td className="py-5">
+                                    <p className="font-semibold text-gray-900">{PRICING_TIERS[selectedTier].name} Package</p>
+                                    <p className="text-sm text-gray-500 mt-1 max-w-md">{PRICING_TIERS[selectedTier].description}</p>
+                                  </td>
+                                  <td className="text-center py-5">1</td>
+                                  <td className="text-right py-5 font-medium">₦{PRICING_TIERS[selectedTier].price.toLocaleString()}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+
+                            {/* Totals */}
+                            <div className="flex justify-end mt-6">
+                              <div className="w-full md:w-1/2 lg:w-1/3">
+                                <div className="flex justify-between py-2 text-gray-600">
+                                  <span>Subtotal</span>
+                                  <span>₦{PRICING_TIERS[selectedTier].price.toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between py-2 text-gray-600 border-b border-gray-200">
+                                  <span>Tax (0%)</span>
+                                  <span>₦0</span>
+                                </div>
+                                <div className="flex justify-between py-4 text-xl font-bold text-gray-900">
+                                  <span>Total Due</span>
+                                  <span>₦{PRICING_TIERS[selectedTier].price.toLocaleString()}</span>
+                                </div>
                               </div>
                             </div>
                           </div>
 
-                          <div className="p-6">
-                            <div className="flex justify-between items-start mb-8">
-                              <div>
-                                <h3 className="text-lg font-bold mb-1">Bill To:</h3>
-                                <p className="text-gray-600 font-medium">{userName}</p>
-                                {userAddress && <p className="text-gray-600 text-sm">{userAddress}</p>}
-                                <p className="text-sm text-gray-500 mt-1">User ID: {contracts[0]?.user_id || 'Current User'}</p>
+                          {/* Payment Details Box */}
+                          <div className="px-8 pb-8">
+                            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 shadow-sm relative overflow-hidden">
+                              <div className="absolute top-0 left-0 w-2 h-full bg-primary-600"></div>
+                              <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4 flex items-center">
+                                <CreditCard className="w-4 h-4 mr-2 text-primary-700" />
+                                Payment Methods
+                              </h3>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                  <p className="text-xs text-gray-500 uppercase font-semibold mb-2">Bank Transfer</p>
+                                  <div className="space-y-2">
+                                    <p className="text-sm"><span className="text-gray-500 w-24 inline-block">Bank:</span> <strong className="text-gray-900">GTBank</strong></p>
+                                    <p className="text-sm"><span className="text-gray-500 w-24 inline-block">Account Name:</span> <strong className="text-gray-900">LegalEase Tech Ltd</strong></p>
+                                    <p className="text-sm flex items-center"><span className="text-gray-500 w-24 inline-block">Account No:</span> <strong className="text-gray-900 font-mono text-lg tracking-widest text-primary-800 bg-white px-2 py-0.5 border border-gray-200 rounded">0123456789</strong></p>
+                                  </div>
+                                </div>
+                                <div>
+                                  <p className="text-xs text-gray-500 uppercase font-semibold mb-2">Online Payment</p>
+                                  <p className="text-sm text-gray-600 leading-relaxed">
+                                    Click "Proceed to Checkout" below to pay instantly via Paystack using your debit card, bank transfer transfer app, or USSD gateway.
+                                  </p>
+                                </div>
                               </div>
                             </div>
+                          </div>
 
-                            <table className="w-full mb-8">
-                              <thead>
-                                <tr className="border-b-2 border-gray-200">
-                                  <th className="text-left py-2 font-semibold text-gray-600">Service Description</th>
-                                  <th className="text-right py-2 font-semibold text-gray-600">Amount</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr className="border-b border-gray-100">
-                                  <td className="py-4">
-                                    <p className="font-medium">{PRICING_TIERS[selectedTier].name}</p>
-                                    <p className="text-sm text-gray-500">{PRICING_TIERS[selectedTier].description}</p>
-                                  </td>
-                                  <td className="text-right py-4 font-medium">
-                                    ₦{PRICING_TIERS[selectedTier].price.toLocaleString()}
-                                  </td>
-                                </tr>
-                              </tbody>
-                              <tfoot>
-                                <tr>
-                                  <td className="pt-4 text-right font-bold text-lg">Total Due:</td>
-                                  <td className="pt-4 text-right font-bold text-lg text-primary-700">
-                                    ₦{PRICING_TIERS[selectedTier].price.toLocaleString()}
-                                  </td>
-                                </tr>
-                              </tfoot>
-                            </table>
-
-                            <div className="bg-blue-50 border border-blue-200 rounded p-4 text-sm text-blue-800 mb-4">
-                              <p><strong>Note:</strong> This is a generated invoice preview. Proceeding to payment constitutes acceptance of these charges.</p>
-                            </div>
+                          {/* Footer */}
+                          <div className="bg-gray-50 px-8 py-5 border-t border-gray-100 text-center">
+                            <p className="text-xs text-gray-400 italic">This is a generated proforma invoice. Payment constitutes acceptance of charges and our terms of service. Thank you for choosing LegalEase!</p>
                           </div>
                         </div>
 
