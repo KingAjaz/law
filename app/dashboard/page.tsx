@@ -132,7 +132,8 @@ export default function DashboardPage() {
         useCORS: true
       } as any)
 
-      const imgData = canvas.toDataURL('image/png')
+      // Use JPEG with 0.8 quality instead of PNG to shrink file size from 10MB to <1MB
+      const imgData = canvas.toDataURL('image/jpeg', 0.8)
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
@@ -143,7 +144,7 @@ export default function DashboardPage() {
       const pdfWidth = pdf.internal.pageSize.getWidth()
       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width
 
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight)
       pdf.save(`Invoice-${selectedTier}-${Date.now()}.pdf`)
 
       toast.success('Invoice downloaded successfully')
