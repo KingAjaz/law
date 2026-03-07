@@ -417,7 +417,7 @@ export default function DashboardPage() {
                               >
                                 <h3 className="font-semibold mb-1">{details.name}</h3>
                                 <p className="text-2xl font-bold text-primary-700 mb-2">
-                                  ₦{details.price.toLocaleString()}
+                                  ₦{details.price.toLocaleString()} / ${Math.round(details.price / 1500)}
                                 </p>
                                 <p className="text-sm text-gray-600 line-clamp-2">{details.description}</p>
                               </button>
@@ -509,7 +509,7 @@ export default function DashboardPage() {
                                     <p className="text-sm text-gray-500 mt-1 max-w-md">{PRICING_TIERS[selectedTier].description}</p>
                                   </td>
                                   <td className="text-center py-5">1</td>
-                                  <td className="text-right py-5 font-medium">₦{PRICING_TIERS[selectedTier].price.toLocaleString()}</td>
+                                  <td className="text-right py-5 font-medium">₦{PRICING_TIERS[selectedTier].price.toLocaleString()} / ${Math.round(PRICING_TIERS[selectedTier].price / 1500)}</td>
                                 </tr>
                               </tbody>
                             </table>
@@ -519,7 +519,7 @@ export default function DashboardPage() {
                               <div className="w-full md:w-1/2 lg:w-1/3">
                                 <div className="flex justify-between py-2 text-gray-600">
                                   <span>Subtotal</span>
-                                  <span>₦{PRICING_TIERS[selectedTier].price.toLocaleString()}</span>
+                                  <span>₦{PRICING_TIERS[selectedTier].price.toLocaleString()} / ${Math.round(PRICING_TIERS[selectedTier].price / 1500)}</span>
                                 </div>
                                 <div className="flex justify-between py-2 text-gray-600 border-b border-gray-200">
                                   <span>Tax (0%)</span>
@@ -527,7 +527,7 @@ export default function DashboardPage() {
                                 </div>
                                 <div className="flex justify-between py-4 text-xl font-bold text-gray-900">
                                   <span>Total Due</span>
-                                  <span>₦{PRICING_TIERS[selectedTier].price.toLocaleString()}</span>
+                                  <span>₦{PRICING_TIERS[selectedTier].price.toLocaleString()} / ${Math.round(PRICING_TIERS[selectedTier].price / 1500)}</span>
                                 </div>
                               </div>
                             </div>
@@ -736,7 +736,7 @@ export default function DashboardPage() {
                           Tier: <span className="font-medium">{PRICING_TIERS[contract.pricing_tier].name}</span>
                         </span>
                         <span>
-                          Amount: <span className="font-medium">₦{PRICING_TIERS[contract.pricing_tier].price.toLocaleString()}</span>
+                          Amount: <span className="font-medium">₦{PRICING_TIERS[contract.pricing_tier].price.toLocaleString()} / ${Math.round(PRICING_TIERS[contract.pricing_tier].price / 1500)}</span>
                         </span>
                         <span className="flex items-center gap-1">
                           Status: {getStatusIcon(contract.status)}
