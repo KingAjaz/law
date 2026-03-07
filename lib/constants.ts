@@ -1,58 +1,149 @@
 import { PricingTier } from './types'
 
 export const PRICING_TIERS: Record<PricingTier, { name: string; price: number; description: string; features: string[]; deprecated?: boolean }> = {
-  nda_basic: {
-    name: 'NDA Review (Basic)',
-    price: 60000,
+  // --- NDA Reviews & Drafts ---
+  nda_draft_basic: {
+    name: 'NDA Draft (Basic)',
+    price: 100000,
+    description: 'Basic Non-Disclosure Agreement drafting',
+    features: ['Standard drafting'],
+  },
+  nda_draft_premium: {
+    name: 'NDA Draft (Premium)',
+    price: 150000,
+    description: 'Premium Non-Disclosure Agreement drafting',
+    features: ['24-hour response time'],
+  },
+  nda_review_basic: {
+    name: 'NDA Review (Basic Plan)',
+    price: 90000,
     description: 'Basic Non-Disclosure Agreement review',
-    features: [
-      '1 review',
-    ],
+    features: ['1 review'],
+  },
+  nda_review_premium: {
+    name: 'NDA Review (Premium Plan)',
+    price: 180000,
+    description: 'Premium Non-Disclosure Agreement review',
+    features: ['2 reviews', '30 min contract negotiation call with counterparty'],
+  },
+
+  // --- SLA Reviews & Drafts ---
+  sla_draft_basic: {
+    name: 'SLA Draft (Basic)',
+    price: 200000,
+    description: 'Basic Service Level Agreement drafting',
+    features: ['Standard drafting'],
+  },
+  sla_draft_premium: {
+    name: 'SLA Draft (Premium)',
+    price: 250000,
+    description: 'Premium Service Level Agreement drafting',
+    features: ['24-hour response time'],
+  },
+  sla_review_basic: {
+    name: 'SLA Review (Basic Plan)',
+    price: 180000,
+    description: 'Basic Service Level Agreement review',
+    features: ['1 review'],
+  },
+  sla_review_premium: {
+    name: 'SLA Review (Premium Plan)',
+    price: 360000,
+    description: 'Premium Service Level Agreement review',
+    features: ['3 reviews', '30 min contract negotiation call with counterparty'],
+  },
+
+  // --- MSA & Order Forms ---
+  tech_msa_draft_basic: {
+    name: 'MSA/SaaS Draft (Basic)',
+    price: 350000,
+    description: 'Basic Master Service Agreement / Order Form drafting',
+    features: ['Standard drafting'],
+  },
+  tech_msa_draft_premium: {
+    name: 'MSA/SaaS Draft (Premium)',
+    price: 400000,
+    description: 'Premium Master Service Agreement / Order Form drafting',
+    features: ['24-hour response time'],
+  },
+  tech_msa_review_basic: {
+    name: 'MSA/SaaS Review (Basic Plan)',
+    price: 330000,
+    description: 'Basic Master Service Agreement / Order Form review',
+    features: ['1 review'],
+  },
+  tech_msa_review_premium: {
+    name: 'MSA/SaaS Review (Premium Plan)',
+    price: 600000,
+    description: 'Premium Master Service Agreement / Order Form review',
+    features: ['3 reviews', '30 min contract negotiation call with counterparty'],
+  },
+
+  // --- Privacy Policy ---
+  privacy_draft_basic: {
+    name: 'Privacy Policy Draft (Basic)',
+    price: 120000,
+    description: 'Basic Privacy Policy drafting',
+    features: ['Standard drafting'],
+  },
+  privacy_draft_premium: {
+    name: 'Privacy Policy Draft (Premium)',
+    price: 200000,
+    description: 'Premium Privacy Policy drafting',
+    features: ['24-hour response time'],
+  },
+
+  // --- Terms & Conditions ---
+  tnc_draft_basic: {
+    name: 'Terms & Conditions Draft (Basic)',
+    price: 500000,
+    description: 'Terms & Conditions drafting for websites and apps',
+    features: ['Standard drafting'],
+  },
+
+  // --- Legacy Tiers (approximated for display) ---
+  nda_basic: {
+    name: 'NDA Review (Legacy Basic)',
+    price: 60000,
+    description: 'Legacy Non-Disclosure Agreement review',
+    features: ['Legacy'],
+    deprecated: true,
   },
   nda_premium: {
-    name: 'NDA Review (Premium)',
+    name: 'NDA Review (Legacy Premium)',
     price: 120000,
-    description: 'Premium Non-Disclosure Agreement review with negotiation',
-    features: [
-      '2 reviews',
-      '30 min contract negotiation call with counterparty',
-    ],
+    description: 'Legacy Premium Non-Disclosure Agreement review',
+    features: ['Legacy'],
+    deprecated: true,
   },
   sla_basic: {
-    name: 'SLA Review (Basic)',
+    name: 'SLA Review (Legacy Basic)',
     price: 160000,
-    description: 'Basic Service Level Agreement review',
-    features: [
-      '2 reviews',
-    ],
+    description: 'Legacy Basic Service Level Agreement review',
+    features: ['Legacy'],
+    deprecated: true,
   },
   sla_premium: {
-    name: 'SLA Review (Premium)',
+    name: 'SLA Review (Legacy Premium)',
     price: 240000,
-    description: 'Premium Service Level Agreement review with negotiation',
-    features: [
-      '3 reviews',
-      '60 min contract negotiation call with counterparty',
-    ],
+    description: 'Legacy Premium Service Level Agreement review',
+    features: ['Legacy'],
+    deprecated: true,
   },
   tech_msa_basic: {
-    name: 'SaaS/MSA Review (Basic)',
+    name: 'SaaS/MSA Review (Legacy Basic)',
     price: 220000,
-    description: 'Basic SaaS Order Form or MSA review',
-    features: [
-      '2 reviews',
-    ],
+    description: 'Legacy Basic SaaS Order Form or MSA review',
+    features: ['Legacy'],
+    deprecated: true,
   },
   tech_msa_premium: {
-    name: 'SaaS/MSA Review (Premium)',
+    name: 'SaaS/MSA Review (Legacy Premium)',
     price: 300000,
-    description: 'Premium SaaS Order Form or MSA review with negotiation',
-    features: [
-      '3 reviews',
-      '60 min contract negotiation call with counterparty',
-    ],
+    description: 'Legacy Premium SaaS Order Form or MSA review',
+    features: ['Legacy'],
+    deprecated: true,
   },
-  // Legacy Tiers (approximated for display)
   nda: {
     name: 'NDA Review (Legacy)',
     price: 60000,

@@ -36,24 +36,7 @@ export default function PricingPage() {
       router.push('/signup')
     }
   }
-  // Group pricing tiers by category
-  const categories = [
-    {
-      id: 'nda',
-      title: 'NDA Review',
-      tiers: ['nda_basic', 'nda_premium']
-    },
-    {
-      id: 'sla',
-      title: 'SLA and Service Agreement',
-      tiers: ['sla_basic', 'sla_premium']
-    },
-    {
-      id: 'tech_msa',
-      title: 'SaaS Order Forms and MSAs',
-      tiers: ['tech_msa_basic', 'tech_msa_premium']
-    }
-  ]
+  // Features are managed in the table directly to match the precise PDF document types
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -89,63 +72,149 @@ export default function PricingPage() {
               Legal Process Outsourcing
             </h3>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {categories.map((category) => (
-                <div key={category.id} className="flex flex-col gap-6">
-                  <div className="bg-brand-50 rounded-xl p-6 h-full flex flex-col border border-brand-100">
-                    <h4 className="text-xl font-bold text-brand-700 mb-6 text-center h-14 flex items-center justify-center">
-                      {category.title}
-                    </h4>
+            <div className="bg-white rounded-xl shadow-sm border border-brand-100 overflow-x-auto">
+              <table className="w-full text-left border-collapse min-w-[900px]">
+                <thead>
+                  <tr className="bg-brand-50 border-b border-brand-100">
+                    <th className="p-5 font-bold text-brand-800 w-1/5">Document Type</th>
+                    <th className="p-5 font-bold text-brand-800 w-1/5">Draft (Basic Plan)</th>
+                    <th className="p-5 font-bold text-brand-800 w-1/5">Draft (Premium Plan)</th>
+                    <th className="p-5 font-bold text-brand-800 w-1/5">Review (Basic Plan)</th>
+                    <th className="p-5 font-bold text-brand-800 w-1/5">Review (Premium Plan)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {/* Row 1: NDA */}
+                  <tr className="hover:bg-gray-50 transition-colors">
+                    <td className="p-5 font-semibold text-brand-700">Non Disclosure Agreements</td>
+                    <td className="p-5">
+                      <div className="font-bold text-brand-700">₦100,000 / $61</div>
+                      <div className="mt-4">
+                        <button onClick={(e) => handleGetStarted(e as any, 'nda_draft_basic')} className="btn btn-secondary w-full text-xs py-2">Get Started</button>
+                      </div>
+                    </td>
+                    <td className="p-5">
+                      <div className="font-bold text-brand-700">₦150,000 / $100</div>
+                      <div className="text-xs text-gray-500 mt-1 mb-3">(24-hour response time)</div>
+                      <div>
+                        <button onClick={(e) => handleGetStarted(e as any, 'nda_draft_premium')} className="btn btn-primary-beige w-full text-xs py-2">Get Started</button>
+                      </div>
+                    </td>
+                    <td className="p-5">
+                      <div className="font-bold text-brand-700">₦90,000 / $60</div>
+                      <div className="text-xs text-gray-500 mt-1 mb-3">(1 review)</div>
+                      <div>
+                        <button onClick={(e) => handleGetStarted(e as any, 'nda_review_basic')} className="btn btn-secondary w-full text-xs py-2">Get Started</button>
+                      </div>
+                    </td>
+                    <td className="p-5">
+                      <div className="font-bold text-brand-700">₦180,000 / $120</div>
+                      <div className="text-xs text-gray-500 mt-1 mb-3">(2 reviews + 30 mins call)</div>
+                      <div>
+                        <button onClick={(e) => handleGetStarted(e as any, 'nda_review_premium')} className="btn btn-primary-beige w-full text-xs py-2">Get Started</button>
+                      </div>
+                    </td>
+                  </tr>
 
-                    <div className="space-y-6 flex-1">
-                      {category.tiers.map((tierKey) => {
-                        // Cast to handle the string indexing, though in a real app better typing is preferred
-                        // @ts-ignore
-                        const tier = PRICING_TIERS[tierKey]
-                        if (!tier) return null
+                  {/* Row 2: SLA */}
+                  <tr className="hover:bg-gray-50 transition-colors">
+                    <td className="p-5 font-semibold text-brand-700">Service Level Agreements or Service Agreements</td>
+                    <td className="p-5">
+                      <div className="font-bold text-brand-700">₦200,000 / $133</div>
+                      <div className="mt-4">
+                        <button onClick={(e) => handleGetStarted(e as any, 'sla_draft_basic')} className="btn btn-secondary w-full text-xs py-2">Get Started</button>
+                      </div>
+                    </td>
+                    <td className="p-5">
+                      <div className="font-bold text-brand-700">₦250,000 / $167</div>
+                      <div className="text-xs text-gray-500 mt-1 mb-3">(24-hour response time)</div>
+                      <div>
+                        <button onClick={(e) => handleGetStarted(e as any, 'sla_draft_premium')} className="btn btn-primary-beige w-full text-xs py-2">Get Started</button>
+                      </div>
+                    </td>
+                    <td className="p-5">
+                      <div className="font-bold text-brand-700">₦180,000 / $120</div>
+                      <div className="text-xs text-gray-500 mt-1 mb-3">(1 review)</div>
+                      <div>
+                        <button onClick={(e) => handleGetStarted(e as any, 'sla_review_basic')} className="btn btn-secondary w-full text-xs py-2">Get Started</button>
+                      </div>
+                    </td>
+                    <td className="p-5">
+                      <div className="font-bold text-brand-700">₦360,000 / $240</div>
+                      <div className="text-xs text-gray-500 mt-1 mb-3">(3 reviews + 30 mins call)</div>
+                      <div>
+                        <button onClick={(e) => handleGetStarted(e as any, 'sla_review_premium')} className="btn btn-primary-beige w-full text-xs py-2">Get Started</button>
+                      </div>
+                    </td>
+                  </tr>
 
-                        const isPremium = tierKey.includes('premium')
+                  {/* Row 3: MSA */}
+                  <tr className="hover:bg-gray-50 transition-colors">
+                    <td className="p-5 font-semibold text-brand-700">Master Service Agreements (SaaS) & Order Forms</td>
+                    <td className="p-5">
+                      <div className="font-bold text-brand-700">₦350,000 / $233</div>
+                      <div className="mt-4">
+                        <button onClick={(e) => handleGetStarted(e as any, 'tech_msa_draft_basic')} className="btn btn-secondary w-full text-xs py-2">Get Started</button>
+                      </div>
+                    </td>
+                    <td className="p-5">
+                      <div className="font-bold text-brand-700">₦400,000 / $267</div>
+                      <div className="text-xs text-gray-500 mt-1 mb-3">(24-hour response time)</div>
+                      <div>
+                        <button onClick={(e) => handleGetStarted(e as any, 'tech_msa_draft_premium')} className="btn btn-primary-beige w-full text-xs py-2">Get Started</button>
+                      </div>
+                    </td>
+                    <td className="p-5">
+                      <div className="font-bold text-brand-700">₦330,000 / $220</div>
+                      <div className="text-xs text-gray-500 mt-1 mb-3">(1 review)</div>
+                      <div>
+                        <button onClick={(e) => handleGetStarted(e as any, 'tech_msa_review_basic')} className="btn btn-secondary w-full text-xs py-2">Get Started</button>
+                      </div>
+                    </td>
+                    <td className="p-5">
+                      <div className="font-bold text-brand-700">₦600,000 / $400</div>
+                      <div className="text-xs text-gray-500 mt-1 mb-3">(3 reviews + 30 mins call)</div>
+                      <div>
+                        <button onClick={(e) => handleGetStarted(e as any, 'tech_msa_review_premium')} className="btn btn-primary-beige w-full text-xs py-2">Get Started</button>
+                      </div>
+                    </td>
+                  </tr>
 
-                        return (
-                          <div
-                            key={tierKey}
-                            className={`bg-white rounded-lg p-6 shadow-sm border ${isPremium ? 'border-brand-400 ring-1 ring-brand-100' : 'border-gray-100'}`}
-                          >
-                            <div className="flex justify-between items-start mb-2">
-                              <span className={`text-sm font-bold px-2 py-1 rounded ${isPremium ? 'bg-brand-100 text-brand-800' : 'bg-gray-100 text-gray-600'}`}>
-                                {isPremium ? 'Premium' : 'Basic'}
-                              </span>
-                            </div>
+                  {/* Row 4: Privacy Policy */}
+                  <tr className="hover:bg-gray-50 transition-colors">
+                    <td className="p-5 font-semibold text-brand-700">Privacy Policy</td>
+                    <td className="p-5">
+                      <div className="font-bold text-brand-700">₦120,000 / $80</div>
+                      <div className="mt-4">
+                        <button onClick={(e) => handleGetStarted(e as any, 'privacy_draft_basic')} className="btn btn-secondary w-full text-xs py-2">Get Started</button>
+                      </div>
+                    </td>
+                    <td className="p-5">
+                      <div className="font-bold text-brand-700">₦200,000 / $133</div>
+                      <div className="text-xs text-gray-500 mt-1 mb-3">(24-hour response time)</div>
+                      <div>
+                        <button onClick={(e) => handleGetStarted(e as any, 'privacy_draft_premium')} className="btn btn-primary-beige w-full text-xs py-2">Get Started</button>
+                      </div>
+                    </td>
+                    <td className="p-5 text-gray-400 italic text-sm text-center">Not available</td>
+                    <td className="p-5 text-gray-400 italic text-sm text-center">Not available</td>
+                  </tr>
 
-                            <div className="mb-4">
-                              <span className="text-2xl font-bold text-brand-700">
-                                ₦{tier.price.toLocaleString()}
-                              </span>
-                            </div>
-
-                            <ul className="space-y-2 mb-6 min-h-[80px]">
-                              {tier.features.map((feature: string, idx: number) => (
-                                <li key={idx} className="flex items-start">
-                                  <CheckCircle className="h-4 w-4 text-brand-600 mr-2 mt-1 flex-shrink-0" />
-                                  <span className="text-gray-600 text-sm leading-snug">{feature}</span>
-                                </li>
-                              ))}
-                            </ul>
-
-                            <Link
-                              href={isAuthenticated ? "/dashboard" : "/signup"}
-                              onClick={(e) => handleGetStarted(e, tierKey)}
-                              className={`btn w-full text-center text-sm ${isPremium ? 'btn-primary-beige' : 'btn-secondary'}`}
-                            >
-                              Get Started
-                            </Link>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  {/* Row 5: Terms & Conditions */}
+                  <tr className="hover:bg-gray-50 transition-colors">
+                    <td className="p-5 font-semibold text-brand-700">Terms & Conditions (Website and Software Apps)</td>
+                    <td className="p-5">
+                      <div className="font-bold text-brand-700">₦500,000 / $333</div>
+                      <div className="mt-4">
+                        <button onClick={(e) => handleGetStarted(e as any, 'tnc_draft_basic')} className="btn btn-secondary w-full text-xs py-2">Get Started</button>
+                      </div>
+                    </td>
+                    <td className="p-5 text-gray-400 italic text-sm text-center">Not available</td>
+                    <td className="p-5 text-gray-400 italic text-sm text-center">Not available</td>
+                    <td className="p-5 text-gray-400 italic text-sm text-center">Not available</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </motion.div>
 

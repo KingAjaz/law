@@ -90,7 +90,7 @@ export default function ServicesPage() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center"
+            className="text-center mb-24"
           >
             <Link
               href="/signup"
@@ -99,6 +99,108 @@ export default function ServicesPage() {
               Request Contract Review
               <ArrowRight className="h-5 w-5" />
             </Link>
+          </motion.div>
+
+          {/* Legal Function Review Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-16"
+          >
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-brand-700 mb-4">
+                Legal Function Review
+              </h2>
+              <div className="w-24 h-1 bg-brand-600 mx-auto mb-6"></div>
+              <h3 className="text-xl md:text-2xl font-semibold text-brand-700 mb-4">
+                Is Your In-House Legal Function Built to Scale?
+              </h3>
+              <p className="text-lg md:text-xl text-brand-700 leading-relaxed max-w-4xl mx-auto">
+                A structured assessment of your legal team&apos;s operations — identifying gaps, inefficiencies, and opportunities so you can build a function that keeps pace with your business.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto mb-12">
+              {/* Essential Review */}
+              <div className="bg-brand-50 rounded-xl p-8 border border-brand-100 flex flex-col h-full hover:shadow-md transition-shadow">
+                <h4 className="text-2xl font-bold text-brand-700 mb-2">Essential Review</h4>
+                <p className="text-brand-600 font-medium mb-6">For early-stage companies (Seed to Series A)</p>
+
+                <ul className="space-y-4 mb-8 flex-1">
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">Document review of existing contracts and legal policies</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">2–3 stakeholder interviews</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">Assessment across 4 core areas: structure, workflows, risk exposure, and talent</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">Prioritised action plan with timelines</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">1-hour advisory session to walk through findings</span>
+                  </li>
+                </ul>
+
+                <div className="bg-white p-4 rounded-lg inline-block self-start border border-brand-100">
+                  <span className="font-semibold text-brand-800">Timeline:</span> <span className="text-gray-700">2 weeks</span>
+                </div>
+              </div>
+
+              {/* Comprehensive Assessment */}
+              <div className="bg-white rounded-xl p-8 border border-brand-200 ring-1 ring-brand-100 flex flex-col h-full hover:shadow-md transition-shadow relative overflow-hidden">
+                <div className="absolute top-0 right-0 bg-brand-100 text-brand-800 text-xs font-bold px-3 py-1 rounded-bl-lg">
+                  PREMIUM
+                </div>
+                <h4 className="text-2xl font-bold text-brand-700 mb-2">Comprehensive Assessment</h4>
+                <p className="text-brand-600 font-medium mb-6">For growth-stage companies (Series B and beyond)</p>
+
+                <ul className="space-y-4 mb-8 flex-1">
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">Full document review across legal and operational functions</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">5–7 stakeholder interviews across legal and business teams</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">Assessment across 7 areas: structure, headcount, workflows, contract management, regulatory posture, external counsel management, and investment/expansion readiness</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">Full roadmap with phased milestones and executive summary</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">2-hour advisory session + 30-day follow-up check-in</span>
+                  </li>
+                </ul>
+
+                <div className="bg-brand-50 p-4 rounded-lg inline-block self-start border border-brand-100">
+                  <span className="font-semibold text-brand-800">Timeline:</span> <span className="text-gray-700">3–4 weeks</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <Link
+                href="/contact"
+                className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
+              >
+                Contact Us to Get Started
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            </div>
           </motion.div>
         </div>
       </main>

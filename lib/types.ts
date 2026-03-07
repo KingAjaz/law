@@ -9,10 +9,15 @@ export type ContractStatus =
   | 'completed'
 
 export type PricingTier =
+  | 'nda_draft_basic' | 'nda_draft_premium' | 'nda_review_basic' | 'nda_review_premium'
+  | 'sla_draft_basic' | 'sla_draft_premium' | 'sla_review_basic' | 'sla_review_premium'
+  | 'tech_msa_draft_basic' | 'tech_msa_draft_premium' | 'tech_msa_review_basic' | 'tech_msa_review_premium'
+  | 'privacy_draft_basic' | 'privacy_draft_premium'
+  | 'tnc_draft_basic'
+  // Legacy tiers
   | 'nda_basic' | 'nda_premium'
   | 'sla_basic' | 'sla_premium'
   | 'tech_msa_basic' | 'tech_msa_premium'
-  // Legacy tiers
   | 'nda' | 'sla' | 'tech_msa'
 
 export interface User {
