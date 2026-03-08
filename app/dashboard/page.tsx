@@ -355,12 +355,6 @@ export default function DashboardPage() {
               <p className="text-gray-600 mt-1">Manage your contract reviews</p>
             </motion.div>
             <div className="flex gap-4">
-              <Link
-                href="/dashboard/settings"
-                className="btn btn-secondary flex items-center"
-              >
-                Profile Settings
-              </Link>
               <motion.button
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -477,7 +471,7 @@ export default function DashboardPage() {
                                 <Image src="/LegalEase Logo backless.png" alt="LegalEase Logo" fill className="object-contain p-1" />
                               </div>
                               <div>
-                                <h1 className="text-2xl font-bold tracking-tight">Legalease consulting services</h1>
+                                <h1 className="text-2xl font-bold tracking-tight">Legalease Consulting Services</h1>
                               </div>
                             </div>
                             <div className="text-right">
@@ -499,7 +493,7 @@ export default function DashboardPage() {
 
                             <div className="text-left md:text-right">
                               <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pay To</h3>
-                              <p className="text-base font-semibold text-gray-900">Legalease consulting services</p>
+                              <p className="text-base font-semibold text-gray-900">Legalease Consulting Services</p>
                               <p className="text-gray-600 text-sm mt-1">TIN: 338500790001</p>
                               <p className="text-gray-600 text-sm max-w-xs md:ml-auto leading-relaxed">
                                 <span className="font-semibold text-gray-700">Service address:</span> 22, Dr. Omon Ebhomenye Street, off Admiralty Way,<br />Lekki I, Lagos, Nigeria.
@@ -537,9 +531,8 @@ export default function DashboardPage() {
                                   <span>Subtotal</span>
                                   <span>₦{PRICING_TIERS[selectedTier].price.toLocaleString()} / ${Math.round(PRICING_TIERS[selectedTier].price / 1500)}</span>
                                 </div>
-                                <div className="flex justify-between py-2 text-gray-600 border-b border-gray-200">
-                                  <span>Tax (0%)</span>
-                                  <span>₦0</span>
+                                <div className="py-2 text-gray-600 border-b border-gray-200 text-xs text-left italic leading-tight">
+                                  These fees are exclusive of all applicable tax including Value Added Tax and Withholding Tax (the "Taxes"). You are required to pay the Taxes and Legalease Consulting Services does not take any responsibility for such remittances.
                                 </div>
                                 <div className="flex justify-between py-4 text-xl font-bold text-gray-900">
                                   <span>Total Due</span>

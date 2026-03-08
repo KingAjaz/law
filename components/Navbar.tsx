@@ -73,6 +73,9 @@ export function Navbar() {
               <div className="h-8 w-20 animate-pulse rounded bg-white/20"></div>
             ) : user ? (
               <>
+                <Link href="/dashboard/settings" className={`text-sm font-medium transition-colors ${authLinkClass}`}>
+                  Settings
+                </Link>
                 <Link href="/dashboard" className="btn text-sm btn-secondary-beige">
                   Dashboard
                 </Link>
@@ -140,6 +143,13 @@ export function Navbar() {
             <div className="pt-4 border-t border-brand-700 space-y-2">
               {user ? (
                 <>
+                  <Link
+                    href="/dashboard/settings"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block btn w-full text-center btn-ghost-beige border border-white/20"
+                  >
+                    Settings
+                  </Link>
                   <Link
                     href="/dashboard"
                     onClick={() => setMobileMenuOpen(false)}
