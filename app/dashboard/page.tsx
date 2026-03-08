@@ -467,10 +467,6 @@ export default function DashboardPage() {
                               <div className="relative w-16 h-16 bg-black rounded-lg p-2 flex items-center justify-center shadow-md">
                                 <Image src="/LegalEase Logo backless.png" alt="LegalEase Logo" fill className="object-contain p-1" />
                               </div>
-                              <div>
-                                <h1 className="text-2xl font-bold tracking-tight">LegalEase</h1>
-                                <p className="text-primary-200 text-sm">Professional Legal Services</p>
-                              </div>
                             </div>
                             <div className="text-right">
                               <h2 className="text-3xl font-light tracking-widest opacity-90">INVOICE</h2>
@@ -491,10 +487,10 @@ export default function DashboardPage() {
 
                             <div className="text-left md:text-right">
                               <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pay To</h3>
-                              <p className="text-base font-semibold text-gray-900">LegalEase Tech</p>
+                              <p className="text-base font-semibold text-gray-900">Legalease consulting services</p>
                               <p className="text-gray-600 text-sm mt-1">TIN: 338500790001</p>
                               <p className="text-gray-600 text-sm max-w-xs md:ml-auto leading-relaxed">
-                                22, Dr. Omon Ebhomenye Street, off Admiralty Way,<br />Lekki I, Lagos, Nigeria.
+                                <span className="font-semibold text-gray-700">Service address:</span> 22, Dr. Omon Ebhomenye Street, off Admiralty Way,<br />Lekki I, Lagos, Nigeria.
                               </p>
                               <p className="text-sm text-gray-500 mt-4">Date Issued: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
                             </div>
