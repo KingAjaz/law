@@ -467,6 +467,9 @@ export default function DashboardPage() {
                               <div className="relative w-16 h-16 bg-black rounded-lg p-2 flex items-center justify-center shadow-md">
                                 <Image src="/LegalEase Logo backless.png" alt="LegalEase Logo" fill className="object-contain p-1" />
                               </div>
+                              <div>
+                                <h1 className="text-2xl font-bold tracking-tight">Legalease consulting services</h1>
+                              </div>
                             </div>
                             <div className="text-right">
                               <h2 className="text-3xl font-light tracking-widest opacity-90">INVOICE</h2>
