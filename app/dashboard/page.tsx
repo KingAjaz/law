@@ -129,7 +129,13 @@ export default function DashboardPage() {
       const canvas = await html2canvas(invoiceRef.current, {
         scale: 2,
         logging: false,
-        useCORS: true
+        useCORS: true,
+        windowWidth: 1024,
+        onclone: (doc: Document, el: HTMLElement) => {
+          // Force a fixed desktop width inside the clone to prevent mobile clipping 
+          el.style.width = '800px';
+          el.style.maxWidth = 'none';
+        }
       } as any)
 
       // Use JPEG with 0.8 quality instead of PNG to shrink file size from 10MB to <1MB
