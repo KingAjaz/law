@@ -130,11 +130,13 @@ export default function DashboardPage() {
         scale: 2,
         logging: false,
         useCORS: true,
-        windowWidth: 1024,
+        windowWidth: invoiceRef.current.scrollWidth,
         onclone: (doc: Document, el: HTMLElement) => {
-          // Force a fixed desktop width inside the clone to prevent mobile clipping 
-          el.style.width = '800px';
+          // Temporarily remove max-width constraints on clone to prevent clipping
+          // but allow intrinsic sizing to prevent it shrinking down to fit a tiny viewport
+          el.style.width = 'max-content';
           el.style.maxWidth = 'none';
+          el.style.minWidth = '800px';
         }
       } as any)
 
