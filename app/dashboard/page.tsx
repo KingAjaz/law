@@ -405,7 +405,7 @@ export default function DashboardPage() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className={`card w-full ${paymentStep === 'invoice' ? 'max-w-4xl' : 'max-w-2xl'}`}
+                className={`card w-full ${paymentStep === 'invoice' ? 'max-w-3xl' : 'max-w-2xl'}`}
               >
                 {paymentStep === 'selection' ? (
                   <>
@@ -468,7 +468,7 @@ export default function DashboardPage() {
                           <div className="bg-gradient-to-r from-primary-900 to-primary-800 px-8 py-6 text-white flex justify-between items-center">
                             <div className="flex items-center gap-4">
                               <div className="relative w-40 h-14 bg-black rounded-lg p-2 flex items-center justify-center shadow-md">
-                                <Image src="/LegalEase Logo backless.svg" alt="LegalEase Logo" fill className="object-contain p-1" />
+                                <img src="/LegalEase Logo backless.svg" alt="LegalEase Logo" className="w-full h-full object-contain p-1" />
                               </div>
                               <div>
                                 <h1 className="text-2xl font-bold tracking-tight">Legalease Consulting Services</h1>
