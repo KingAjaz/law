@@ -465,16 +465,17 @@ export default function DashboardPage() {
                       <div className="space-y-6">
                         <div ref={invoiceRef} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden text-gray-800">
                           {/* Header */}
-                          <div className="bg-gradient-to-r from-primary-900 to-primary-800 px-8 py-6 text-white flex justify-between items-center">
-                            <div className="flex items-center gap-4">
-                              <div className="relative w-40 h-14 bg-transparent flex items-center justify-center">
-                                <img src="/LegalEase Logo backless.png" alt="LegalEase Logo" className="w-full h-full object-contain" />
-                              </div>
-                              <div>
-                                <h1 className="text-2xl font-bold tracking-tight">Legalease Consulting Services</h1>
-                              </div>
+                          <div className="bg-gradient-to-r from-primary-900 to-primary-800 px-8 py-6 text-white flex flex-col md:flex-row justify-between items-center gap-4 relative">
+                            <div className="relative w-40 h-14 bg-transparent flex items-center justify-center flex-shrink-0">
+                              <img src="/LegalEase Logo backless.png" alt="LegalEase Logo" className="w-full h-full object-contain" />
                             </div>
-                            <div className="text-right">
+
+                            {/* Centralized Text */}
+                            <div className="md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2 text-center pointer-events-none w-full md:w-auto">
+                              <h1 className="text-xl md:text-2xl font-bold tracking-tight">Legalease Consulting Services</h1>
+                            </div>
+
+                            <div className="text-center md:text-right flex-shrink-0">
                               <h2 className="text-3xl font-light tracking-widest opacity-90">INVOICE</h2>
                               <p className="text-sm text-primary-200 mt-1">#INV-{Date.now().toString().slice(-6)}</p>
                             </div>
