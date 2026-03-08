@@ -467,8 +467,8 @@ export default function DashboardPage() {
                           {/* Header */}
                           <div className="bg-gradient-to-r from-primary-900 to-primary-800 px-8 py-6 text-white flex justify-between items-center">
                             <div className="flex items-center gap-4">
-                              <div className="relative w-40 h-14 bg-black rounded-lg p-2 flex items-center justify-center shadow-md">
-                                <img src="/LegalEase Logo backless.svg" alt="LegalEase Logo" className="w-full h-full object-contain p-1" />
+                              <div className="relative w-40 h-14 bg-transparent flex items-center justify-center">
+                                <img src="/LegalEase Logo backless.png" alt="LegalEase Logo" className="w-full h-full object-contain" />
                               </div>
                               <div>
                                 <h1 className="text-2xl font-bold tracking-tight">Legalease Consulting Services</h1>
