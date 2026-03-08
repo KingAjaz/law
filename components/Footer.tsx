@@ -62,10 +62,6 @@ export function Footer() {
                 <p>{CONTACT_INFO.address}</p>
               </li>
               <li>
-                <p className="font-medium text-white mb-1">Phone No:</p>
-                <p>{CONTACT_INFO.phone}</p>
-              </li>
-              <li>
                 <p className="font-medium text-white mb-1">Email:</p>
                 <p>{CONTACT_INFO.email}</p>
               </li>
