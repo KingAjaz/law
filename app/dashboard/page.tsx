@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { createSupabaseClient } from '@/lib/supabase/client'
@@ -353,17 +354,25 @@ export default function DashboardPage() {
               <h1 className="text-3xl font-bold text-primary-900">Dashboard</h1>
               <p className="text-gray-600 mt-1">Manage your contract reviews</p>
             </motion.div>
-            <motion.button
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              onClick={() => setShowPaymentModal(true)}
-              disabled={!kycCompleted}
-              className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-              title={!kycCompleted ? 'Please complete KYC verification first' : ''}
-            >
-              <CreditCard className="h-5 w-5 mr-2" />
-              New Contract Review
-            </motion.button>
+            <div className="flex gap-4">
+              <Link
+                href="/dashboard/settings"
+                className="btn btn-secondary flex items-center"
+              >
+                Profile Settings
+              </Link>
+              <motion.button
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                onClick={() => setShowPaymentModal(true)}
+                disabled={!kycCompleted}
+                className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                title={!kycCompleted ? 'Please complete KYC verification first' : ''}
+              >
+                <CreditCard className="h-5 w-5 mr-2" />
+                New Contract Review
+              </motion.button>
+            </div>
           </div>
 
           {/* Client Info Banner */}
