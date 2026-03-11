@@ -7,28 +7,24 @@ export const PRICING_TIERS: Record<PricingTier, { name: string; price: number; d
     price: 100000,
     description: 'Basic Non-Disclosure Agreement drafting',
     features: ['Standard drafting'],
-    deprecated: true,
   },
   nda_draft_premium: {
     name: 'NDA Draft (Premium)',
     price: 150000,
     description: 'Premium Non-Disclosure Agreement drafting',
     features: ['24-hour response time'],
-    deprecated: true,
   },
   nda_review_basic: {
     name: 'NDA Review (Basic Plan)',
     price: 90000,
     description: 'Basic Non-Disclosure Agreement review',
     features: ['1 review'],
-    deprecated: true,
   },
   nda_review_premium: {
     name: 'NDA Review (Premium Plan)',
     price: 180000,
     description: 'Premium Non-Disclosure Agreement review',
     features: ['2 reviews', '30 min contract negotiation call with counterparty'],
-    deprecated: true,
   },
 
   // --- SLA Reviews & Drafts ---
@@ -37,28 +33,24 @@ export const PRICING_TIERS: Record<PricingTier, { name: string; price: number; d
     price: 200000,
     description: 'Basic Service Level Agreement drafting',
     features: ['Standard drafting'],
-    deprecated: true,
   },
   sla_draft_premium: {
     name: 'SLA Draft (Premium)',
     price: 250000,
     description: 'Premium Service Level Agreement drafting',
     features: ['24-hour response time'],
-    deprecated: true,
   },
   sla_review_basic: {
     name: 'SLA Review (Basic Plan)',
     price: 180000,
     description: 'Basic Service Level Agreement review',
     features: ['1 review'],
-    deprecated: true,
   },
   sla_review_premium: {
     name: 'SLA Review (Premium Plan)',
     price: 360000,
     description: 'Premium Service Level Agreement review',
     features: ['3 reviews', '30 min contract negotiation call with counterparty'],
-    deprecated: true,
   },
 
   // --- MSA & Order Forms ---
@@ -67,28 +59,24 @@ export const PRICING_TIERS: Record<PricingTier, { name: string; price: number; d
     price: 350000,
     description: 'Basic Master Service Agreement / Order Form drafting',
     features: ['Standard drafting'],
-    deprecated: true,
   },
   tech_msa_draft_premium: {
     name: 'MSA/SaaS Draft (Premium)',
     price: 400000,
     description: 'Premium Master Service Agreement / Order Form drafting',
     features: ['24-hour response time'],
-    deprecated: true,
   },
   tech_msa_review_basic: {
     name: 'MSA/SaaS Review (Basic Plan)',
     price: 330000,
     description: 'Basic Master Service Agreement / Order Form review',
     features: ['1 review'],
-    deprecated: true,
   },
   tech_msa_review_premium: {
     name: 'MSA/SaaS Review (Premium Plan)',
     price: 600000,
     description: 'Premium Master Service Agreement / Order Form review',
     features: ['3 reviews', '30 min contract negotiation call with counterparty'],
-    deprecated: true,
   },
 
   // --- Privacy Policy ---
@@ -97,14 +85,12 @@ export const PRICING_TIERS: Record<PricingTier, { name: string; price: number; d
     price: 120000,
     description: 'Basic Privacy Policy drafting',
     features: ['Standard drafting'],
-    deprecated: true,
   },
   privacy_draft_premium: {
     name: 'Privacy Policy Draft (Premium)',
     price: 200000,
     description: 'Premium Privacy Policy drafting',
     features: ['24-hour response time'],
-    deprecated: true,
   },
 
   // --- Terms & Conditions ---
@@ -113,7 +99,6 @@ export const PRICING_TIERS: Record<PricingTier, { name: string; price: number; d
     price: 500000,
     description: 'Terms & Conditions drafting for websites and apps',
     features: ['Standard drafting'],
-    deprecated: true,
   },
 
   // --- Legacy Tiers (approximated for display) ---
@@ -165,18 +150,21 @@ export const PRICING_TIERS: Record<PricingTier, { name: string; price: number; d
     price: 60000,
     description: 'Non-Disclosure Agreement review',
     features: ['Standard Review'],
+    deprecated: true,
   },
   sla: {
     name: 'SLA Review',
     price: 100000,
     description: 'Service Level Agreement review',
     features: ['Standard Review'],
+    deprecated: true,
   },
   tech_msa: {
     name: 'Tech MSA',
     price: 150000,
     description: 'Technology Master Service Agreements',
     features: ['Standard Review'],
+    deprecated: true,
   },
 }
 
