@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Suspense } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { createSupabaseClient } from '@/lib/supabase/client'
 import { Navbar } from '@/components/Navbar'
@@ -14,11 +14,12 @@ import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { EmptyState, ErrorMessage } from '@/components/ErrorFallback'
 import { PRICING_TIERS, CONTRACT_STATUS_LABELS } from '@/lib/constants'
 import type { Contract, PricingTier } from '@/lib/types'
-import { initializePayment } from '@/lib/paystack'
+import { initializePayment, verifyPayment } from '@/lib/paystack'
 import { validateFile, getAllowedFileTypesString, formatFileSize } from '@/lib/file-validation'
 
-export default function DashboardPage() {
+function DashboardContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const supabase = createSupabaseClient()
   const [contracts, setContracts] = useState<Contract[]>([])
   const [loading, setLoading] = useState(true)
@@ -41,7 +42,37 @@ export default function DashboardPage() {
   useEffect(() => {
     loadContracts()
     checkKYCStatus()
-  }, [])
+
+    // Check for Paystack redirect reference
+    const reference = searchParams?.get('reference')
+    const trxref = searchParams?.get('trxref')
+
+    if (reference || trxref) {
+      handlePaymentVerification(reference || trxref || '')
+    }
+  }, [searchParams])
+
+  const handlePaymentVerification = async (reference: string) => {
+    try {
+      const result = await verifyPayment(reference)
+
+      if (result.status && result.data.status === 'success') {
+        toast.success('Payment successful! You can now upload your contract.')
+
+        // Remove reference from URL to prevent re-verification on refresh
+        const newUrl = window.location.pathname
+        window.history.replaceState({}, document.title, newUrl)
+
+        // Reload contracts to reflect updated status
+        loadContracts()
+      } else {
+        toast.error('Payment verification failed or payment was not successful.')
+      }
+    } catch (error: any) {
+      console.error('Payment verification error:', error)
+      toast.error('Failed to verify payment. Please check your email for confirmation.')
+    }
+  }
 
   useEffect(() => {
     if (showPaymentModal) {
@@ -876,5 +907,13 @@ export default function DashboardPage() {
 
       <Footer />
     </div>
+  )
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-900"></div></div>}>
+      <DashboardContent />
+    </Suspense>
   )
 }
