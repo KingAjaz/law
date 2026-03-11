@@ -22,7 +22,8 @@ BEGIN
         ''privacy_draft_basic'', ''privacy_draft_premium'',
         ''tnc_draft_basic'',
         ''nda_basic'', ''nda_premium'', ''sla_basic'', ''sla_premium'', ''tech_msa_basic'', ''tech_msa_premium'',
-        ''nda'', ''sla'', ''tech_msa''
+        ''nda'', ''sla'', ''tech_msa'',
+        ''basic'', ''standard'', ''premium''
       ));
     ';
     RAISE NOTICE 'Updated contracts table check constraint.';
@@ -50,7 +51,8 @@ BEGIN
         ''privacy_draft_basic'', ''privacy_draft_premium'',
         ''tnc_draft_basic'',
         ''nda_basic'', ''nda_premium'', ''sla_basic'', ''sla_premium'', ''tech_msa_basic'', ''tech_msa_premium'',
-        ''nda'', ''sla'', ''tech_msa''
+        ''nda'', ''sla'', ''tech_msa'',
+        ''basic'', ''standard'', ''premium''
       ));
     ';
     RAISE NOTICE 'Updated pricing_tiers table check constraint.';
