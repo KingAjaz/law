@@ -482,11 +482,22 @@ export default function AdminPage() {
                         <div className="flex flex-col gap-2 items-end">
                           {contract.original_file_url && contract.original_file_url !== 'pending_upload' && (
                             <button
-                              onClick={() => {
-                                const link = document.createElement('a')
-                                link.href = contract.original_file_url!
-                                link.download = contract.title || 'document'
-                                link.click()
+                              onClick={async () => {
+                                try {
+                                  const res = await fetch(`/api/download?url=${encodeURIComponent(contract.original_file_url!)}&filename=${encodeURIComponent(contract.title || 'document')}`)
+                                  if (!res.ok) throw new Error('Download failed')
+                                  const blob = await res.blob()
+                                  const url = window.URL.createObjectURL(blob)
+                                  const link = document.createElement('a')
+                                  link.href = url
+                                  link.download = contract.title || 'document'
+                                  document.body.appendChild(link)
+                                  link.click()
+                                  window.URL.revokeObjectURL(url)
+                                  document.body.removeChild(link)
+                                } catch (error) {
+                                  toast.error('Failed to download document')
+                                }
                               }}
                               className="btn btn-outline py-2 px-3 flex items-center gap-2 text-sm"
                               title="Download uploaded document"
@@ -497,11 +508,22 @@ export default function AdminPage() {
                           )}
                           {contract.reviewed_file_url && (
                             <button
-                              onClick={() => {
-                                const link = document.createElement('a')
-                                link.href = contract.reviewed_file_url!
-                                link.download = `${contract.title}-reviewed` || 'reviewed-document'
-                                link.click()
+                              onClick={async () => {
+                                try {
+                                  const res = await fetch(`/api/download?url=${encodeURIComponent(contract.reviewed_file_url!)}&filename=${encodeURIComponent(`${contract.title}-reviewed` || 'reviewed-document')}`)
+                                  if (!res.ok) throw new Error('Download failed')
+                                  const blob = await res.blob()
+                                  const url = window.URL.createObjectURL(blob)
+                                  const link = document.createElement('a')
+                                  link.href = url
+                                  link.download = `${contract.title}-reviewed` || 'reviewed-document'
+                                  document.body.appendChild(link)
+                                  link.click()
+                                  window.URL.revokeObjectURL(url)
+                                  document.body.removeChild(link)
+                                } catch (error) {
+                                  toast.error('Failed to download document')
+                                }
                               }}
                               className="btn btn-outline py-2 px-3 flex items-center gap-2 text-sm"
                               title="Download reviewed document"
