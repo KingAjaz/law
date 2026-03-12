@@ -3,8 +3,7 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('documents', 'documents', true)
 ON CONFLICT (id) DO NOTHING;
 
--- Enable RLS for the documents bucket
-ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+-- Enable RLS for the documents bucket (Skipped as Supabase handles this by default and throws permission errors)
 
 -- Allow authenticated users to upload files to the documents bucket
 CREATE POLICY "Authenticated users can upload documents"
