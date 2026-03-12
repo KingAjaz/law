@@ -479,49 +479,66 @@ export default function AdminPage() {
                             Created: {new Date(contract.created_at).toLocaleString()}
                           </p>
                         </div>
-                        {contract.status === 'payment_confirmed' && !contract.lawyer_id && (
-                          <div className="flex gap-2 items-center">
-                            {contract.original_file_url && contract.original_file_url !== 'pending_upload' && (
-                              <button
-                                onClick={() => {
-                                  const link = document.createElement('a')
-                                  link.href = contract.original_file_url!
-                                  link.download = contract.title || 'document'
-                                  link.click()
-                                }}
-                                className="btn btn-outline py-2 px-3 flex items-center gap-2 text-sm"
-                                title="Download uploaded document"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                                Download
-                              </button>
-                            )}
-                            <select
-                              onChange={(e) => {
-                                if (e.target.value) {
-                                  assignContract(contract.id, e.target.value)
-                                }
+                        <div className="flex flex-col gap-2 items-end">
+                          {contract.original_file_url && contract.original_file_url !== 'pending_upload' && (
+                            <button
+                              onClick={() => {
+                                const link = document.createElement('a')
+                                link.href = contract.original_file_url!
+                                link.download = contract.title || 'document'
+                                link.click()
                               }}
-                              className="input"
-                              defaultValue=""
-                              disabled={assigningContract === contract.id}
+                              className="btn btn-outline py-2 px-3 flex items-center gap-2 text-sm"
+                              title="Download uploaded document"
                             >
-                              <option value="">Assign to lawyer...</option>
-                              {lawyers.map((lawyer) => (
-                                <option key={lawyer.id} value={lawyer.id}>
-                                  {lawyer.full_name || lawyer.email}
-                                  {lawyer.role === 'admin' ? ' (Admin)' : ''}
-                                </option>
-                              ))}
-                            </select>
-                            {assigningContract === contract.id && (
-                              <div className="flex items-center text-primary-600">
-                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-700"></div>
-                                <span className="ml-2 text-sm">Assigning...</span>
-                              </div>
-                            )}
-                          </div>
-                        )}
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                              Download Original
+                            </button>
+                          )}
+                          {contract.reviewed_file_url && (
+                            <button
+                              onClick={() => {
+                                const link = document.createElement('a')
+                                link.href = contract.reviewed_file_url!
+                                link.download = `${contract.title}-reviewed` || 'reviewed-document'
+                                link.click()
+                              }}
+                              className="btn btn-outline py-2 px-3 flex items-center gap-2 text-sm"
+                              title="Download reviewed document"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                              Download Reviewed
+                            </button>
+                          )}
+                          {contract.status === 'payment_confirmed' && !contract.lawyer_id && (
+                            <div className="flex gap-2 items-center mt-2">
+                              <select
+                                onChange={(e) => {
+                                  if (e.target.value) {
+                                    assignContract(contract.id, e.target.value)
+                                  }
+                                }}
+                                className="input"
+                                defaultValue=""
+                                disabled={assigningContract === contract.id}
+                              >
+                                <option value="">Assign to lawyer...</option>
+                                {lawyers.map((lawyer) => (
+                                  <option key={lawyer.id} value={lawyer.id}>
+                                    {lawyer.full_name || lawyer.email}
+                                    {lawyer.role === 'admin' ? ' (Admin)' : ''}
+                                  </option>
+                                ))}
+                              </select>
+                              {assigningContract === contract.id && (
+                                <div className="flex items-center text-primary-600">
+                                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-700"></div>
+                                  <span className="ml-2 text-sm">Assigning...</span>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
