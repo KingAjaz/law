@@ -789,7 +789,7 @@ function DashboardContent() {
                       </p>
                     </div>
                     <div className="flex gap-2">
-                      {contract.status === 'awaiting_upload' && (
+                      {(contract.status === 'awaiting_upload' || contract.status === 'payment_confirmed') && (
                         <button
                           onClick={() => {
                             if (!kycCompleted) {
