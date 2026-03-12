@@ -22,6 +22,7 @@ export default function AdminPage() {
   const [kycSubmissions, setKycSubmissions] = useState<(KYCData & { email: string; full_name: string | null })[]>([])
   const [loading, setLoading] = useState(true)
   const [assigningContract, setAssigningContract] = useState<string | null>(null)
+  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null)
   const [verifyingKyc, setVerifyingKyc] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'contracts' | 'lawyers' | 'kyc'>('overview')
 
@@ -138,6 +139,37 @@ export default function AdminPage() {
       toast.error(error.message || `Failed to ${action} KYC`)
     } finally {
       setVerifyingKyc(null)
+    }
+  }
+
+  const updateStatus = async (contractId: string, status: string, previousStatus: string) => {
+    setUpdatingStatus(contractId)
+    try {
+      // Update status via API route (sends email notifications)
+      const response = await fetch('/api/contracts/update-status', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contractId,
+          status,
+          previousStatus,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to update status')
+      }
+
+      toast.success('Status updated successfully')
+      await loadData()
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to update status')
+    } finally {
+      setUpdatingStatus(null)
     }
   }
 
@@ -471,7 +503,21 @@ export default function AdminPage() {
                         <div className="flex-1">
                           <h3 className="text-lg font-semibold mb-2">{contract.title}</h3>
                           <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-2">
-                            <span>Status: <span className="font-medium">{CONTRACT_STATUS_LABELS[contract.status]}</span></span>
+                            <span className="flex items-center gap-2">Status:
+                              <select
+                                value={contract.status}
+                                onChange={(e) => updateStatus(contract.id, e.target.value, contract.status)}
+                                disabled={updatingStatus === contract.id}
+                                className="input py-1 px-2 text-xs w-auto min-w-[140px] h-8 font-medium bg-white"
+                              >
+                                {Object.entries(CONTRACT_STATUS_LABELS).map(([key, label]) => (
+                                  <option key={key} value={key}>{label}</option>
+                                ))}
+                              </select>
+                              {updatingStatus === contract.id && (
+                                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-primary-700"></div>
+                              )}
+                            </span>
                             <span>Tier: <span className="font-medium">{PRICING_TIERS[contract.pricing_tier].name}</span></span>
                             <span>Payment: <span className="font-medium">{contract.payment_status}</span></span>
                           </div>
