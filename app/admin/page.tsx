@@ -253,8 +253,8 @@ export default function AdminPage() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
-                      ? 'border-primary-700 text-primary-700'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-primary-700 text-primary-700'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}
                 >
                   {tab.label}
@@ -481,6 +481,21 @@ export default function AdminPage() {
                         </div>
                         {contract.status === 'payment_confirmed' && !contract.lawyer_id && (
                           <div className="flex gap-2 items-center">
+                            {contract.original_file_url && contract.original_file_url !== 'pending_upload' && (
+                              <button
+                                onClick={() => {
+                                  const link = document.createElement('a')
+                                  link.href = contract.original_file_url!
+                                  link.download = contract.title || 'document'
+                                  link.click()
+                                }}
+                                className="btn btn-outline py-2 px-3 flex items-center gap-2 text-sm"
+                                title="Download uploaded document"
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                Download
+                              </button>
+                            )}
                             <select
                               onChange={(e) => {
                                 if (e.target.value) {
@@ -615,10 +630,10 @@ export default function AdminPage() {
                             </h3>
                             <span
                               className={`badge ${kyc.status === 'approved'
-                                  ? 'badge-success'
-                                  : kyc.status === 'rejected'
-                                    ? 'badge-error'
-                                    : 'badge-warning'
+                                ? 'badge-success'
+                                : kyc.status === 'rejected'
+                                  ? 'badge-error'
+                                  : 'badge-warning'
                                 }`}
                             >
                               {kyc.status === 'pending' ? 'Pending' : kyc.status === 'approved' ? 'Approved' : 'Rejected'}
