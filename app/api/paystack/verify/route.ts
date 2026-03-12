@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
 import { getEnvVar } from '@/lib/env'
 import { rateLimiters, createRateLimitHeaders } from '@/lib/rate-limit'
 import { logger } from '@/lib/logger'
@@ -68,7 +69,7 @@ export async function GET(request: NextRequest) {
         message: data.message,
         reference,
       })
-      
+
       // Handle specific error cases
       if (response.status === 404) {
         logger.warn('Payment reference not found', { reference })
@@ -77,7 +78,7 @@ export async function GET(request: NextRequest) {
           { status: 404 }
         )
       }
-      
+
       if (response.status === 401 || response.status === 403) {
         logger.error('Paystack authentication error', { reference, status: response.status })
         return NextResponse.json(
@@ -87,7 +88,7 @@ export async function GET(request: NextRequest) {
       }
 
       return NextResponse.json(
-        { 
+        {
           error: data.message || 'Failed to verify payment',
           details: data.errors || null,
         },
@@ -102,6 +103,64 @@ export async function GET(request: NextRequest) {
         { error: 'Invalid payment verification response' },
         { status: 502 }
       )
+    }
+
+    // Sync database with successful verification
+    if (data.data.status === 'success') {
+      try {
+        const supabaseUrl = getEnvVar('NEXT_PUBLIC_SUPABASE_URL')
+        const supabaseServiceKey = getEnvVar('SUPABASE_SERVICE_ROLE_KEY')
+        const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+          auth: {
+            autoRefreshToken: false,
+            persistSession: false,
+          },
+        })
+
+        // Update payment status
+        await supabase
+          .from('payments')
+          .update({
+            status: 'success',
+            updated_at: new Date().toISOString(),
+          })
+          .eq('paystack_reference', reference)
+
+        // Find associated payment
+        const { data: payment } = await supabase
+          .from('payments')
+          .select('contract_id')
+          .eq('paystack_reference', reference)
+          .single()
+
+        if (payment) {
+          // Find associated contract
+          const { data: existingContract } = await supabase
+            .from('contracts')
+            .select('id, original_file_url')
+            .eq('id', payment.contract_id)
+            .single()
+
+          if (existingContract) {
+            // Update contract status
+            const newStatus = existingContract.original_file_url
+              ? 'payment_confirmed'
+              : 'awaiting_upload'
+
+            await supabase
+              .from('contracts')
+              .update({
+                payment_status: 'completed',
+                status: newStatus,
+                updated_at: new Date().toISOString(),
+              })
+              .eq('id', payment.contract_id)
+          }
+        }
+      } catch (dbError) {
+        // Log but do not fail the verification process since Paystack confirmed it
+        logger.error('Database sync failed during payment verification', { reference, error: dbError })
+      }
     }
 
     logger.logPaymentEvent('payment_verified', {
