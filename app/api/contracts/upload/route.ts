@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const supabase = createSupabaseServer()
-    
+
     // Get authenticated user
     const {
       data: { user },
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
       .select('*')
       .eq('id', contractId)
       .eq('user_id', user.id)
-      .eq('status', 'awaiting_upload')
+      .in('status', ['awaiting_upload', 'payment_confirmed'])
       .eq('payment_status', 'completed')
       .single()
 
