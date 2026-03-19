@@ -48,7 +48,7 @@ export default function AboutPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
               <div className="lg:col-span-4 block relative h-[400px] w-full rounded-xl overflow-hidden shadow-lg bg-brand-200/30 xl:h-[500px]">
                 <Image
-                  src="/founder-removebg-preview.png"
+                  src="/founder-bg-removed-upscaled.png"
                   alt="Ayobami Omisakin - Founder"
                   fill
                   className="object-contain object-bottom drop-shadow-2xl p-4"
