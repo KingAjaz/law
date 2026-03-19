@@ -46,12 +46,12 @@ export default function AboutPage() {
             className="mb-24 bg-brand-50 rounded-2xl p-8 md:p-12 shadow-sm border border-brand-100"
           >
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-              <div className="lg:col-span-4 block relative h-[400px] w-full rounded-xl overflow-hidden shadow-lg xl:h-[500px]">
+              <div className="lg:col-span-4 block relative h-[400px] w-full rounded-xl overflow-hidden shadow-lg bg-brand-200/30 xl:h-[500px]">
                 <Image
-                  src="/founder.jpg"
+                  src="/founder-removebg-preview.png"
                   alt="Ayobami Omisakin - Founder"
                   fill
-                  className="object-cover object-top"
+                  className="object-contain object-bottom drop-shadow-2xl p-4"
                 />
               </div>
 
