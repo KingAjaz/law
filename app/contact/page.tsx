@@ -13,7 +13,6 @@ export default function ContactPage() {
     name: '',
     company: '',
     email: '',
-    phone: '',
     service: '',
     message: '',
   })
@@ -39,7 +38,7 @@ export default function ContactPage() {
       }
 
       toast.success(data.message || 'Message sent successfully! We will get back to you soon.')
-      setFormData({ name: '', company: '', email: '', phone: '', service: '', message: '' })
+      setFormData({ name: '', company: '', email: '', service: '', message: '' })
     } catch (error: any) {
       toast.error(error.message || 'Failed to send message. Please try again.')
     } finally {
@@ -59,7 +58,7 @@ export default function ContactPage() {
             className="text-center mb-16"
           >
             <h1 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">
-              Let's Move Your Legal Work Forward
+              Let's Move Your Work Forward
             </h1>
             <p className="text-lg md:text-xl text-brand-700 leading-relaxed max-w-3xl mx-auto">
               Whether you are ready to upload a contract, need a custom quote, or want to talk strategy —
@@ -84,17 +83,6 @@ export default function ContactPage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               className="card"
-            >
-              <Phone className="h-8 w-8 text-brand-600 mb-4" />
-              <h3 className="text-xl font-bold text-brand-700 mb-2">Phone</h3>
-              <p className="text-brand-700 font-medium">{CONTACT_INFO.phone}</p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="card md:col-span-2"
             >
               <MapPin className="h-8 w-8 text-brand-600 mb-4" />
               <h3 className="text-xl font-bold text-brand-700 mb-2">Address</h3>
@@ -129,18 +117,17 @@ export default function ContactPage() {
               </div>
               <div>
                 <label htmlFor="contact-company" className="block text-sm font-semibold mb-2 text-brand-700">
-                  Company <span className="text-red-600" aria-label="required">*</span>
+                  Company <span className="text-gray-500 font-normal ml-1" aria-label="optional">(Optional)</span>
                 </label>
                 <input
                   id="contact-company"
                   name="company"
                   type="text"
-                  required
                   value={formData.company}
                   onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                   className="input"
                   placeholder="Your company name"
-                  aria-required="true"
+                  aria-required="false"
                   autoComplete="organization"
                 />
               </div>
@@ -161,23 +148,7 @@ export default function ContactPage() {
                   autoComplete="email"
                 />
               </div>
-              <div>
-                <label htmlFor="contact-phone" className="block text-sm font-semibold mb-2 text-brand-700">
-                  Phone <span className="text-red-600" aria-label="required">*</span>
-                </label>
-                <input
-                  id="contact-phone"
-                  name="phone"
-                  type="tel"
-                  required
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="input"
-                  placeholder="Your phone number"
-                  aria-required="true"
-                  autoComplete="tel"
-                />
-              </div>
+
               <div>
                 <label htmlFor="contact-service" className="block text-sm font-semibold mb-2 text-brand-700">
                   Service Interested In <span className="text-red-600" aria-label="required">*</span>
