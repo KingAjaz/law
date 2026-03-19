@@ -550,6 +550,92 @@ export default function HomePage() {
 
         <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-12">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+              >
+                <h2 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">
+                  Legal Function Review
+                </h2>
+                <div className="w-24 h-1 bg-brand-600 mb-6"></div>
+                <h3 className="text-2xl md:text-3xl font-semibold text-brand-700 mb-4">
+                  Is Your In-House Legal Function Built to Scale?
+                </h3>
+                <p className="text-lg md:text-xl text-brand-700 leading-relaxed mb-8">
+                  A structured assessment of your legal team&apos;s operations — identifying gaps, inefficiencies, and opportunities so you can build a function that keeps pace with your business.
+                </p>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="relative h-[450px] rounded-2xl overflow-hidden shadow-2xl"
+              >
+                <Image
+                  src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80&auto=format&fit=crop"
+                  alt="Business strategy meeting"
+                  fill
+                  className="object-cover"
+                />
+              </motion.div>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="max-w-4xl mx-auto mb-12"
+            >
+              <ul className="space-y-4">
+                <li className="flex items-start">
+                  <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <p className="text-brand-700 leading-relaxed text-base">
+                    <strong>Essential Review:</strong> Document review, stakeholder interviews, and an action plan for early-stage companies.
+                  </p>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <p className="text-brand-700 leading-relaxed text-base">
+                    <strong>Comprehensive Assessment:</strong> Full document and workflow review across 7 key areas for growth-stage companies.
+                  </p>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <p className="text-brand-700 leading-relaxed text-base">
+                    <strong>Actionable Roadmaps:</strong> Prioritised action plans with timelines and phased milestones.
+                  </p>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <p className="text-brand-700 leading-relaxed text-base">
+                    <strong>Advisory Support:</strong> Walk-through sessions and follow-up check-ins to ensure successful implementation.
+                  </p>
+                </li>
+              </ul>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <Link
+                href="/services"
+                className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
+              >
+                Explore Legal Function Review
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="py-20 bg-brand-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -625,7 +711,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="py-20 bg-brand-50">
+        <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
