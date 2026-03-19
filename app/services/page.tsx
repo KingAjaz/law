@@ -19,7 +19,7 @@ export default function ServicesPage() {
             className="text-center mb-12"
           >
             <h1 className="text-4xl md:text-5xl font-bold text-brand-700 mb-4">
-              Services / Expertise
+              Our Services
             </h1>
             <div className="w-24 h-1 bg-brand-600 mx-auto mb-6"></div>
             <h2 className="text-2xl md:text-3xl font-semibold text-brand-700 mb-4">
@@ -198,6 +198,132 @@ export default function ServicesPage() {
                 className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
               >
                 Contact Us to Get Started
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            </div>
+          </motion.div>
+
+          {/* Fractional General Counsel Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-16"
+          >
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-brand-700 mb-4">
+                Fractional General Counsel
+              </h2>
+              <div className="w-24 h-1 bg-brand-600 mx-auto mb-6"></div>
+              <h3 className="text-xl md:text-2xl font-semibold text-brand-700 mb-4">
+                Strategic Counsel — Fractional & Scalable
+              </h3>
+              <p className="text-lg md:text-xl text-brand-700 leading-relaxed max-w-4xl mx-auto">
+                Not ready for a full-time GC? We provide flexible counsel.
+              </p>
+            </div>
+
+            <div className="max-w-4xl mx-auto mb-12">
+              <ul className="space-y-4">
+                <li className="flex items-start">
+                  <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <p className="text-brand-700 leading-relaxed text-base">
+                    Regulatory advisory
+                  </p>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <p className="text-brand-700 leading-relaxed text-base">
+                    Contract review
+                  </p>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <p className="text-brand-700 leading-relaxed text-base">
+                    Legal strategy
+                  </p>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <p className="text-brand-700 leading-relaxed text-base">
+                    Data and IP Protection
+                  </p>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <p className="text-brand-700 leading-relaxed text-base">
+                    Cross-functional risk alignment
+                  </p>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <p className="text-brand-700 leading-relaxed text-base">
+                    Legal operations
+                  </p>
+                </li>
+              </ul>
+            </div>
+            
+            <div className="text-center mb-24">
+              <Link
+                href="/contact"
+                className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
+              >
+                Engage a Fractional Counsel
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            </div>
+          </motion.div>
+
+          {/* Recruitment & Training Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-16"
+          >
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-brand-700 mb-4">
+                Recruitment & Training
+              </h2>
+              <div className="w-24 h-1 bg-brand-600 mx-auto mb-6"></div>
+              <h3 className="text-xl md:text-2xl font-semibold text-brand-700 mb-4">
+                Grow Your Legal Team — With Support
+              </h3>
+              <p className="text-lg md:text-xl text-brand-700 leading-relaxed max-w-4xl mx-auto">
+                Need to recruit or train your in-house legal team? We support you with:
+              </p>
+            </div>
+
+            <div className="max-w-4xl mx-auto mb-12">
+              <ul className="space-y-4">
+                <li className="flex items-start">
+                  <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <p className="text-brand-700 leading-relaxed text-base">
+                    Hiring guidance for legal roles
+                  </p>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <p className="text-brand-700 leading-relaxed text-base">
+                    Onboarding and training frameworks
+                  </p>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
+                  <p className="text-brand-700 leading-relaxed text-base">
+                    Practical workshops for contract management and legal operations
+                  </p>
+                </li>
+              </ul>
+            </div>
+            
+            <div className="text-center">
+              <Link
+                href="/contact"
+                className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
+              >
+                Contact us to learn more
                 <ArrowRight className="h-5 w-5" />
               </Link>
             </div>
