@@ -366,7 +366,7 @@ export default function HomePage() {
                 <div className="absolute inset-0 flex items-end">
                   <div className="p-8 w-full bg-white/90 backdrop-blur-sm">
                     <h3 className="text-2xl md:text-3xl font-semibold mb-4 text-brand-700">
-                      Legal Process Outsourcing
+                      On-Demand Contract Review
                     </h3>
                     <p className="text-xl md:text-2xl font-medium text-brand-700">
                       Precise Contract Reviews — Fast Turnaround
