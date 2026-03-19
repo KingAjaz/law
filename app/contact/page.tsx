@@ -165,6 +165,7 @@ export default function ContactPage() {
                   <option value="">Select a service</option>
                   <option value="contract-review">Contract Review</option>
                   <option value="fractional-gc">Fractional General Counsel</option>
+                  <option value="legal-function-review">Legal Function Review</option>
                   <option value="recruitment-training">Recruitment & Training</option>
                   <option value="custom-quote">Custom Quote</option>
                   <option value="other">Other</option>
