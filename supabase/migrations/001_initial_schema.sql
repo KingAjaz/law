@@ -129,8 +129,6 @@ BEGIN
     NEW.raw_user_meta_data->>'full_name',
     NEW.raw_user_meta_data->>'name',
     NEW.raw_user_meta_data->>'display_name',
-    NEW.user_metadata->>'full_name',
-    NEW.user_metadata->>'name',
     split_part(COALESCE(NEW.email, ''), '@', 1)  -- Fallback to email prefix
   );
 
