@@ -83,13 +83,16 @@ export async function POST(request: NextRequest) {
             )
         }
 
+        // Create the securely wrapped link that forces manual interaction
+        const secureResetLink = `${appUrl}/auth/secure-link?type=reset&url=${encodeURIComponent(resetLink)}`
+
         // Get user display name
         const userName = user.user_metadata?.full_name
             || user.user_metadata?.name
             || email.split('@')[0]
 
         // Send the professional email via Resend
-        const emailSent = await sendPasswordResetRequestEmail(email, userName, resetLink)
+        const emailSent = await sendPasswordResetRequestEmail(email, userName, secureResetLink)
 
         if (!emailSent) {
             logger.error('Failed to send password reset email via Resend', { email })

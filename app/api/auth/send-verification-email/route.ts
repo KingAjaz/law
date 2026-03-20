@@ -77,9 +77,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Create the securely wrapped link that forces manual interaction
+    const secureVerificationLink = `${appUrl}/auth/secure-link?type=verify&url=${encodeURIComponent(verificationLink)}`
+
     // Send verification email via our email service
     const userName = fullName || email.split('@')[0]
-    const emailSent = await sendEmailVerificationEmail(email, userName, verificationLink)
+    const emailSent = await sendEmailVerificationEmail(email, userName, secureVerificationLink)
 
     if (!emailSent) {
       logger.error('Failed to send verification email via our service', { email })
