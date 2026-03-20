@@ -17,6 +17,8 @@ function ResetPasswordConfirmForm() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [verifyingLink, setVerifyingLink] = useState(true)
+  const [linkError, setLinkError] = useState(false)
 
   useEffect(() => {
     // Check if there's a valid session (user must be authenticated via the reset link)
@@ -30,7 +32,7 @@ function ResetPasswordConfirmForm() {
       (event: string) => {
         if (event === 'PASSWORD_RECOVERY') {
           settled = true
-          // Session is ready — the form is already displayed, nothing else to do
+          setVerifyingLink(false)
         }
       }
     )
@@ -38,27 +40,40 @@ function ResetPasswordConfirmForm() {
     // Also poll for an existing session (covers the PKCE / code flow)
     const checkSession = async () => {
       try {
+        if (typeof window !== 'undefined' && window.location.hash.includes('error=')) {
+          setLinkError(true)
+          setVerifyingLink(false)
+          toast.error('This link is invalid or has already been used.')
+          return
+        }
+
         // Try multiple times over 5 seconds to allow time for hash processing
         for (let i = 0; i < 5; i++) {
-          if (settled) return
+          if (settled) {
+             setVerifyingLink(false)
+             return
+          }
           const { data: { session } } = await supabase.auth.getSession()
           if (session) {
             settled = true
+            setVerifyingLink(false)
             return
           }
           await new Promise(resolve => setTimeout(resolve, 1000))
         }
 
-        // If still no session after retries, redirect
+        // If still no session after retries, show error state
         if (!settled) {
+          setLinkError(true)
+          setVerifyingLink(false)
           toast.error('Invalid or expired reset link. Please request a new one.')
-          router.push('/reset-password')
         }
       } catch (error) {
         console.error('Session check error:', error)
         if (!settled) {
+          setLinkError(true)
+          setVerifyingLink(false)
           toast.error('An error occurred. Please try again.')
-          router.push('/reset-password')
         }
       }
     }
@@ -108,6 +123,38 @@ function ResetPasswordConfirmForm() {
     } finally {
       setLoading(false)
     }
+  }
+
+  if (verifyingLink) {
+    return (
+      <div className="min-h-screen flex flex-col bg-dark-950">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-md w-full text-center card">
+            <h2 className="text-2xl font-bold mb-4">Verifying secure link...</h2>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500 mx-auto"></div>
+            <p className="text-gray-400 mt-4 text-sm">Please wait while we verify your password reset safely.</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
+
+  if (linkError) {
+    return (
+      <div className="min-h-screen flex flex-col bg-dark-950">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-md w-full text-center card">
+            <h2 className="text-xl font-bold text-red-500 mb-4">Link Expired or Invalid</h2>
+            <p className="text-gray-400 mb-6 text-sm">This password reset link has already been used (e.g. by an email scanner) or has expired. Please request a new reset link.</p>
+            <Link href="/reset-password" className="btn btn-primary w-full">Request New Link</Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    )
   }
 
   if (success) {

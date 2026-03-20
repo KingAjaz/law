@@ -160,9 +160,13 @@ function getEmailTemplate(title: string, content: string, actionText?: string, a
     
     ${actionText && actionUrl ? `
     <div style="margin: 30px 0; text-align: center;">
-      <a href="${actionUrl}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: 600;">
+      <a href="${actionUrl}" style="display: inline-block; background-color: #667eea; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: 600;">
         ${actionText}
       </a>
+    </div>
+    <div style="text-align: center; margin-top: 20px;">
+      <p style="color: #888; font-size: 13px; margin-bottom: 5px;">If the button above doesn't work, copy and paste this link into your browser:</p>
+      <p style="word-break: break-all; font-size: 12px; color: #667eea; margin-top: 0;">${actionUrl}</p>
     </div>
     ` : ''}
     
@@ -490,9 +494,6 @@ export async function sendPasswordResetRequestEmail(
         <strong>🔒 Security Notice:</strong> If you did not request this password reset, you can safely ignore this email. Your password will remain unchanged and your account is secure.
       </p>
     </div>
-    
-    <p style="color: #888; font-size: 13px;">If the button above doesn't work, copy and paste this link into your browser:</p>
-    <p style="word-break: break-all; font-size: 12px; color: #667eea;">${resetLink}</p>
   `
 
   const html = getEmailTemplate(

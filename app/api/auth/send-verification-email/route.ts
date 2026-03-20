@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { getEnvVar } from '@/lib/env'
-import { sendEmailVerificationEmail } from '@/lib/email'
+import { sendEmailVerificationEmail, sendNewUserSignupEmailToAdmin, getAdminEmails } from '@/lib/email'
 import { logger } from '@/lib/logger'
 
 /**
@@ -94,6 +94,23 @@ export async function POST(request: NextRequest) {
     }
 
     logger.logAuthEvent('verification_email_sent', { email, userId: user.id, via: 'custom_service' })
+
+    // Send admin notification immediately after signup verification email is triggered!
+    try {
+      const adminEmails = await getAdminEmails()
+      for (const adminEmail of adminEmails) {
+        await sendNewUserSignupEmailToAdmin(
+          adminEmail,
+          email,
+          userName,
+          new Date().toISOString()
+        )
+      }
+      logger.info('Admin signup notification sent successfully.')
+    } catch (adminNotifyError) {
+      logger.error('Failed to notify admins of new signup', { error: adminNotifyError })
+      // Don't fail the complete verification request if admin notify fails
+    }
 
     return NextResponse.json({
       success: true,
