@@ -47,9 +47,27 @@ function ResetPasswordConfirmForm() {
           return
         }
 
-        // Try multiple times over 5 seconds to allow time for hash processing
+        // Manually parse the hash to guarantee session establishment
+        // This bypasses any race conditions with Providers or Next.js routers
+        let sessionEstablished = false
+        if (typeof window !== 'undefined' && window.location.hash.includes('access_token=')) {
+          const params = new URLSearchParams(window.location.hash.substring(1))
+          const access_token = params.get('access_token')
+          const refresh_token = params.get('refresh_token')
+          if (access_token && refresh_token) {
+            const { error: setSessionError } = await supabase.auth.setSession({
+              access_token,
+              refresh_token
+            })
+            if (!setSessionError) {
+              sessionEstablished = true
+            }
+          }
+        }
+
+        // Try multiple times over 5 seconds to verify session is active
         for (let i = 0; i < 5; i++) {
-          if (settled) {
+          if (settled || sessionEstablished) {
              setVerifyingLink(false)
              return
           }
@@ -148,7 +166,7 @@ function ResetPasswordConfirmForm() {
         <main className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-md w-full text-center card">
             <h2 className="text-xl font-bold text-red-500 mb-4">Link Expired or Invalid</h2>
-            <p className="text-gray-400 mb-6 text-sm">This password reset link has already been used (e.g. by an email scanner) or has expired. Please request a new reset link.</p>
+            <p className="text-gray-400 mb-6 text-sm">Your password reset link was not properly loaded or has expired. Please request a new reset link.</p>
             <Link href="/reset-password" className="btn btn-primary w-full">Request New Link</Link>
           </div>
         </main>
