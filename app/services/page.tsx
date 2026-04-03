@@ -86,20 +86,7 @@ export default function ServicesPage() {
             </p>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-24"
-          >
-            <Link
-              href="/signup"
-              className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
-            >
-              Request Contract Review
-              <ArrowRight className="h-5 w-5" />
-            </Link>
-          </motion.div>
+
 
           {/* Legal Function Review Section */}
           <motion.div
@@ -192,15 +179,7 @@ export default function ServicesPage() {
               </div>
             </div>
 
-            <div className="text-center">
-              <Link
-                href="/contact"
-                className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
-              >
-                Contact Us to Get Started
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-            </div>
+
           </motion.div>
 
           {/* Fractional General Counsel Section */}
@@ -264,15 +243,7 @@ export default function ServicesPage() {
               </ul>
             </div>
             
-            <div className="text-center mb-24">
-              <Link
-                href="/contact"
-                className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
-              >
-                Engage a Fractional Counsel
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-            </div>
+
           </motion.div>
 
           {/* Recruitment & Training Section */}
@@ -318,15 +289,25 @@ export default function ServicesPage() {
               </ul>
             </div>
             
-            <div className="text-center">
-              <Link
-                href="/contact"
-                className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
-              >
-                Contact us to learn more
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-            </div>
+          </motion.div>
+
+          {/* Single Universal CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mt-16"
+          >
+            <Link
+              href="/contact"
+              className="btn btn-primary-beige text-lg px-12 py-4 inline-flex items-center gap-2"
+            >
+              Get Started
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+            <p className="text-sm text-gray-500 mt-3">
+              Reach out to discuss your needs — no commitment required.
+            </p>
           </motion.div>
         </div>
       </main>
