@@ -206,18 +206,31 @@ export function HeroBanner() {
               </AnimatePresence>
             </div>
 
-            {/* Primary CTA Button */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Link
-                href={isAuthenticated ? "/dashboard" : "/signup"}
-                className="btn btn-primary text-lg px-8 py-4 inline-flex items-center gap-2"
+            {/* CTA Buttons */}
+            <div className="flex flex-wrap gap-4">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                {isAuthenticated ? "Go to Dashboard" : "Get Started"}
-              </Link>
-            </motion.div>
+                <Link
+                  href={isAuthenticated ? "/dashboard" : "/signup"}
+                  className="btn btn-primary text-lg px-8 py-4 inline-flex items-center gap-2"
+                >
+                  {isAuthenticated ? "Go to Dashboard" : "Get Started"}
+                </Link>
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link
+                  href="/services"
+                  className="text-lg px-8 py-4 inline-flex items-center gap-2 rounded-lg font-semibold border-2 border-white text-white hover:bg-white hover:text-brand-700 transition-all duration-300"
+                >
+                  Our Services
+                </Link>
+              </motion.div>
+            </div>
 
             {/* Mobile Navigation Arrows */}
             <div className="flex gap-4 mt-8">
