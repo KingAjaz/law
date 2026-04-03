@@ -3,8 +3,7 @@
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { motion } from 'framer-motion'
-import { Star, CheckCircle, ArrowRight } from 'lucide-react'
-import Link from 'next/link'
+import { Star } from 'lucide-react'
 import Image from 'next/image'
 import { StructuredData } from '@/components/StructuredData'
 
@@ -80,55 +79,7 @@ export default function AboutPage() {
             </div>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="card mb-12 max-w-4xl mx-auto"
-          >
-            <h2 className="text-2xl font-bold text-brand-700 mb-6">Our Services</h2>
-            <ul className="space-y-4">
-              <li className="flex items-start">
-                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
-                <p className="text-brand-700 leading-relaxed text-base">
-                  Contract review for NDAs, SLAs, MSAs, service agreements, and key operational contracts
-                </p>
-              </li>
-              <li className="flex items-start">
-                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
-                <p className="text-brand-700 leading-relaxed text-base">
-                  Fractional general counsel — compliance, risk, governance, and strategic advisory
-                </p>
-              </li>
-              <li className="flex items-start">
-                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
-                <p className="text-brand-700 leading-relaxed text-base">
-                  In-house legal team recruitment & training
-                </p>
-              </li>
-              <li className="flex items-start">
-                <CheckCircle className="h-6 w-6 text-brand-600 mr-3 mt-1 flex-shrink-0" />
-                <p className="text-brand-700 leading-relaxed text-base">
-                  Transparent pricing, reliable delivery, secure communication
-                </p>
-              </li>
-            </ul>
-          </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center"
-          >
-            <Link
-              href="/services"
-              className="btn btn-primary-beige text-lg px-8 py-4 inline-flex items-center gap-2"
-            >
-              Explore Our Services
-              <ArrowRight className="h-5 w-5" />
-            </Link>
-          </motion.div>
         </div>
       </main>
 
