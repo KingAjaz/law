@@ -8,7 +8,7 @@ import { updatePassword } from '@/lib/auth'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import toast from 'react-hot-toast'
-import { Lock, CheckCircle } from 'lucide-react'
+import { Lock, CheckCircle, Eye, EyeOff } from 'lucide-react'
 
 function ResetPasswordConfirmForm() {
   const router = useRouter()
@@ -19,6 +19,8 @@ function ResetPasswordConfirmForm() {
   const [success, setSuccess] = useState(false)
   const [verifyingLink, setVerifyingLink] = useState(true)
   const [linkError, setLinkError] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   useEffect(() => {
     // Check if there's a valid session (user must be authenticated via the reset link)
@@ -232,15 +234,24 @@ function ResetPasswordConfirmForm() {
                   <input
                     id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     autoComplete="new-password"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="input pl-10"
+                    className="input pl-10 pr-10"
                     placeholder="••••••••"
                     minLength={6}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
+                    tabIndex={-1}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
                 </div>
                 <p className="mt-1 text-xs text-gray-500">Must be at least 6 characters</p>
               </div>
@@ -254,15 +265,24 @@ function ResetPasswordConfirmForm() {
                   <input
                     id="confirmPassword"
                     name="confirmPassword"
-                    type="password"
+                    type={showConfirmPassword ? 'text' : 'password'}
                     autoComplete="new-password"
                     required
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="input pl-10"
+                    className="input pl-10 pr-10"
                     placeholder="••••••••"
                     minLength={6}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
+                    tabIndex={-1}
+                    aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
                 </div>
               </div>
 

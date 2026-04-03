@@ -8,7 +8,7 @@ import { signInWithEmail, signInWithOAuth, resendEmailConfirmation } from '@/lib
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import toast from 'react-hot-toast'
-import { Mail, Lock, ArrowRight, KeyRound } from 'lucide-react'
+import { Mail, Lock, ArrowRight, KeyRound, Eye, EyeOff } from 'lucide-react'
 
 function LoginForm() {
   const router = useRouter()
@@ -19,6 +19,7 @@ function LoginForm() {
   const [loading, setLoading] = useState(false)
   const [resendingVerification, setResendingVerification] = useState(false)
   const [showResendVerification, setShowResendVerification] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   // Handle error messages from query params (e.g., OAuth errors)
   const error = searchParams.get('error')
@@ -139,14 +140,23 @@ function LoginForm() {
                   <input
                     id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     autoComplete="current-password"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="input pl-10"
+                    className="input pl-10 pr-10"
                     placeholder="••••••••"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
+                    tabIndex={-1}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
                 </div>
               </div>
 

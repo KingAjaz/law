@@ -89,30 +89,18 @@ export default function PricingPage() {
                     <td className="p-5 font-semibold text-brand-700">Non Disclosure Agreements</td>
                     <td className="p-5">
                       <div className="font-bold text-brand-700">₦100,000 / $61</div>
-                      <div className="mt-4">
-                        <button onClick={(e) => handleGetStarted(e as any, 'nda_draft_basic')} className="btn btn-secondary w-full text-xs py-2">Get Started</button>
-                      </div>
                     </td>
                     <td className="p-5">
                       <div className="font-bold text-brand-700">₦150,000 / $100</div>
-                      <div className="text-xs text-gray-500 mt-1 mb-3">(24-hour response time)</div>
-                      <div>
-                        <button onClick={(e) => handleGetStarted(e as any, 'nda_draft_premium')} className="btn btn-primary-beige w-full text-xs py-2">Get Started</button>
-                      </div>
+                      <div className="text-xs text-gray-500 mt-1">(24-hour response time)</div>
                     </td>
                     <td className="p-5">
                       <div className="font-bold text-brand-700">₦90,000 / $60</div>
-                      <div className="text-xs text-gray-500 mt-1 mb-3">(1 review)</div>
-                      <div>
-                        <button onClick={(e) => handleGetStarted(e as any, 'nda_review_basic')} className="btn btn-secondary w-full text-xs py-2">Get Started</button>
-                      </div>
+                      <div className="text-xs text-gray-500 mt-1">(1 review)</div>
                     </td>
                     <td className="p-5">
                       <div className="font-bold text-brand-700">₦180,000 / $120</div>
-                      <div className="text-xs text-gray-500 mt-1 mb-3">(2 reviews + 30 mins call)</div>
-                      <div>
-                        <button onClick={(e) => handleGetStarted(e as any, 'nda_review_premium')} className="btn btn-primary-beige w-full text-xs py-2">Get Started</button>
-                      </div>
+                      <div className="text-xs text-gray-500 mt-1">(2 reviews + 30 mins call)</div>
                     </td>
                   </tr>
 
@@ -121,30 +109,18 @@ export default function PricingPage() {
                     <td className="p-5 font-semibold text-brand-700">Service Level Agreements or Service Agreements</td>
                     <td className="p-5">
                       <div className="font-bold text-brand-700">₦200,000 / $133</div>
-                      <div className="mt-4">
-                        <button onClick={(e) => handleGetStarted(e as any, 'sla_draft_basic')} className="btn btn-secondary w-full text-xs py-2">Get Started</button>
-                      </div>
                     </td>
                     <td className="p-5">
                       <div className="font-bold text-brand-700">₦250,000 / $167</div>
-                      <div className="text-xs text-gray-500 mt-1 mb-3">(24-hour response time)</div>
-                      <div>
-                        <button onClick={(e) => handleGetStarted(e as any, 'sla_draft_premium')} className="btn btn-primary-beige w-full text-xs py-2">Get Started</button>
-                      </div>
+                      <div className="text-xs text-gray-500 mt-1">(24-hour response time)</div>
                     </td>
                     <td className="p-5">
                       <div className="font-bold text-brand-700">₦180,000 / $120</div>
-                      <div className="text-xs text-gray-500 mt-1 mb-3">(1 review)</div>
-                      <div>
-                        <button onClick={(e) => handleGetStarted(e as any, 'sla_review_basic')} className="btn btn-secondary w-full text-xs py-2">Get Started</button>
-                      </div>
+                      <div className="text-xs text-gray-500 mt-1">(1 review)</div>
                     </td>
                     <td className="p-5">
                       <div className="font-bold text-brand-700">₦360,000 / $240</div>
-                      <div className="text-xs text-gray-500 mt-1 mb-3">(3 reviews + 30 mins call)</div>
-                      <div>
-                        <button onClick={(e) => handleGetStarted(e as any, 'sla_review_premium')} className="btn btn-primary-beige w-full text-xs py-2">Get Started</button>
-                      </div>
+                      <div className="text-xs text-gray-500 mt-1">(3 reviews + 30 mins call)</div>
                     </td>
                   </tr>
 
@@ -153,30 +129,18 @@ export default function PricingPage() {
                     <td className="p-5 font-semibold text-brand-700">Master Service Agreements (SaaS) & Order Forms</td>
                     <td className="p-5">
                       <div className="font-bold text-brand-700">₦350,000 / $233</div>
-                      <div className="mt-4">
-                        <button onClick={(e) => handleGetStarted(e as any, 'tech_msa_draft_basic')} className="btn btn-secondary w-full text-xs py-2">Get Started</button>
-                      </div>
                     </td>
                     <td className="p-5">
                       <div className="font-bold text-brand-700">₦400,000 / $267</div>
-                      <div className="text-xs text-gray-500 mt-1 mb-3">(24-hour response time)</div>
-                      <div>
-                        <button onClick={(e) => handleGetStarted(e as any, 'tech_msa_draft_premium')} className="btn btn-primary-beige w-full text-xs py-2">Get Started</button>
-                      </div>
+                      <div className="text-xs text-gray-500 mt-1">(24-hour response time)</div>
                     </td>
                     <td className="p-5">
                       <div className="font-bold text-brand-700">₦330,000 / $220</div>
-                      <div className="text-xs text-gray-500 mt-1 mb-3">(1 review)</div>
-                      <div>
-                        <button onClick={(e) => handleGetStarted(e as any, 'tech_msa_review_basic')} className="btn btn-secondary w-full text-xs py-2">Get Started</button>
-                      </div>
+                      <div className="text-xs text-gray-500 mt-1">(1 review)</div>
                     </td>
                     <td className="p-5">
                       <div className="font-bold text-brand-700">₦600,000 / $400</div>
-                      <div className="text-xs text-gray-500 mt-1 mb-3">(3 reviews + 30 mins call)</div>
-                      <div>
-                        <button onClick={(e) => handleGetStarted(e as any, 'tech_msa_review_premium')} className="btn btn-primary-beige w-full text-xs py-2">Get Started</button>
-                      </div>
+                      <div className="text-xs text-gray-500 mt-1">(3 reviews + 30 mins call)</div>
                     </td>
                   </tr>
 
@@ -185,16 +149,10 @@ export default function PricingPage() {
                     <td className="p-5 font-semibold text-brand-700">Privacy Policy</td>
                     <td className="p-5">
                       <div className="font-bold text-brand-700">₦120,000 / $80</div>
-                      <div className="mt-4">
-                        <button onClick={(e) => handleGetStarted(e as any, 'privacy_draft_basic')} className="btn btn-secondary w-full text-xs py-2">Get Started</button>
-                      </div>
                     </td>
                     <td className="p-5">
                       <div className="font-bold text-brand-700">₦200,000 / $133</div>
-                      <div className="text-xs text-gray-500 mt-1 mb-3">(24-hour response time)</div>
-                      <div>
-                        <button onClick={(e) => handleGetStarted(e as any, 'privacy_draft_premium')} className="btn btn-primary-beige w-full text-xs py-2">Get Started</button>
-                      </div>
+                      <div className="text-xs text-gray-500 mt-1">(24-hour response time)</div>
                     </td>
                     <td className="p-5 text-gray-400 italic text-sm text-center">Not available</td>
                     <td className="p-5 text-gray-400 italic text-sm text-center">Not available</td>
@@ -205,9 +163,6 @@ export default function PricingPage() {
                     <td className="p-5 font-semibold text-brand-700">Terms & Conditions (Website and Software Apps)</td>
                     <td className="p-5">
                       <div className="font-bold text-brand-700">₦500,000 / $333</div>
-                      <div className="mt-4">
-                        <button onClick={(e) => handleGetStarted(e as any, 'tnc_draft_basic')} className="btn btn-secondary w-full text-xs py-2">Get Started</button>
-                      </div>
                     </td>
                     <td className="p-5 text-gray-400 italic text-sm text-center">Not available</td>
                     <td className="p-5 text-gray-400 italic text-sm text-center">Not available</td>
@@ -215,6 +170,21 @@ export default function PricingPage() {
                   </tr>
                 </tbody>
               </table>
+            </div>
+
+            {/* Single universal CTA */}
+            <div className="mt-10 text-center">
+              <a
+                href="#"
+                onClick={(e) => handleGetStarted(e, 'lpo')}
+                className="btn btn-primary-beige px-12 py-3 text-lg inline-flex items-center gap-2"
+              >
+                Get Started
+                <ArrowRight className="h-5 w-5" />
+              </a>
+              <p className="text-sm text-gray-500 mt-3">
+                Select your service after signing up — no commitment required.
+              </p>
             </div>
           </motion.div>
 
