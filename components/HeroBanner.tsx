@@ -225,7 +225,7 @@ export function HeroBanner() {
               >
                 <Link
                   href="/services"
-                  className="text-lg px-8 py-4 inline-flex items-center gap-2 rounded-lg font-semibold border-2 border-white text-white hover:bg-white hover:text-brand-700 transition-all duration-300"
+                  className="text-lg px-8 py-4 inline-flex items-center gap-2 rounded-lg font-semibold bg-brand-600 text-white hover:bg-brand-700 transition-all duration-300"
                 >
                   Our Services
                 </Link>
