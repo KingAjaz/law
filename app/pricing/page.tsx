@@ -14,6 +14,7 @@ export default function PricingPage() {
   const router = useRouter()
   const supabase = createSupabaseClient()
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+  const [currency, setCurrency] = useState<'NGN' | 'USD'>('NGN')
 
   useEffect(() => {
     checkAuth()
@@ -72,6 +73,32 @@ export default function PricingPage() {
               Legal Process Outsourcing
             </h3>
 
+            {/* Currency Toggle */}
+            <div className="flex justify-center mb-8">
+              <div className="bg-brand-50 p-1 rounded-lg inline-flex shadow-inner">
+                <button
+                  onClick={() => setCurrency('NGN')}
+                  className={`px-6 py-2.5 rounded-md text-sm font-semibold transition-all ${
+                    currency === 'NGN'
+                      ? 'bg-white text-brand-800 shadow-sm'
+                      : 'text-brand-600 hover:text-brand-800'
+                  }`}
+                >
+                  Naira (₦)
+                </button>
+                <button
+                  onClick={() => setCurrency('USD')}
+                  className={`px-6 py-2.5 rounded-md text-sm font-semibold transition-all ${
+                    currency === 'USD'
+                      ? 'bg-white text-brand-800 shadow-sm'
+                      : 'text-brand-600 hover:text-brand-800'
+                  }`}
+                >
+                  USD ($)
+                </button>
+              </div>
+            </div>
+
             <div className="bg-white rounded-xl shadow-sm border border-brand-100 overflow-x-auto">
               <table className="w-full text-left border-collapse min-w-[900px]">
                 <thead>
@@ -88,18 +115,18 @@ export default function PricingPage() {
                   <tr className="hover:bg-gray-50 transition-colors">
                     <td className="p-5 font-semibold text-brand-700">Non Disclosure Agreements</td>
                     <td className="p-5">
-                      <div className="font-bold text-brand-700">₦100,000 ($61)</div>
+                      <div className="font-bold text-brand-700">{currency === 'NGN' ? '₦100,000' : '$61'}</div>
                     </td>
                     <td className="p-5">
-                      <div className="font-bold text-brand-700">₦150,000 ($100)</div>
+                      <div className="font-bold text-brand-700">{currency === 'NGN' ? '₦150,000' : '$100'}</div>
                       <div className="text-xs text-gray-500 mt-1">(24-hour response time)</div>
                     </td>
                     <td className="p-5">
-                      <div className="font-bold text-brand-700">₦90,000 ($60)</div>
+                      <div className="font-bold text-brand-700">{currency === 'NGN' ? '₦90,000' : '$60'}</div>
                       <div className="text-xs text-gray-500 mt-1">(1 review)</div>
                     </td>
                     <td className="p-5">
-                      <div className="font-bold text-brand-700">₦180,000 ($120)</div>
+                      <div className="font-bold text-brand-700">{currency === 'NGN' ? '₦180,000' : '$120'}</div>
                       <div className="text-xs text-gray-500 mt-1">(2 reviews + 30 mins call)</div>
                     </td>
                   </tr>
@@ -108,18 +135,18 @@ export default function PricingPage() {
                   <tr className="hover:bg-gray-50 transition-colors">
                     <td className="p-5 font-semibold text-brand-700">Service Level Agreements or Service Agreements</td>
                     <td className="p-5">
-                      <div className="font-bold text-brand-700">₦200,000 ($133)</div>
+                      <div className="font-bold text-brand-700">{currency === 'NGN' ? '₦200,000' : '$133'}</div>
                     </td>
                     <td className="p-5">
-                      <div className="font-bold text-brand-700">₦250,000 ($167)</div>
+                      <div className="font-bold text-brand-700">{currency === 'NGN' ? '₦250,000' : '$167'}</div>
                       <div className="text-xs text-gray-500 mt-1">(24-hour response time)</div>
                     </td>
                     <td className="p-5">
-                      <div className="font-bold text-brand-700">₦180,000 ($120)</div>
+                      <div className="font-bold text-brand-700">{currency === 'NGN' ? '₦180,000' : '$120'}</div>
                       <div className="text-xs text-gray-500 mt-1">(1 review)</div>
                     </td>
                     <td className="p-5">
-                      <div className="font-bold text-brand-700">₦360,000 ($240)</div>
+                      <div className="font-bold text-brand-700">{currency === 'NGN' ? '₦360,000' : '$240'}</div>
                       <div className="text-xs text-gray-500 mt-1">(3 reviews + 30 mins call)</div>
                     </td>
                   </tr>
@@ -128,18 +155,18 @@ export default function PricingPage() {
                   <tr className="hover:bg-gray-50 transition-colors">
                     <td className="p-5 font-semibold text-brand-700">Master Service Agreements (SaaS) & Order Forms</td>
                     <td className="p-5">
-                      <div className="font-bold text-brand-700">₦350,000 ($233)</div>
+                      <div className="font-bold text-brand-700">{currency === 'NGN' ? '₦350,000' : '$233'}</div>
                     </td>
                     <td className="p-5">
-                      <div className="font-bold text-brand-700">₦400,000 ($267)</div>
+                      <div className="font-bold text-brand-700">{currency === 'NGN' ? '₦400,000' : '$267'}</div>
                       <div className="text-xs text-gray-500 mt-1">(24-hour response time)</div>
                     </td>
                     <td className="p-5">
-                      <div className="font-bold text-brand-700">₦330,000 ($220)</div>
+                      <div className="font-bold text-brand-700">{currency === 'NGN' ? '₦330,000' : '$220'}</div>
                       <div className="text-xs text-gray-500 mt-1">(1 review)</div>
                     </td>
                     <td className="p-5">
-                      <div className="font-bold text-brand-700">₦600,000 ($400)</div>
+                      <div className="font-bold text-brand-700">{currency === 'NGN' ? '₦600,000' : '$400'}</div>
                       <div className="text-xs text-gray-500 mt-1">(3 reviews + 30 mins call)</div>
                     </td>
                   </tr>
@@ -148,10 +175,10 @@ export default function PricingPage() {
                   <tr className="hover:bg-gray-50 transition-colors">
                     <td className="p-5 font-semibold text-brand-700">Privacy Policy</td>
                     <td className="p-5">
-                      <div className="font-bold text-brand-700">₦120,000 ($80)</div>
+                      <div className="font-bold text-brand-700">{currency === 'NGN' ? '₦120,000' : '$80'}</div>
                     </td>
                     <td className="p-5">
-                      <div className="font-bold text-brand-700">₦200,000 ($133)</div>
+                      <div className="font-bold text-brand-700">{currency === 'NGN' ? '₦200,000' : '$133'}</div>
                       <div className="text-xs text-gray-500 mt-1">(24-hour response time)</div>
                     </td>
                     <td className="p-5 text-gray-400 italic text-sm text-center">Not available</td>
@@ -162,7 +189,7 @@ export default function PricingPage() {
                   <tr className="hover:bg-gray-50 transition-colors">
                     <td className="p-5 font-semibold text-brand-700">Terms & Conditions (Website and Software Apps)</td>
                     <td className="p-5">
-                      <div className="font-bold text-brand-700">₦500,000 ($333)</div>
+                      <div className="font-bold text-brand-700">{currency === 'NGN' ? '₦500,000' : '$333'}</div>
                     </td>
                     <td className="p-5 text-gray-400 italic text-sm text-center">Not available</td>
                     <td className="p-5 text-gray-400 italic text-sm text-center">Not available</td>
